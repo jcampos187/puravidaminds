@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+/* ─── Carreta-Inspired Color Palette ────────────────────────────
+   Traditional Sarchí oxcart colors — bold, vibrant folk-art palette
+   Rooted in the UNESCO-recognized craft of Costa Rican carretas.
+*/
+:root {
+  --carreta-red: #CC2936;
+  --carreta-orange: #FF7F00;
+  --carreta-gold: #FFD700;
+  --carreta-blue: #005ABB;
+  --carreta-turquoise: #00CED1;
+  --carreta-fuchsia: #FF007F;
+  --carreta-eggshell: #F0EAD6;
+  --carreta-cream: #FFF8E7;
+
+  --background: var(--carreta-cream);
+  --foreground: #1A1A2E;
+  --card-bg: #FFFFFF;
+  --card-border: #E8DCC8;
+}
+
+@theme inline {
+  --color-carreta-red: #CC2936;
+  --color-carreta-red-light: #E85D6A;
+  --color-carreta-orange: #FF7F00;
+  --color-carreta-orange-light: #FFA94D;
+  --color-carreta-gold: #FFD700;
+  --color-carreta-gold-light: #FFE44D;
+  --color-carreta-blue: #005ABB;
+  --color-carreta-blue-light: #3388DD;
+  --color-carreta-turquoise: #00CED1;
+  --color-carreta-turquoise-light: #40E0E3;
+  --color-carreta-fuchsia: #FF007F;
+  --color-carreta-fuchsia-light: #FF4D9E;
+  --color-carreta-eggshell: #F0EAD6;
+  --color-carreta-cream: #FFF8E7;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card-bg);
+  --color-card-border: var(--card-border);
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1A1A2E;
+    --foreground: #F0EAD6;
+    --card-bg: #22223A;
+    --card-border: #3A3A5C;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* ─── Folk-Art Pattern Utilities ────────────────────────────────
+   Decorative mandala/wheel patterns inspired by carreta wheels.
+*/
+.carreta-pattern-dots {
+  background-image: radial-gradient(var(--carreta-gold) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+}
+
+.carreta-pattern-waves {
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(0, 90, 187, 0.05) 10px,
+    rgba(0, 90, 187, 0.05) 12px
+  );
+}
+
+.carreta-border-pattern {
+  border-image: repeating-linear-gradient(
+    90deg,
+    var(--carreta-red),
+    var(--carreta-red) 8px,
+    var(--carreta-gold) 8px,
+    var(--carreta-gold) 16px,
+    var(--carreta-blue) 16px,
+    var(--carreta-blue) 24px
+  ) 1;
+  border-width: 0 0 4px 0;
+  border-style: solid;
+}
+
+/* Carreta-inspired decorative divider */
+.carreta-divider {
+  height: 8px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--carreta-red) 0px,
+    var(--carreta-red) 12px,
+    var(--carreta-gold) 12px,
+    var(--carreta-gold) 24px,
+    var(--carreta-blue) 24px,
+    var(--carreta-blue) 36px,
+    var(--carreta-turquoise) 36px,
+    var(--carreta-turquoise) 48px,
+    var(--carreta-orange) 48px,
+    var(--carreta-orange) 60px
+  );
+}
+
+/* Button with carreta folk-art style */
+.carreta-btn {
+  position: relative;
+  border: 2px solid var(--carreta-red);
+  background: linear-gradient(135deg, var(--carreta-red), var(--carreta-orange));
+  color: white;
+  font-weight: 600;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.carreta-btn::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  pointer-events: none;
+}
+
+.carreta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(204, 41, 54, 0.35);
+}
+
+/* Folk-art card border */
+.carreta-card {
+  border: 2px solid var(--card-border);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.carreta-card::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(204, 41, 54, 0.15);
+  pointer-events: none;
+}
+
+.carreta-card:hover {
+  border-color: var(--carreta-red);
+  box-shadow: 0 8px 30px rgba(204, 41, 54, 0.12);
+  transform: translateY(-4px);
+}
+
+/* Animated sparkle for decorative elements */
+@keyframes sparkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.animate-sparkle {
+  animation: sparkle 3s ease-in-out infinite;
+}
+
+/* Gradient text in carreta style */
+.carreta-gradient-text {
+  background: linear-gradient(135deg, var(--carreta-red), var(--carreta-orange), var(--carreta-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
