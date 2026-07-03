@@ -1,9 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { db } from "@/db";
 import { categories } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import CarretaWheel from "@/components/CarretaWheel";
 import { ProductForm } from "./product-form";
 import { getTranslations } from "@/i18n/getTranslations";

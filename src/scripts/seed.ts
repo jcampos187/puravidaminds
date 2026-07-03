@@ -78,8 +78,8 @@ async function seed() {
     try {
       await db.insert(categories).values(cat);
       console.log(`  ✅ Created: ${cat.name}`);
-    } catch (err: any) {
-      if (err?.code === "23505") {
+    } catch (err: unknown) {
+      if (err && typeof err === "object" && "code" in err && (err as Record<string, unknown>).code === "23505") {
         console.log(`  ⏭️  Skipped (already exists): ${cat.name}`);
       } else {
         console.error(`  ❌ Error creating ${cat.name}:`, err);

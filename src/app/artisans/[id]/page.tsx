@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import { db } from "@/db";
 import { users, artisanProfiles, products, productImages, categories } from "@/db/schema";
 import { eq, desc, sql } from "drizzle-orm";
+import Image from "next/image";
 import CarretaWheel from "@/components/CarretaWheel";
 import ProductCard from "@/components/ProductCard";
 import { getTranslations } from "@/i18n/getTranslations";
@@ -58,6 +58,7 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
       artisanName: users.name,
       artisanLocation: artisanProfiles.location,
       categoryName: categories.name,
+      categorySlug: categories.slug,
       images: sql<
     { url: string; altText: string | null }[]
   >`COALESCE(json_agg(json_build_object('url', ${productImages.url}, 'altText', ${productImages.altText}) ORDER BY ${productImages.displayOrder}) FILTER (WHERE ${productImages.id} IS NOT NULL), '[]'::json)`,
@@ -68,7 +69,7 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
     .leftJoin(users, eq(products.artisanId, users.id))
     .leftJoin(artisanProfiles, eq(users.id, artisanProfiles.userId))
     .where(eq(products.artisanId, id))
-    .groupBy(products.id, users.name, artisanProfiles.location, categories.name)
+    .groupBy(products.id, users.name, artisanProfiles.location, categories.name, categories.slug)
     .orderBy(desc(products.createdAt));
 
   const displayName =
@@ -79,10 +80,11 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
       {/* ─── Cover ──────────────────────────────────────── */}
       <div className="relative h-64 overflow-hidden bg-gradient-to-r from-carreta-red/20 via-carreta-gold/20 to-carreta-blue/20 sm:h-80">
         {artisan.profile?.coverImageUrl ? (
-          <img
+          <Image
             src={artisan.profile.coverImageUrl}
             alt=""
-            className="h-full w-full object-cover"
+            fill
+            className="object-cover"
           />
         ) : (
           <div className="flex h-full items-center justify-center opacity-10">
@@ -98,12 +100,13 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
         {/* ─── Profile Header ────────────────────────────── */}
         <div className="relative -mt-16 mb-10 flex flex-col items-start gap-6 sm:flex-row sm:items-end">
           {/* Avatar */}
-          <div className="h-32 w-32 overflow-hidden rounded-2xl border-4 border-white shadow-xl dark:border-[#1A1A2E]">
+          <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-2xl border-4 border-white shadow-xl dark:border-[#1A1A2E]">
             {artisan.avatarUrl ? (
-              <img
+              <Image
                 src={artisan.avatarUrl}
                 alt={displayName}
-                className="h-full w-full object-cover"
+                fill
+                className="object-cover"
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-carreta-red/10 to-carreta-gold/10 text-4xl">
@@ -151,7 +154,7 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
             ) : (
               <div className="mt-6 grid gap-8 sm:grid-cols-2">
                 {artisanProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} byLabel={t("products.by")} />
+                  <ProductCard key={product.id} product={product} byLabel={t("products.by")} categoryLabel={product.categorySlug ? t(`cat.${product.categorySlug}`) : undefined} />
                 ))}
               </div>
             )}
@@ -197,9 +200,7 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
                     </span>
                     {artisan.profile.phone}
                   </div>
-                )}
-
-                {artisan.profile?.whatsapp && (
+                )}                  {artisan.profile?.whatsapp && (
                   <a
                     href={`https://wa.me/${artisan.profile.whatsapp.replace(/[^0-9]/g, "")}`}
                     target="_blank"
@@ -209,7 +210,7 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
                     <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-green-600">
                       💬
                     </span>
-                    WhatsApp
+                    {t("artisan.whatsapp")}
                   </a>
                 )}
 
@@ -241,9 +242,7 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
                       ? artisan.profile.instagram
                       : `@${artisan.profile.instagram}`}
                   </a>
-                )}
-
-                {artisan.profile?.facebook && (
+                )}                  {artisan.profile?.facebook && (
                   <a
                     href={artisan.profile.facebook}
                     target="_blank"
@@ -253,7 +252,7 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
                     <span className="flex h-8 w-8 items-center justify-center rounded-full bg-carreta-blue/10">
                       👍
                     </span>
-                    Facebook
+                    {t("artisan.facebook")}
                   </a>
                 )}
               </div>

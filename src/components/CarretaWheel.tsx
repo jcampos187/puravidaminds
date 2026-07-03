@@ -41,7 +41,7 @@ export default function CarretaWheel({
       className={`${className}${animated ? " animate-spin-slow" : ""}`}
       width={size}
       height={size}
-      aria-label="Carreta wheel"
+      aria-label={className.includes('no-label') ? undefined : "Carreta wheel"}
       role="img"
     >
       <defs>

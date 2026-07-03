@@ -25,6 +25,7 @@ async function getFeaturedProducts() {
         artisanName: users.name,
         artisanLocation: artisanProfiles.location,
         categoryName: categories.name,
+        categorySlug: categories.slug,
         images: sql<
       { url: string; altText: string | null }[]
     >`COALESCE(json_agg(json_build_object('url', ${productImages.url}, 'altText', ${productImages.altText}) ORDER BY ${productImages.displayOrder}) FILTER (WHERE ${productImages.id} IS NOT NULL), '[]'::json)`,
@@ -50,7 +51,8 @@ async function getFeaturedProducts() {
         products.price,
         users.name,
         artisanProfiles.location,
-        categories.name
+        categories.name,
+        categories.slug
       )
       .orderBy(desc(products.createdAt))
       .limit(6);
@@ -183,13 +185,13 @@ export default async function Home() {
                 >
                   <span className="text-3xl">{icons[idx % icons.length]}</span>
                   <h3 className="mt-4 text-lg font-semibold text-[#1A1A2E] transition-colors group-hover:text-carreta-red dark:text-carreta-eggshell">
-                    {cat.name}
+                    {t(`cat.${cat.slug}`)}
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-[#1A1A2E]/70 dark:text-carreta-eggshell/70">
-                    {cat.description}
+                    {t(`cat-desc.${cat.slug}`)}
                   </p>
                   <div className="mt-4 flex items-center gap-1 text-sm font-medium text-carreta-red opacity-0 transition-all group-hover:opacity-100">
-                    {t("categories.browse")} {cat.name} →
+                    {t("categories.browse")} {t(`cat.${cat.slug}`)} →
                   </div>
                 </Link>
               );
@@ -221,7 +223,7 @@ export default async function Home() {
 
             <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {featuredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} byLabel={t("products.by")} />
+                <ProductCard key={product.id} product={product} byLabel={t("products.by")} categoryLabel={product.categorySlug ? t(`cat.${product.categorySlug}`) : undefined} />
               ))}
             </div>
 

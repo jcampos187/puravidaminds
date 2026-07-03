@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Product } from "@/db/schema";
 
 interface ProductCardProps {
@@ -7,11 +8,13 @@ interface ProductCardProps {
     artisanName?: string | null;
     artisanLocation?: string | null;
     categoryName?: string | null;
+    categorySlug?: string | null;
   };
   byLabel?: string;
+  categoryLabel?: string;
 }
 
-export default function ProductCard({ product, byLabel = "by" }: ProductCardProps) {
+export default function ProductCard({ product, byLabel = "by", categoryLabel }: ProductCardProps) {
   const primaryImage = product.images?.[0]?.url;
   const price =
     product.price && product.currency
@@ -25,10 +28,11 @@ export default function ProductCard({ product, byLabel = "by" }: ProductCardProp
       {/* Image */}
       <div className="relative aspect-[4/3] overflow-hidden rounded-t-xl bg-carreta-eggshell/50">
         {primaryImage ? (
-          <img
+          <Image
             src={primaryImage}
             alt={product.images?.[0]?.altText || product.title}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
           <div className="flex h-full items-center justify-center">
@@ -46,9 +50,9 @@ export default function ProductCard({ product, byLabel = "by" }: ProductCardProp
         )}
 
         {/* Category badge */}
-        {product.categoryName && (
+        {(categoryLabel || product.categoryName) && (
           <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-carreta-blue shadow-sm backdrop-blur-sm dark:bg-[#1A1A2E]/90 dark:text-carreta-turquoise">
-            {product.categoryName}
+            {categoryLabel || product.categoryName}
           </span>
         )}
       </div>

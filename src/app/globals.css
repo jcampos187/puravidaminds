@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* ─── Enable class-based dark mode for Tailwind v4 ────────────── */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ─── Carreta-Inspired Color Palette ────────────────────────────
    Traditional Sarchí oxcart colors — bold, vibrant folk-art palette
    Rooted in the UNESCO-recognized craft of Costa Rican carretas.
@@ -18,6 +21,13 @@
   --foreground: #1A1A2E;
   --card-bg: #FFFFFF;
   --card-border: #E8DCC8;
+}
+
+:root.dark {
+  --background: #1A1A2E;
+  --foreground: #F0EAD6;
+  --card-bg: #22223A;
+  --card-border: #3A3A5C;
 }
 
 @theme inline {
@@ -42,15 +52,6 @@
   --color-card-border: var(--card-border);
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #1A1A2E;
-    --foreground: #F0EAD6;
-    --card-bg: #22223A;
-    --card-border: #3A3A5C;
-  }
 }
 
 body {

@@ -2,6 +2,8 @@ import Link from "next/link";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import CarretaWheel from "./CarretaWheel";
 import LanguageToggle from "./LanguageToggle";
+import ThemeToggle from "./ThemeToggle";
+import MobileMenu from "./MobileMenu";
 import { getTranslations } from "@/i18n/getTranslations";
 
 export default async function Header() {
@@ -21,7 +23,7 @@ export default async function Header() {
           </span>
         </Link>
 
-        {/* Navigation */}
+        {/* Desktop Navigation */}
         <nav className="hidden items-center gap-6 md:flex">
           <Link
             href="/products"
@@ -37,10 +39,11 @@ export default async function Header() {
           </Link>
 
           <LanguageToggle />
+          <ThemeToggle />
         </nav>
 
-        {/* Auth */}
-        <div className="flex items-center gap-4">
+        {/* Desktop Auth */}
+        <div className="hidden items-center gap-4 md:flex">
           {userId ? (
             <div className="flex items-center gap-4">
               <Link
@@ -70,11 +73,12 @@ export default async function Header() {
             </div>
           )}
         </div>
-      </div>
 
-      {/* Language toggle for mobile */}
-      <div className="flex items-center justify-center border-t border-carreta-red/10 px-6 py-2 md:hidden">
-        <LanguageToggle />
+        {/* Mobile hamburger */}
+        <MobileMenu
+          isSignedIn={!!userId}
+          userName={user?.firstName || user?.emailAddresses[0]?.emailAddress}
+        />
       </div>
 
       {/* Decorative carreta border */}

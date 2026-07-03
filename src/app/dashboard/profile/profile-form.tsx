@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { UploadButton } from "@/lib/uploadthing";
 import CarretaWheel from "@/components/CarretaWheel";
 import { useTranslations } from "@/i18n/useTranslations";
 
 interface ProfileFormProps {
-  userId: string;
   initialData?: {
     businessName: string | null;
     bio: string | null;
@@ -22,7 +22,7 @@ interface ProfileFormProps {
   };
 }
 
-export function ProfileForm({ userId, initialData }: ProfileFormProps) {
+export function ProfileForm({ initialData }: ProfileFormProps) {
   const router = useRouter();
   const { t } = useTranslations();
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(
@@ -107,11 +107,12 @@ export function ProfileForm({ userId, initialData }: ProfileFormProps) {
           />
 
           {coverImageUrl && (
-            <div className="mt-4">
-              <img
+            <div className="relative mt-4 h-40">
+              <Image
                 src={coverImageUrl}
-                alt="Cover preview"
-                className="h-40 w-full rounded-lg object-cover"
+                alt={t("accessibility.coverPreview")}
+                fill
+                className="rounded-lg object-cover"
               />
             </div>
           )}

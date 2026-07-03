@@ -1,6 +1,5 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { db } from "@/db";
 import { users, artisanProfiles } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -47,7 +46,6 @@ export default async function ProfileSettingsPage() {
       </div>
 
       <ProfileForm
-        userId={localUser.id}
         initialData={
           profile
             ? {

@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { db } from "@/db";
 import { products, productImages, users, artisanProfiles, categories } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import CarretaWheel from "@/components/CarretaWheel";
+import ProductImageGallery from "@/components/ProductImageGallery";
 import { getTranslations } from "@/i18n/getTranslations";
 
 interface PageProps {
@@ -36,6 +37,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
       artisanBio: artisanProfiles.bio,
       artisanBusinessName: artisanProfiles.businessName,
       categoryName: categories.name,
+      categorySlug: categories.slug,
     })
     .from(products)
     .leftJoin(users, eq(products.artisanId, users.id))
@@ -73,49 +75,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <div className="grid gap-12 lg:grid-cols-2">
         {/* ─── Images ───────────────────────────────────── */}
 
-        <div>
-          <div className="relative overflow-hidden rounded-2xl border-2 border-carreta-red/20 bg-carreta-eggshell/50">
-            {images.length > 0 ? (
-              <img
-                src={images[0].url}
-                alt={images[0].altText || product.title}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <div className="flex aspect-square items-center justify-center">
-                <CarretaWheel size={120} variant="outline" className="opacity-30" />
-              </div>
-            )}
-          </div>
-
-          {/* Thumbnail gallery */}
-          {images.length > 1 && (
-            <div className="mt-4 flex gap-3 overflow-x-auto pb-2">
-              {images.map((img, i) => (
-                <button
-                  key={img.id}
-                  className={`shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
-                    i === 0
-                      ? "border-carreta-red"
-                      : "border-transparent opacity-70 hover:opacity-100"
-                  }`}
-                >
-                  <img
-                    src={img.url}
-                    alt={img.altText || `${product.title} image ${i + 1}`}
-                    className="h-20 w-20 object-cover"
-                  />
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        <ProductImageGallery images={images} productTitle={product.title} />
 
         {/* ─── Product Info ──────────────────────────────── */}
         <div>
           {product.categoryName && (
             <span className="inline-block rounded-full bg-carreta-blue/10 px-4 py-1.5 text-xs font-semibold text-carreta-blue">
-              {product.categoryName}
+              {product.categorySlug ? t(`cat.${product.categorySlug}`) : product.categoryName}
             </span>
           )}
 
@@ -145,7 +111,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
           <div className="mt-6">
             <h2 className="text-lg font-semibold text-[#1A1A2E] dark:text-carreta-eggshell">
-              Description
+              {t("product.description")}
             </h2>
             <p className="mt-3 leading-relaxed text-[#1A1A2E]/70 dark:text-carreta-eggshell/70 whitespace-pre-line">
               {product.description || t("product.noDescription")}
@@ -156,12 +122,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
           <div className="mt-8 rounded-xl border-2 border-carreta-gold/20 bg-gradient-to-br from-carreta-gold/5 to-carreta-orange/5 p-6">
             <div className="flex items-start gap-4">
               <div className="shrink-0">
-                <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-carreta-gold/20">
+                <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-carreta-gold/20">
                   {product.artisanAvatar ? (
-                    <img
+                    <Image
                       src={product.artisanAvatar}
                       alt={product.artisanName || "Artisan"}
-                      className="h-full w-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   ) : (
                     <span className="text-xl">🎨</span>
@@ -203,7 +170,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 rounded-full border-2 border-green-500/30 px-4 py-2 text-xs font-medium text-green-600 transition-all hover:border-green-500 hover:bg-green-500/5"
                     >
-                      💬 WhatsApp
+                      💬 {t("product.whatsapp")}
                     </a>
                   )}
                   {product.artisanInstagram && (
@@ -213,7 +180,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 rounded-full border-2 border-carreta-fuchsia/30 px-4 py-2 text-xs font-medium text-carreta-fuchsia transition-all hover:border-carreta-fuchsia hover:bg-carreta-fuchsia/5"
                     >
-                      📸 Instagram
+                      📸 {t("product.instagram")}
                     </a>
                   )}
                 </div>

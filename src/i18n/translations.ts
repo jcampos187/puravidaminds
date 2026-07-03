@@ -196,6 +196,14 @@ export const translations: Translations = {
     en: "Artesanías",
     es: "Artesanías",
   },
+  "artisan.whatsapp": {
+    en: "WhatsApp",
+    es: "WhatsApp",
+  },
+  "artisan.facebook": {
+    en: "Facebook",
+    es: "Facebook",
+  },
 
   // ─── Products Listing ──────────────────────────────────────
   "products.title": {
@@ -230,6 +238,10 @@ export const translations: Translations = {
     en: "by",
     es: "por",
   },
+  "products.noResults": {
+    en: (q: string) => `No results for "${q}". Try a different search term.`,
+    es: (q: string) => `Sin resultados para "${q}". Intenta con otro término de búsqueda.`,
+  },
 
   // ─── Product Detail ────────────────────────────────────────
   "product.contact.title": {
@@ -247,6 +259,30 @@ export const translations: Translations = {
   "product.noDescription": {
     en: "No description provided.",
     es: "No se proporcionó descripción.",
+  },
+  "product.description": {
+    en: "Description",
+    es: "Descripción",
+  },
+  "product.whatsapp": {
+    en: "WhatsApp",
+    es: "WhatsApp",
+  },
+  "product.instagram": {
+    en: "Instagram",
+    es: "Instagram",
+  },
+  "product.status.active": {
+    en: "Active",
+    es: "Activo",
+  },
+  "product.status.inactive": {
+    en: "Inactive",
+    es: "Inactivo",
+  },
+  "product.status.sold": {
+    en: "Sold",
+    es: "Vendido",
   },
 
   // ─── Dashboard ─────────────────────────────────────────────
@@ -677,5 +713,47 @@ export const translations: Translations = {
   "artisanCard.artesania": {
     en: (n: string) => `${n} ${n === "1" ? "artesanía" : "artesanías"}`,
     es: (n: string) => `${n} ${n === "1" ? "artesanía" : "artesanías"}`,
+  },
+  "artisanCard.fallbackName": {
+    en: "Artisan",
+    es: "Artesano",
+  },
+
+  // ─── Accessibility ──────────────────────────────────────────
+  "accessibility.carretaWheel": {
+    en: "Carreta wheel",
+    es: "Rueda de carreta",
+  },
+  "accessibility.coverPreview": {
+    en: "Cover preview",
+    es: "Vista previa de portada",
+  },
+
+  // ─── Mobile Menu ────────────────────────────────────────────
+  "mobileMenu.open": {
+    en: "Open menu",
+    es: "Abrir menú",
+  },
+  "mobileMenu.close": {
+    en: "Close menu",
+    es: "Cerrar menú",
+  },
+
+  // ─── Theme ──────────────────────────────────────────────────
+  "theme.light": {
+    en: "Light Mode",
+    es: "Modo Claro",
+  },
+  "theme.dark": {
+    en: "Dark Mode",
+    es: "Modo Oscuro",
+  },
+  "theme.switchToDark": {
+    en: "Switch to dark mode",
+    es: "Cambiar a modo oscuro",
+  },
+  "theme.switchToLight": {
+    en: "Switch to light mode",
+    es: "Cambiar a modo claro",
   },
 };

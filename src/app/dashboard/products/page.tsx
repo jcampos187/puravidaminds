@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { db } from "@/db";
 import { users, products, productImages, categories } from "@/db/schema";
 import { eq, desc, sql } from "drizzle-orm";
@@ -29,6 +30,7 @@ export default async function MyProductsPage() {
       status: products.status,
       createdAt: products.createdAt,
       categoryName: categories.name,
+      categorySlug: categories.slug,
       imageUrl: sql<string | null>`(
         SELECT ${productImages.url} FROM ${productImages}
         WHERE ${productImages.productId} = ${products.id}
@@ -118,12 +120,13 @@ export default async function MyProductsPage() {
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-4">
-                        <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-carreta-eggshell/50">
+                        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-carreta-eggshell/50">
                           {product.imageUrl ? (
-                            <img
+                            <Image
                               src={product.imageUrl}
                               alt={product.title}
-                              className="h-full w-full object-cover"
+                              fill
+                              className="object-cover"
                             />
                           ) : (
                             <div className="flex h-full w-full items-center justify-center text-carreta-gold">
@@ -137,7 +140,7 @@ export default async function MyProductsPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-[#1A1A2E]/60 dark:text-carreta-eggshell/60">
-                      {product.categoryName || "—"}
+                      {product.categorySlug ? t(`cat.${product.categorySlug}`) : product.categoryName || "—"}
                     </td>
                     <td className="px-6 py-4 text-sm font-medium text-carreta-red">
                       {price}
@@ -152,7 +155,7 @@ export default async function MyProductsPage() {
                               : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
                         }`}
                       >
-                        {product.status}
+                        {t(`product.status.${product.status}`)}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">

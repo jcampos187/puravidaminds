@@ -76,7 +76,7 @@ export default async function ArtisansPage() {
           ) : (
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {artisans.map((artisan) => (
-                <ArtisanCard key={artisan.id} artisan={artisan} itemsLabel={t("artisanCard.artesania", String(artisan.productCount))} />
+                <ArtisanCard key={artisan.id} artisan={artisan} itemsLabel={t("artisanCard.artesania", String(artisan.productCount))} fallbackName={t("artisanCard.fallbackName")} />
               ))}
             </div>
           )}

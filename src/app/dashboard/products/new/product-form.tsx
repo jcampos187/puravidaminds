@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { UploadButton } from "@/lib/uploadthing";
 import CarretaWheel from "@/components/CarretaWheel";
 import { useTranslations } from "@/i18n/useTranslations";
@@ -179,7 +180,7 @@ export function ProductForm({ categories, initialData, isEditing }: ProductFormP
           <option value="">{t("productForm.category.placeholder")}</option>
           {categories.map((cat) => (
             <option key={cat.id} value={cat.id}>
-              {cat.name}
+              {t(`cat.${cat.slug}`)}
             </option>
           ))}
         </select>
@@ -252,11 +253,12 @@ export function ProductForm({ categories, initialData, isEditing }: ProductFormP
           {imageUrls.length > 0 && (
             <div className="mt-4 grid grid-cols-3 gap-3">
               {imageUrls.map((img, i) => (
-                <div key={img.url} className="relative">
-                  <img
+                <div key={img.url} className="relative aspect-square">
+                  <Image
                     src={img.url}
                     alt={`Product image ${i + 1}`}
-                    className="aspect-square w-full rounded-lg object-cover"
+                    fill
+                    className="rounded-lg object-cover"
                   />
                   <button
                     type="button"

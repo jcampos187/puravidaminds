@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { ClerkProvider } from "@clerk/nextjs";
 import { LanguageProvider } from "@/i18n/LanguageProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "./globals.css";
@@ -28,16 +30,41 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <LanguageProvider>
-        <html
-          lang="en"
-          className="h-full antialiased"
-        >
-          <body className="flex min-h-full flex-col bg-carreta-cream font-sans text-[#1A1A2E] dark:bg-[#1A1A2E] dark:text-carreta-eggshell">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </body>
-        </html>
+        <ThemeProvider>
+          <html
+            lang="en"
+            className="h-full antialiased"
+            suppressHydrationWarning
+          >
+            <head>
+              {/* Prevent flash of wrong theme — applies stored/system preference before any rendering */}
+              <Script
+                id="theme-init"
+                strategy="beforeInteractive"
+                dangerouslySetInnerHTML={{
+                  __html: `
+                    (function() {
+                      try {
+                        var theme = localStorage.getItem('theme');
+                        if (!theme) {
+                          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                        }
+                        if (theme === 'dark') {
+                          document.documentElement.classList.add('dark');
+                        }
+                      } catch(e) {}
+                    })();
+                  `,
+                }}
+              />
+            </head>
+            <body className="flex min-h-full flex-col bg-carreta-cream font-sans text-[#1A1A2E] dark:bg-[#1A1A2E] dark:text-carreta-eggshell">
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </body>
+          </html>
+        </ThemeProvider>
       </LanguageProvider>
     </ClerkProvider>
   );

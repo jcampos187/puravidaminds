@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { User, ArtisanProfile } from "@/db/schema";
+import Image from "next/image";
 import CarretaWheel from "./CarretaWheel";
 
 interface ArtisanCardProps {
@@ -16,9 +16,10 @@ interface ArtisanCardProps {
     productCount?: number;
   };
   itemsLabel?: string;
+  fallbackName?: string;
 }
 
-export default function ArtisanCard({ artisan, itemsLabel }: ArtisanCardProps) {
+export default function ArtisanCard({ artisan, itemsLabel, fallbackName = "Artisan" }: ArtisanCardProps) {
   return (
     <Link
       href={`/artisans/${artisan.id}`}
@@ -27,10 +28,11 @@ export default function ArtisanCard({ artisan, itemsLabel }: ArtisanCardProps) {
       {/* Cover area */}
       <div className="relative h-32 overflow-hidden rounded-t-xl bg-gradient-to-br from-carreta-red/10 via-carreta-gold/10 to-carreta-blue/10">
         {artisan.profile?.coverImageUrl ? (
-          <img
+          <Image
             src={artisan.profile.coverImageUrl}
             alt=""
-            className="h-full w-full object-cover"
+            fill
+            className="object-cover"
           />
         ) : (
           <div className="flex h-full items-center justify-center opacity-20">
@@ -40,12 +42,13 @@ export default function ArtisanCard({ artisan, itemsLabel }: ArtisanCardProps) {
 
         {/* Avatar */}
         <div className="absolute -bottom-10 left-5">
-          <div className="h-20 w-20 overflow-hidden rounded-full border-4 border-white shadow-lg dark:border-[#1A1A2E]">
+          <div className="relative h-20 w-20 overflow-hidden rounded-full border-4 border-white shadow-lg dark:border-[#1A1A2E]">
             {artisan.avatarUrl ? (
-              <img
+              <Image
                 src={artisan.avatarUrl}
-                alt={artisan.name || "Artisan"}
-                className="h-full w-full object-cover"
+                alt={artisan.name || fallbackName}
+                fill
+                className="object-cover"
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center bg-carreta-gold/20 text-2xl">
@@ -59,7 +62,7 @@ export default function ArtisanCard({ artisan, itemsLabel }: ArtisanCardProps) {
       {/* Content */}
       <div className="p-5 pt-12">
         <h3 className="font-semibold text-[#1A1A2E] transition-colors group-hover:text-carreta-red dark:text-carreta-eggshell dark:group-hover:text-carreta-gold">
-          {artisan.profile?.businessName || artisan.name || "Artisan"}
+          {artisan.profile?.businessName || artisan.name || fallbackName}
         </h3>
 
         {artisan.profile?.location && (

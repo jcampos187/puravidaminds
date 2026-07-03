@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import Link from "next/link";
 import { db } from "@/db";
 import { products, categories, productImages, users, artisanProfiles } from "@/db/schema";
@@ -57,6 +56,7 @@ async function getProducts(searchParams: Awaited<PageProps["searchParams"]>) {
       artisanName: users.name,
       artisanLocation: artisanProfiles.location,
       categoryName: categories.name,
+      categorySlug: categories.slug,
       images: sql<
     { url: string; altText: string | null }[]
   >`COALESCE(json_agg(json_build_object('url', ${productImages.url}, 'altText', ${productImages.altText}) ORDER BY ${productImages.displayOrder}) FILTER (WHERE ${productImages.id} IS NOT NULL), '[]'::json)`,
@@ -67,7 +67,7 @@ async function getProducts(searchParams: Awaited<PageProps["searchParams"]>) {
     .leftJoin(categories, eq(products.categoryId, categories.id))
     .leftJoin(productImages, eq(products.id, productImages.productId))
     .where(and(...conditions))
-    .groupBy(products.id, products.artisanId, products.categoryId, products.status, products.tags, products.createdAt, products.updatedAt, users.name, artisanProfiles.location, categories.name)
+    .groupBy(products.id, products.artisanId, products.categoryId, products.status, products.tags, products.createdAt, products.updatedAt, users.name, artisanProfiles.location, categories.name, categories.slug)
     .orderBy(desc(products.createdAt));
 
   return result;
@@ -143,8 +143,8 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                   ? "border-carreta-red bg-carreta-red/10 text-carreta-red"
                   : "border-[#1A1A2E]/20 text-[#1A1A2E]/60 hover:border-carreta-red/50 hover:text-carreta-red dark:border-carreta-eggshell/20 dark:text-carreta-eggshell/60"
               }`}
-            >
-              {cat.name}
+>
+              {t(`cat.${cat.slug}`)}
             </Link>
           ))}
         </div>
@@ -159,7 +159,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
           </h3>
           <p className="mt-2 text-sm text-[#1A1A2E]/60 dark:text-carreta-eggshell/60">
             {params.q
-              ? `No results for "${params.q}". Try a different search term.`
+              ? t("products.noResults", params.q)
               : t("products.emptySub")}
           </p>
           <Link
@@ -172,7 +172,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
       ) : (
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {allProducts.map((product) => (
-            <ProductCard key={product.id} product={product} byLabel={t("products.by")} />
+            <ProductCard key={product.id} product={product} byLabel={t("products.by")} categoryLabel={product.categorySlug ? t(`cat.${product.categorySlug}`) : undefined} />
           ))}
         </div>
       )}
