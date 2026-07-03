@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Script from "next/script";
+import { cookies } from "next/headers";
 import { ClerkProvider } from "@clerk/nextjs";
 import { LanguageProvider } from "@/i18n/LanguageProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -22,30 +22,26 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Read theme cookie so the correct class is rendered server-side — no flash, no inline script needed
+  const cookieStore = await cookies();
+  const themeCookie = cookieStore.get("theme");
+  const initialTheme = themeCookie?.value === "dark" ? "dark" : "light";
+
   return (
     <ClerkProvider>
       <LanguageProvider>
-        <ThemeProvider>
+        <ThemeProvider initialServerTheme={initialTheme}>
           <html
             lang="en"
-            className="h-full antialiased"
+            className={`h-full antialiased${initialTheme === "dark" ? " dark" : ""}`}
             suppressHydrationWarning
           >
-            <head>
-              {/* Prevent flash of wrong theme — applies stored/system preference before any rendering */}
-              <Script
-                id="theme-init"
-                strategy="beforeInteractive"
-                dangerouslySetInnerHTML={{
-                  __html: `(function(){try{var t=localStorage.getItem("theme");if(t&&t==="dark")document.documentElement.classList.add("dark");else{var m=window.matchMedia("(prefers-color-scheme:dark)");if(m.matches)document.documentElement.classList.add("dark")}}catch(e){}})()`,
-                }}
-              />
-            </head>
+            <head />
             <body className="flex min-h-full flex-col bg-carreta-cream font-sans text-[#1A1A2E] dark:bg-[#1A1A2E] dark:text-carreta-eggshell">
               <Header />
               <main className="flex-1">{children}</main>
