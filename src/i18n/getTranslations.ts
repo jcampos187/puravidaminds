@@ -7,7 +7,7 @@ export async function getTranslations() {
 
   function t(key: TranslationKey | (string & {}), ...args: string[]): string {
     const entry = (translations as Record<string, Record<string, TranslationValue>>)[key];
-    if (!entry) return key;
+    if (!entry) return key as string;
     const value = entry[locale] ?? entry.en;
     if (typeof value === "function") return (value as (...a: string[]) => string)(...args);
     return value as string;
