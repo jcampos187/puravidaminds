@@ -128,6 +128,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                       src={product.artisanAvatar}
                       alt={product.artisanName || "Artisan"}
                       fill
+                      sizes="56px"
                       className="object-cover"
                     />
                   ) : (

@@ -59,6 +59,7 @@ export default function ProductImageGallery({
           src={images[selectedIndex].url}
           alt={images[selectedIndex].altText || `${productTitle} image ${selectedIndex + 1}`}
           fill
+          sizes="(max-width: 1024px) 100vw, 50vw"
           className="object-cover transition-opacity duration-300"
         />
 
@@ -104,6 +105,7 @@ export default function ProductImageGallery({
                 src={img.url}
                 alt={img.altText || `${productTitle} thumbnail ${i + 1}`}
                 fill
+                sizes="80px"
                 className="object-cover"
               />
             </button>

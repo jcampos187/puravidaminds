@@ -258,6 +258,7 @@ export function ProductForm({ categories, initialData, isEditing }: ProductFormP
                     src={img.url}
                     alt={`Product image ${i + 1}`}
                     fill
+                    sizes="(max-width: 768px) 50vw, 25vw"
                     className="rounded-lg object-cover"
                   />
                   <button

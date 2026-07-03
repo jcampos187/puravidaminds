@@ -42,19 +42,7 @@ export default function RootLayout({
                 id="theme-init"
                 strategy="beforeInteractive"
                 dangerouslySetInnerHTML={{
-                  __html: `
-                    (function() {
-                      try {
-                        var theme = localStorage.getItem('theme');
-                        if (!theme) {
-                          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                        }
-                        if (theme === 'dark') {
-                          document.documentElement.classList.add('dark');
-                        }
-                      } catch(e) {}
-                    })();
-                  `,
+                  __html: `(function(){try{var t=localStorage.getItem("theme");if(t&&t==="dark")document.documentElement.classList.add("dark");else{var m=window.matchMedia("(prefers-color-scheme:dark)");if(m.matches)document.documentElement.classList.add("dark")}}catch(e){}})()`,
                 }}
               />
             </head>

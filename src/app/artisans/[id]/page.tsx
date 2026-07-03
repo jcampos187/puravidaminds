@@ -84,6 +84,7 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
             src={artisan.profile.coverImageUrl}
             alt=""
             fill
+            sizes="100vw"
             className="object-cover"
           />
         ) : (
@@ -106,6 +107,7 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
                 src={artisan.avatarUrl}
                 alt={displayName}
                 fill
+                sizes="128px"
                 className="object-cover"
               />
             ) : (

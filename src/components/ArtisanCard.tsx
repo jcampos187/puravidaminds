@@ -27,11 +27,11 @@ export default function ArtisanCard({ artisan, itemsLabel, fallbackName = "Artis
     >
       {/* Cover area */}
       <div className="relative h-32 overflow-hidden rounded-t-xl bg-gradient-to-br from-carreta-red/10 via-carreta-gold/10 to-carreta-blue/10">
-        {artisan.profile?.coverImageUrl ? (
-          <Image
+        {artisan.profile?.coverImageUrl ? (            <Image
             src={artisan.profile.coverImageUrl}
             alt=""
             fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover"
           />
         ) : (
@@ -48,6 +48,7 @@ export default function ArtisanCard({ artisan, itemsLabel, fallbackName = "Artis
                 src={artisan.avatarUrl}
                 alt={artisan.name || fallbackName}
                 fill
+                sizes="80px"
                 className="object-cover"
               />
             ) : (

@@ -112,6 +112,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
                 src={coverImageUrl}
                 alt={t("accessibility.coverPreview")}
                 fill
+                sizes="100vw"
                 className="rounded-lg object-cover"
               />
             </div>
