@@ -1,10 +1,10 @@
 export type Locale = "en" | "es";
 
-type TranslationValue = string | ((...args: string[]) => string);
+export type TranslationValue = string | ((...args: string[]) => string);
 
 type Translations = Record<string, Record<string, TranslationValue>>;
 
-export const translations: Translations = {
+export const translations = {
   // ─── Common ────────────────────────────────────────────────
   "site.name": {
     en: "Pura Vida Artesanías",
@@ -756,4 +756,6 @@ export const translations: Translations = {
     en: "Switch to light mode",
     es: "Cambiar a modo claro",
   },
-};
+} satisfies Translations;
+
+export type TranslationKey = keyof typeof translations;
