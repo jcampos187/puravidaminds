@@ -74,6 +74,10 @@ const dashboard: Record<string, Record<Locale, TranslationValue>> = {
     en: "Set up your artisan profile to start selling on Pura Vida Artesanías.",
     es: "Configura tu perfil de artesano para empezar a vender en Pura Vida Artesanías.",
   },
+  "dashboard.profile.setup": {
+    en: "Fill in your details below — it only takes a minute!",
+    es: "Completa tus datos a continuación — ¡solo te tomará un minuto!",
+  },
   "dashboard.stats.reviews": {
     en: "Reviews",
     es: "Reseñas",

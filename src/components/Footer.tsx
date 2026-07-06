@@ -25,9 +25,14 @@ export default async function Footer() {
           <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" className="flex items-center gap-3">
               <CarretaWheel size={32} variant="outline" />
-              <span className="text-lg font-bold tracking-tight">
-                <span className="carreta-gradient-text">Pura Vida</span>{" "}
-                <span className="text-carreta-turquoise">Artesanías</span>
+              <span className="flex flex-col">
+                <span className="text-lg font-bold leading-tight tracking-tight">
+                  <span className="carreta-gradient-text">Pura Vida</span>{" "}
+                  <span>Minds</span>
+                </span>
+                <span className="text-[11px] font-medium leading-tight tracking-wider text-carreta-turquoise">
+                  ARTESANÍAS
+                </span>
               </span>
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-carreta-eggshell/70">
@@ -55,6 +60,22 @@ export default async function Footer() {
                   className="text-sm text-carreta-eggshell/70 transition-colors hover:text-carreta-gold"
                 >
                   {t("footer.meetArtisans")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/terms"
+                  className="text-sm text-carreta-eggshell/70 transition-colors hover:text-carreta-gold"
+                >
+                  {t("footer.terms")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/privacy"
+                  className="text-sm text-carreta-eggshell/70 transition-colors hover:text-carreta-gold"
+                >
+                  {t("footer.privacy")}
                 </Link>
               </li>
             </ul>

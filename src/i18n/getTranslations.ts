@@ -3,7 +3,7 @@ import { translations, type Locale, type TranslationKey, type TranslationValue }
 
 export async function getTranslations() {
   const cookieStore = await cookies();
-  const locale = (cookieStore.get("puravida-locale")?.value as Locale) || "en";
+  const locale = (cookieStore.get("puravida-locale")?.value as Locale) || "es";
 
   function t(key: TranslationKey | (string & {}), ...args: string[]): string {
     const entry = (translations as Record<string, Record<string, TranslationValue>>)[key];

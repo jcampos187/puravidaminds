@@ -33,7 +33,7 @@ export default function ProductCard({ product, byLabel = "by", categoryLabel }: 
             alt={product.images?.[0]?.altText || product.title}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-110"
+            className="object-contain p-3 transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
           <div className="flex h-full items-center justify-center">

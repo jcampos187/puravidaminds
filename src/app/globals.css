@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 /* ─── Enable class-based dark mode for Tailwind v4 ────────────── */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -163,6 +164,25 @@ body {
 
 .animate-sparkle {
   animation: sparkle 3s ease-in-out infinite;
+}
+
+/* ─── Mobile Menu Animations ──────────────────────────────── */
+@keyframes menu-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes menu-slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: menu-fade-in 200ms ease-out;
+}
+
+.animate-slide-up {
+  animation: menu-slide-up 300ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Gradient text in carreta style */

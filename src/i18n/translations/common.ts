@@ -88,6 +88,14 @@ const common: Record<string, Record<Locale, TranslationValue>> = {
     en: "Hecho en Costa Rica",
     es: "Hecho en Costa Rica",
   },
+  "footer.terms": {
+    en: "Terms & Conditions",
+    es: "Términos y Condiciones",
+  },
+  "footer.privacy": {
+    en: "Privacy Policy",
+    es: "Política de Privacidad",
+  },
 
   // ─── Accessibility ──────────────────────────────────────────
   "accessibility.carretaWheel": {

@@ -10,18 +10,40 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const [localUser] = await db
+  // Parse body first so we can access email/name for user creation
+  let signUpEmail = "";
+  let signUpName: string | null = null;
+  let body: Record<string, unknown>;
+
+  try {
+    body = await request.json();
+    signUpEmail = (body.email as string) || "";
+    signUpName = (body.name as string) || null;
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
+
+  let [localUser] = await db
     .select()
     .from(users)
     .where(eq(users.clerkId, clerkId))
     .limit(1);
 
+  // Auto-create local user for new sign-ups (e.g. from custom sign-up form)
   if (!localUser) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
+    const [created] = await db
+      .insert(users)
+      .values({
+        clerkId,
+        email: signUpEmail,
+        name: signUpName,
+        role: "artisan",
+      })
+      .returning();
+    localUser = created;
   }
 
   try {
-    const body = await request.json();
     const {
       businessName,
       bio,
@@ -45,30 +67,30 @@ export async function PUT(request: Request) {
       await db
         .update(artisanProfiles)
         .set({
-          businessName: businessName || null,
-          bio: bio || null,
-          location: location || null,
-          phone: phone || null,
-          whatsapp: whatsapp || null,
-          website: website || null,
-          instagram: instagram || null,
-          facebook: facebook || null,
-          coverImageUrl: coverImageUrl || null,
+          businessName: (businessName as string) || null,
+          bio: (bio as string) || null,
+          location: (location as string) || null,
+          phone: (phone as string) || null,
+          whatsapp: (whatsapp as string) || null,
+          website: (website as string) || null,
+          instagram: (instagram as string) || null,
+          facebook: (facebook as string) || null,
+          coverImageUrl: (coverImageUrl as string) || null,
           updatedAt: new Date(),
         })
         .where(eq(artisanProfiles.userId, localUser.id));
     } else {
       await db.insert(artisanProfiles).values({
         userId: localUser.id,
-        businessName: businessName || null,
-        bio: bio || null,
-        location: location || null,
-        phone: phone || null,
-        whatsapp: whatsapp || null,
-        website: website || null,
-        instagram: instagram || null,
-        facebook: facebook || null,
-        coverImageUrl: coverImageUrl || null,
+        businessName: (businessName as string) || null,
+        bio: (bio as string) || null,
+        location: (location as string) || null,
+        phone: (phone as string) || null,
+        whatsapp: (whatsapp as string) || null,
+        website: (website as string) || null,
+        instagram: (instagram as string) || null,
+        facebook: (facebook as string) || null,
+        coverImageUrl: (coverImageUrl as string) || null,
       });
     }
 

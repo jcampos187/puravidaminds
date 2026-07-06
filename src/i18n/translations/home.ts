@@ -65,8 +65,8 @@ const home: Record<string, Record<Locale, TranslationValue>> = {
     es: "Por más de un siglo, las carretas pintadas de Sarchí han sido símbolos rodantes de la identidad costarricense — reconocidas por la UNESCO como Patrimonio Cultural Inmaterial. Cada carreta, con sus ruedas de mandala caleidoscópicas y patrones geométricos pintados a mano, cuenta una historia de familia, tradición y orgullo comunitario.",
   },
   "story.paragraph2": {
-    en: "Today, that same spirit lives on in every artesanía created by our community of master craftspeople. When you bring home a piece from Pura Vida Artesanías, you're not just buying a product — you're becoming part of a story that's been unfolding for generations.",
-    es: "Hoy, ese mismo espíritu vive en cada artesanía creada por nuestra comunidad de maestros artesanos. Cuando llevas a casa una pieza de Pura Vida Artesanías, no solo estás comprando un producto — te estás convirtiendo en parte de una historia que se ha ido desarrollando por generaciones.",
+    en: "Today, that same spirit lives on in every artesanía created by our community of master craftspeople. When you bring home a piece from our artisans, you're not just buying a product — you're becoming part of a story that's been unfolding for generations.",
+    es: "Hoy, ese mismo espíritu vive en cada artesanía creada por nuestra comunidad de maestros artesanos. Cuando llevas a casa una pieza de nuestros artesanos, no solo estás comprando un producto — te estás convirtiendo en parte de una historia que se ha ido desarrollando por generaciones.",
   },
   "story.tagline": {
     en: "The pure life, shared through craft.",
@@ -115,6 +115,24 @@ const home: Record<string, Record<Locale, TranslationValue>> = {
   "cat-desc.coffee-cacao": {
     en: "Premium Costa Rican coffee and chocolate",
     es: "Café y chocolate costarricense premium",
+  },
+  "cat-desc.home-decor": {
+    en: "Handcrafted furniture and decorative items for your home",
+    es: "Muebles artesanales y artículos decorativos para tu hogar",
+  },
+  "cat-desc.leatherwork": {
+    en: "Hand-tooled leather goods crafted by master artisans",
+    es: "Artículos de cuero hechos a mano por maestros artesanos",
+  },
+
+  // ─── Category Names ───────────────────────────────────────
+  "cat.home-decor": {
+    en: "Home Decor",
+    es: "Decoración para el Hogar",
+  },
+  "cat.leatherwork": {
+    en: "Leatherwork",
+    es: "Marroquinería",
   },
 };
 

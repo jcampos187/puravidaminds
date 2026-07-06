@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { db } from "@/db";
 import { users, artisanProfiles, products, productImages, categories } from "@/db/schema";
@@ -7,19 +8,62 @@ import CarretaWheel from "@/components/CarretaWheel";
 import ProductCard from "@/components/ProductCard";
 import { getTranslations } from "@/i18n/getTranslations";
 
+/** Simple UUID v4 regex — matches 8-4-4-4-12 hex format */
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await getTranslations();
+  const { id } = await params;
+
+  if (!UUID_RE.test(id)) return { title: "Artisan Not Found" };
+
+  const [artisan] = await db
+    .select({
+      name: users.name,
+      businessName: artisanProfiles.businessName,
+      location: artisanProfiles.location,
+    })
+    .from(users)
+    .leftJoin(artisanProfiles, eq(users.id, artisanProfiles.userId))
+    .where(eq(users.id, id))
+    .limit(1);
+
+  if (!artisan) return { title: "Artisan Not Found" };
+
+  const displayName = artisan.businessName || artisan.name || "Artisan";
+  const locationEn = artisan.location ? ` from ${artisan.location}` : "";
+  const locationEs = artisan.location ? ` de ${artisan.location}` : "";
+
+  if (locale === "es") {
+    return {
+      title: `${displayName} | Artesano de Pura Vida Artesanías`,
+      description:
+        `Conoce a ${displayName}, artesano${locationEs} de Costa Rica. Descubre sus productos hechos a mano y su historia.`,
+    };
+  }
+
+  return {
+    title: `${displayName} | Artisan at Pura Vida Artesanías`,
+    description:
+      `Meet ${displayName}, an artisan${locationEn} in Costa Rica. Discover their handcrafted products and story.`,
+  };
 }
 
 export default async function ArtisanProfilePage({ params }: PageProps) {
   const { t } = await getTranslations();
   const { id } = await params;
 
+  // Reject non-UUID values immediately so we never hit the DB with garbage
+  if (!UUID_RE.test(id)) notFound();
+
   const [artisan] = await db
     .select({
       id: users.id,
       name: users.name,
-      email: users.email,
       avatarUrl: users.avatarUrl,
       profile: {
         businessName: artisanProfiles.businessName,
@@ -183,18 +227,6 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
               <div className="mt-6 carreta-divider" />
 
               <div className="mt-6 space-y-4">
-                {artisan.email && (
-                  <a
-                    href={`mailto:${artisan.email}`}
-                    className="flex items-center gap-3 text-sm text-[#1A1A2E]/70 transition-colors hover:text-carreta-red dark:text-carreta-eggshell/70 dark:hover:text-carreta-gold"
-                  >
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-carreta-blue/10 text-carreta-blue">
-                      ✉
-                    </span>
-                    {artisan.email}
-                  </a>
-                )}
-
                 {artisan.profile?.phone && (
                   <div className="flex items-center gap-3 text-sm text-[#1A1A2E]/70 dark:text-carreta-eggshell/70">
                     <span className="flex h-8 w-8 items-center justify-center rounded-full bg-carreta-orange/10 text-carreta-orange">

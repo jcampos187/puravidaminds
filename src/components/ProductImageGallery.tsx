@@ -60,7 +60,7 @@ export default function ProductImageGallery({
           alt={images[selectedIndex].altText || `${productTitle} image ${selectedIndex + 1}`}
           fill
           sizes="(max-width: 1024px) 100vw, 50vw"
-          className="object-cover transition-opacity duration-300"
+          className="object-contain p-4 transition-opacity duration-300"
         />
 
         {/* Left/Right nav arrows */}
@@ -106,7 +106,7 @@ export default function ProductImageGallery({
                 alt={img.altText || `${productTitle} thumbnail ${i + 1}`}
                 fill
                 sizes="80px"
-                className="object-cover"
+                className="object-contain p-1"
               />
             </button>
           ))}

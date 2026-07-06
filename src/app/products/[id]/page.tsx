@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -7,13 +8,54 @@ import { eq } from "drizzle-orm";
 import ProductImageGallery from "@/components/ProductImageGallery";
 import { getTranslations } from "@/i18n/getTranslations";
 
+/** Simple UUID v4 regex — matches 8-4-4-4-12 hex format */
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await getTranslations();
+  const { id } = await params;
+
+  if (!UUID_RE.test(id)) return { title: "Product Not Found" };
+
+  const [product] = await db
+    .select({
+      title: products.title,
+      artisanBusinessName: artisanProfiles.businessName,
+      artisanName: users.name,
+    })
+    .from(products)
+    .leftJoin(users, eq(products.artisanId, users.id))
+    .leftJoin(artisanProfiles, eq(users.id, artisanProfiles.userId))
+    .where(eq(products.id, id))
+    .limit(1);
+
+  if (!product) return { title: "Product Not Found" };
+
+  const artisanName = product.artisanBusinessName || product.artisanName || "Artisan";
+
+  if (locale === "es") {
+    return {
+      title: `${product.title} | Pura Vida Artesanías`,
+      description: `Artesanía de ${artisanName}. Descubre este producto hecho a mano en Costa Rica.`,
+    };
+  }
+
+  return {
+    title: `${product.title} | Pura Vida Artesanías`,
+    description: `Handcrafted by ${artisanName}. Discover this authentic Costa Rican product.`,
+  };
 }
 
 export default async function ProductDetailPage({ params }: PageProps) {
   const { t } = await getTranslations();
   const { id } = await params;
+
+  // Reject non-UUID values immediately so we never hit the DB with garbage
+  if (!UUID_RE.test(id)) notFound();
 
   const [product] = await db
     .select({
@@ -28,7 +70,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
       artisanId: products.artisanId,
       artisanName: users.name,
       artisanAvatar: users.avatarUrl,
-      artisanEmail: users.email,
       artisanLocation: artisanProfiles.location,
       artisanPhone: artisanProfiles.phone,
       artisanWhatsapp: artisanProfiles.whatsapp,
@@ -156,14 +197,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
                 {/* Contact buttons */}
                 <div className="mt-4 flex flex-wrap gap-3">
-                  {product.artisanEmail && (
-                    <a
-                      href={`mailto:${product.artisanEmail}?subject=Inquiry about ${product.title}`}
-                      className="inline-flex items-center gap-2 rounded-full border-2 border-carreta-blue/30 px-4 py-2 text-xs font-medium text-carreta-blue transition-all hover:border-carreta-blue hover:bg-carreta-blue/5"
-                    >
-                      ✉ {t("product.contact.title")}
-                    </a>
-                  )}
                   {product.artisanWhatsapp && (
                     <a
                       href={`https://wa.me/${product.artisanWhatsapp.replace(/[^0-9]/g, "")}?text=Hi! I'm interested in ${product.title}`}
@@ -182,6 +215,16 @@ export default async function ProductDetailPage({ params }: PageProps) {
                       className="inline-flex items-center gap-2 rounded-full border-2 border-carreta-fuchsia/30 px-4 py-2 text-xs font-medium text-carreta-fuchsia transition-all hover:border-carreta-fuchsia hover:bg-carreta-fuchsia/5"
                     >
                       📸 {t("product.instagram")}
+                    </a>
+                  )}
+                  {product.artisanFacebook && (
+                    <a
+                      href={product.artisanFacebook.startsWith("http") ? product.artisanFacebook : `https://facebook.com/${product.artisanFacebook}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full border-2 border-blue-500/30 px-4 py-2 text-xs font-medium text-blue-600 transition-all hover:border-blue-500 hover:bg-blue-500/5"
+                    >
+                      📘 {t("product.facebook")}
                     </a>
                   )}
                 </div>

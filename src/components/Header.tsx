@@ -17,9 +17,14 @@ export default async function Header() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
           <CarretaWheel size={36} variant="outline" />
-          <span className="text-lg font-bold tracking-tight text-[#1A1A2E] dark:text-carreta-eggshell">
-            <span className="carreta-gradient-text">Pura Vida</span>{" "}
-            <span className="text-carreta-blue">Artesanías</span>
+          <span className="flex flex-col">
+            <span className="text-lg font-bold leading-tight tracking-tight text-[#1A1A2E] dark:text-carreta-eggshell">
+              <span className="carreta-gradient-text">Pura Vida</span>{" "}
+              <span>Minds</span>
+            </span>
+            <span className="text-[11px] font-medium leading-tight tracking-wider text-carreta-blue dark:text-carreta-turquoise">
+              ARTESANÍAS
+            </span>
           </span>
         </Link>
 
@@ -65,7 +70,7 @@ export default async function Header() {
                 {t("nav.signIn")}
               </Link>
               <Link
-                href="/sign-up"
+                href="/register"
                 className="carreta-btn inline-flex items-center rounded-full px-5 py-2 text-sm font-medium"
               >
                 {t("nav.signUp")}

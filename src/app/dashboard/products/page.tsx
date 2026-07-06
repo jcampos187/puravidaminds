@@ -46,7 +46,7 @@ export default async function MyProductsPage() {
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">
       {/* Header */}
-      <div className="mb-10 flex items-center justify-between">
+      <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
           <CarretaWheel size={36} variant="outline" />
           <div>
@@ -84,8 +84,8 @@ export default async function MyProductsPage() {
           </Link>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border-2 border-carreta-red/10">
-          <table className="w-full">
+        <div className="overflow-x-auto rounded-xl border-2 border-carreta-red/10">
+          <table className="w-full min-w-[640px]">
             <thead>
               <tr className="bg-carreta-red/5 dark:bg-carreta-red/10">
                 <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-[#1A1A2E]/60 dark:text-carreta-eggshell/60">

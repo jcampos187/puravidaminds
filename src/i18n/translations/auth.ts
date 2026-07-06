@@ -22,6 +22,144 @@ const auth: Record<string, Record<Locale, TranslationValue>> = {
     en: "Create your artisan profile and share your work with the world.",
     es: "Crea tu perfil de artesano y comparte tu trabajo con el mundo.",
   },
+
+  // ─── Sign-Up Form ──────────────────────────────────────────
+  "auth.signUp.error": {
+    en: "Something went wrong",
+    es: "Algo salió mal",
+  },
+  "auth.signUp.account": {
+    en: "Account",
+    es: "Cuenta",
+  },
+  "auth.signUp.fullName": {
+    en: "Full Name",
+    es: "Nombre Completo",
+  },
+  "auth.signUp.fullNamePlaceholder": {
+    en: "Your name",
+    es: "Tu nombre",
+  },
+  "auth.signUp.email": {
+    en: "Email",
+    es: "Correo Electrónico",
+  },
+  "auth.signUp.emailPlaceholder": {
+    en: "your@email.com",
+    es: "tu@correo.com",
+  },
+  "auth.signUp.password": {
+    en: "Password",
+    es: "Contraseña",
+  },
+  "auth.signUp.passwordPlaceholder": {
+    en: "At least 8 characters",
+    es: "Al menos 8 caracteres",
+  },
+  "auth.signUp.artisanProfile": {
+    en: "Artisan Profile",
+    es: "Perfil de Artesano",
+  },
+  "auth.signUp.artisanProfileHint": {
+    en: "Optional — you can fill these in later from your dashboard.",
+    es: "Opcional — puedes completarlos después desde tu panel.",
+  },
+  "auth.signUp.businessName": {
+    en: "Business Name",
+    es: "Nombre del Negocio",
+  },
+  "auth.signUp.businessNamePlaceholder": {
+    en: "e.g. Artesanías de Sarchí",
+    es: "ej. Artesanías de Sarchí",
+  },
+  "auth.signUp.phone": {
+    en: "Phone",
+    es: "Teléfono",
+  },
+  "auth.signUp.phonePlaceholder": {
+    en: "+506 8888 8888",
+    es: "+506 8888 8888",
+  },
+  "auth.signUp.whatsapp": {
+    en: "WhatsApp",
+    es: "WhatsApp",
+  },
+  "auth.signUp.whatsappPlaceholder": {
+    en: "+506 8888 9999",
+    es: "+506 8888 9999",
+  },
+  "auth.signUp.website": {
+    en: "Website",
+    es: "Sitio Web",
+  },
+  "auth.signUp.websitePlaceholder": {
+    en: "https://myartesanias.com",
+    es: "https://miartesania.com",
+  },
+  "auth.signUp.instagram": {
+    en: "Instagram",
+    es: "Instagram",
+  },
+  "auth.signUp.instagramPlaceholder": {
+    en: "@misartesanias",
+    es: "@misartesanias",
+  },
+  "auth.signUp.facebook": {
+    en: "Facebook",
+    es: "Facebook",
+  },
+  "auth.signUp.facebookPlaceholder": {
+    en: "https://facebook.com/...",
+    es: "https://facebook.com/...",
+  },
+  "auth.signUp.submit": {
+    en: "Create Account & Join",
+    es: "Crear Cuenta y Unirse",
+  },
+  "auth.signUp.submitting": {
+    en: "Creating account...",
+    es: "Creando cuenta...",
+  },
+  "auth.signUp.terms": {
+    en: "By signing up, you agree to our Terms and Privacy Policy.",
+    es: "Al registrarte, aceptas nuestros Términos y Política de Privacidad.",
+  },
+
+  // ─── Verification ──────────────────────────────────────────
+  "auth.verify.title": {
+    en: "Verification Code",
+    es: "Código de Verificación",
+  },
+  "auth.verify.sent": {
+    en: (email: string) => `We sent a verification code to ${email}`,
+    es: (email: string) => `Enviamos un código de verificación a ${email}`,
+  },
+  "auth.verify.placeholder": {
+    en: "Enter the 6-digit code",
+    es: "Ingresa el código de 6 dígitos",
+  },
+  "auth.verify.submit": {
+    en: "Verify & Complete",
+    es: "Verificar y Completar",
+  },
+  "auth.verify.submitting": {
+    en: "Verifying...",
+    es: "Verificando...",
+  },
+  "auth.verify.back": {
+    en: "← Back to sign-up",
+    es: "← Volver al registro",
+  },
+
+  // ─── Complete ──────────────────────────────────────────────
+  "auth.complete.title": {
+    en: "Welcome to Pura Vida Minds!",
+    es: "¡Bienvenido a Pura Vida Minds!",
+  },
+  "auth.complete.redirect": {
+    en: "Redirecting to your dashboard...",
+    es: "Redirigiendo a tu panel...",
+  },
 };
 
 export default auth;

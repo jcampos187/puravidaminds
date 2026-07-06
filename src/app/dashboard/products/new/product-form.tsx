@@ -251,7 +251,7 @@ export function ProductForm({ categories, initialData, isEditing }: ProductFormP
           />
 
           {imageUrls.length > 0 && (
-            <div className="mt-4 grid grid-cols-3 gap-3">
+            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
               {imageUrls.map((img, i) => (
                 <div key={img.url} className="relative aspect-square">
                   <Image

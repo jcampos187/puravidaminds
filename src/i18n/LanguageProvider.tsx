@@ -12,7 +12,7 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 const COOKIE_NAME = "puravida-locale";
-const DEFAULT_LOCALE: Locale = "en";
+const DEFAULT_LOCALE: Locale = "es";
 
 function getCookie(name: string): string | undefined {
   if (typeof document === "undefined") return undefined;

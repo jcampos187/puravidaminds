@@ -68,6 +68,10 @@ const products: Record<string, Record<Locale, TranslationValue>> = {
     en: "Instagram",
     es: "Instagram",
   },
+  "product.facebook": {
+    en: "Facebook",
+    es: "Facebook",
+  },
   "product.status.active": {
     en: "Active",
     es: "Activo",
@@ -105,6 +109,14 @@ const products: Record<string, Record<Locale, TranslationValue>> = {
   "cat.coffee-cacao": {
     en: "Coffee & Cacao",
     es: "Café y Cacao",
+  },
+  "cat.home-decor": {
+    en: "Home Decor",
+    es: "Decoración para el Hogar",
+  },
+  "cat.leatherwork": {
+    en: "Leatherwork",
+    es: "Marroquinería",
   },
 
   // ─── Units ─────────────────────────────────────────────────

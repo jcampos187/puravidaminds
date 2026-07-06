@@ -16,28 +16,16 @@ export default async function DashboardPage() {
   const clerkUser = await currentUser();
   if (!clerkUser) redirect("/sign-in");
 
-  // Get or create local user
-  let [localUser] = await db
+  // Get local user
+  const [localUser] = await db
     .select()
     .from(users)
     .where(eq(users.clerkId, clerkId))
     .limit(1);
 
   if (!localUser) {
-    const [newUser] = await db
-      .insert(users)
-      .values({
-        clerkId,
-        email: clerkUser.emailAddresses[0]?.emailAddress || "",
-        name:
-          clerkUser.firstName
-            ? `${clerkUser.firstName} ${clerkUser.lastName || ""}`.trim()
-            : null,
-        avatarUrl: clerkUser.imageUrl,
-        role: "customer",
-      })
-      .returning();
-    localUser = newUser;
+    // User not found — redirect to profile setup to create one
+    redirect("/dashboard/profile?setup=true");
   }
 
   // Get product count
