@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { db } from "@/db";
 import { users, artisanProfiles, products } from "@/db/schema";
@@ -5,6 +6,24 @@ import { eq, sql, desc } from "drizzle-orm";
 import CarretaWheel from "@/components/CarretaWheel";
 import ArtisanCard from "@/components/ArtisanCard";
 import { getTranslations } from "@/i18n/getTranslations";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale } = await getTranslations();
+
+  if (locale === "es") {
+    return {
+      title: "Nuestros Artesanos | Pura Vida Artesanías",
+      description:
+        "Conoce a los talentosos artesanos costarricenses que crean nuestras artesanías. Cada pieza cuenta una historia de tradición y cultura.",
+    };
+  }
+
+  return {
+    title: "Meet Our Artisans | Pura Vida Artesanías",
+    description:
+      "Meet the talented Costa Rican artisans who create our handcrafts. Every piece tells a story of tradition and culture.",
+  };
+}
 
 export default async function ArtisansPage() {
   const { t } = await getTranslations();
@@ -27,6 +46,7 @@ export default async function ArtisansPage() {
     .from(users)
     .innerJoin(artisanProfiles, eq(users.id, artisanProfiles.userId))
     .leftJoin(products, eq(users.id, products.artisanId))
+    .where(sql`${users.name} IS NOT NULL`)
     .groupBy(users.id, users.name, users.email, users.avatarUrl, artisanProfiles.id, artisanProfiles.businessName, artisanProfiles.bio, artisanProfiles.location, artisanProfiles.coverImageUrl, artisanProfiles.isVerified)
     .orderBy(desc(artisanProfiles.isVerified), desc(sql`MAX(${products.createdAt})`));
 
@@ -67,7 +87,7 @@ export default async function ArtisansPage() {
                 {t("artisans.emptySub")}
               </p>
               <Link
-                href="/sign-up"
+                href="/register"
                 className="carreta-btn mt-6 inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-medium"
               >
                 {t("nav.joinAsArtisan")}

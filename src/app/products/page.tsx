@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { db } from "@/db";
 import { products, categories, productImages, users, artisanProfiles } from "@/db/schema";
@@ -5,6 +6,24 @@ import { eq, desc, and, sql, ilike, or } from "drizzle-orm";
 import ProductCard from "@/components/ProductCard";
 import CarretaWheel from "@/components/CarretaWheel";
 import { getTranslations } from "@/i18n/getTranslations";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale } = await getTranslations();
+
+  if (locale === "es") {
+    return {
+      title: "Explorar Artesanías | Pura Vida Artesanías",
+      description:
+        "Explora nuestra colección de artesanías costarricenses auténticas. Filtra por categoría y encuentra la pieza perfecta hecha a mano por artesanos locales.",
+    };
+  }
+
+  return {
+    title: "Browse Artesanías | Pura Vida Artesanías",
+    description:
+      "Browse our collection of authentic Costa Rican handcrafts. Filter by category and find the perfect handmade piece crafted by local artisans.",
+  };
+}
 
 interface PageProps {
   searchParams: Promise<{
@@ -101,18 +120,18 @@ export default async function ProductsPage({ searchParams }: PageProps) {
       </div>
 
       {/* Search & Filter */}
-      <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-10 flex flex-col gap-4">
         {/* Search */}
-        <form className="relative flex-1 max-w-md" method="GET" action="/products">
+        <form className="relative w-full" method="GET" action="/products">
           <input
             type="text"
             name="q"
             defaultValue={params.q || ""}
             placeholder={t("products.search")}
-            className="w-full rounded-full border-2 border-carreta-red/20 bg-white px-5 py-3 pl-12 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell dark:placeholder-carreta-eggshell/40"
+            className="w-full rounded-full border-2 border-carreta-red/20 bg-white px-5 py-3.5 pl-12 text-[16px] sm:text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell dark:placeholder-carreta-eggshell/40"
           />
           <svg
-            className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#1A1A2E]/40 dark:text-carreta-eggshell/40"
+            className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#1A1A2E]/40 dark:text-carreta-eggshell/40"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

@@ -1,0 +1,10 @@
+# robots.txt — Pura Vida Artesanías
+# Allow all crawlers on public pages, block admin/dashboard areas
+
+User-agent: *
+Allow: /
+Disallow: /dashboard/
+Disallow: /api/
+
+# Sitemap location (uncomment when sitemap is created)
+# Sitemap: https://puravidaartesania.com/sitemap.xml

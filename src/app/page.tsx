@@ -1,10 +1,30 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
 import CarretaWheel, { CarretaWheelPattern } from "@/components/CarretaWheel";
 import { db } from "@/db";
 import { products, categories, productImages, users, artisanProfiles } from "@/db/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import ProductCard from "@/components/ProductCard";
 import { getTranslations } from "@/i18n/getTranslations";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale } = await getTranslations();
+
+  if (locale === "es") {
+    return {
+      title: "Pura Vida Artesanías — Artesanías Costarricenses Auténticas",
+      description:
+        "Descubre artesanías costarricenses auténticas. Conecta directamente con artesanos de Sarchí y toda Costa Rica. Pura Vida.",
+    };
+  }
+
+  return {
+    title: "Pura Vida Artesanías — Authentic Costa Rican Handcrafts",
+    description:
+      "Discover authentic Costa Rican handcrafted products. Connect directly with skilled artisans from Sarchí and across Costa Rica. Pura Vida.",
+  };
+}
 
 async function getFeaturedProducts() {
   try {
@@ -88,6 +108,8 @@ function getDefaultCategories(t: (key: string) => string) {
 
 export default async function Home() {
   const { t } = await getTranslations();
+  const { userId } = await auth();
+  const sellHref = userId ? "/dashboard/products/new" : "/register";
   const [featuredProducts, allCategories] = await Promise.all([
     getFeaturedProducts(),
     getCategories(),
@@ -140,7 +162,7 @@ export default async function Home() {
                 {t("hero.cta.explore")}
               </Link>
               <Link
-                href="/sign-up"
+                href={sellHref}
                 className="inline-flex h-14 w-full items-center justify-center rounded-full border-2 border-carreta-blue/30 px-10 text-base font-semibold text-carreta-blue transition-all hover:border-carreta-blue hover:bg-carreta-blue/5 sm:w-auto"
               >
                 {t("hero.cta.sell")}
@@ -175,7 +197,16 @@ export default async function Home() {
                 "from-carreta-turquoise/20 to-carreta-blue/20 border-carreta-turquoise/30",
                 "from-carreta-orange/20 to-carreta-gold/20 border-carreta-orange/30",
               ];
-              const icons = ["🪵", "💍", "🧶", "🏺", "🎨", "☕"];
+              const icons: Record<string, string> = {
+                "wood-carvings": "🪵",
+                "jewelry": "💍",
+                "textiles": "🧶",
+                "ceramics": "🏺",
+                "paintings": "🎨",
+                "coffee-cacao": "☕",
+                "home-decor": "🖼️",
+                "leatherwork": "👝",
+              };
 
               return (
                 <Link
@@ -183,8 +214,8 @@ export default async function Home() {
                   href={`/products?category=${cat.slug}`}
                   className={`group rounded-xl border-2 bg-gradient-to-br p-6 transition-all hover:shadow-lg hover:-translate-y-1 ${colors[idx % colors.length]}`}
                 >
-                  <span className="text-3xl">{icons[idx % icons.length]}</span>
-                  <h3 className="mt-4 text-lg font-semibold text-[#1A1A2E] transition-colors group-hover:text-carreta-red dark:text-carreta-eggshell">
+                  <span className="text-3xl">{icons[cat.slug] || "✨"}</span>
+                  <h3 className="mt-4 text-lg font-semibold text-[#1A1A2E] transition-colors group-hover:text-carreta-orange dark:text-carreta-eggshell">
                     {t(`cat.${cat.slug}`)}
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-[#1A1A2E]/70 dark:text-carreta-eggshell/70">
@@ -286,14 +317,13 @@ export default async function Home() {
           <p className="mt-4 text-lg text-[#1A1A2E]/70 dark:text-carreta-eggshell/70">
             {t("cta.subtitle")}
           </p>
-          <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <Link
-              href="/sign-up"
-              className="carreta-btn inline-flex h-14 w-full items-center justify-center gap-2 rounded-full px-10 text-base font-semibold shadow-xl shadow-carreta-red/25 sm:w-auto"
-            >
-              <CarretaWheel size={20} variant="outline" />
-              {t("cta.join")}
-            </Link>
+          <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">              <Link
+                href={sellHref}
+                className="carreta-btn inline-flex h-14 w-full items-center justify-center gap-2 rounded-full px-10 text-base font-semibold shadow-xl shadow-carreta-red/25 sm:w-auto"
+              >
+                <CarretaWheel size={20} variant="outline" />
+                {t("cta.join")}
+              </Link>
             <Link
               href="/products"
               className="inline-flex h-14 w-full items-center justify-center rounded-full border-2 border-[#1A1A2E]/20 px-10 text-base font-semibold text-[#1A1A2E] transition-all hover:border-carreta-red/50 hover:text-carreta-red dark:border-carreta-eggshell/20 dark:text-carreta-eggshell dark:hover:border-carreta-gold/50 dark:hover:text-carreta-gold sm:w-auto"
