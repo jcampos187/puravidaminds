@@ -51,14 +51,11 @@ export function ThemeProvider({ children, initialServerTheme = "light" }: ThemeP
       ? "dark"
       : "light";
   });
-  const [mounted, setMounted] = useState(false);
 
   // Sync DOM class on mount (SSR can't touch DOM)
   useEffect(() => {
     applyTheme(theme);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, [theme, setMounted]);
+  }, [theme]);
 
   // Listen for system preference changes when no manual preference is stored
   useEffect(() => {
@@ -85,11 +82,6 @@ export function ThemeProvider({ children, initialServerTheme = "light" }: ThemeP
   const toggleTheme = useCallback(() => {
     setTheme(theme === "dark" ? "light" : "dark");
   }, [theme, setTheme]);
-
-  // Prevent hydration mismatch by not rendering theme-dependent UI until mounted
-  if (!mounted) {
-    return <>{children}</>;
-  }
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
