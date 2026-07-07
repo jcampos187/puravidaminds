@@ -12,36 +12,48 @@ export default function CarretaWheel({
   variant = "full",
 }: CarretaWheelProps) {
   const center = size / 2;
-  const radius = size * 0.42;
-  const hubRadius = size * 0.08;
+
+  // Radii — evenly stepped for perfect visual balance
+  const R = {
+    outerRim: size * 0.44,
+    ring1: size * 0.37,
+    ring2: size * 0.30,
+    ring3: size * 0.23,
+    dots: size * 0.19,
+    hubOuter: size * 0.15,
+    hubInner: size * 0.09,
+    hubPin: size * 0.04,
+  };
+
   const spokeCount = 12;
   const angleStep = (2 * Math.PI) / spokeCount;
 
   const spokes = Array.from({ length: spokeCount }, (_, i) => {
     const angle = i * angleStep - Math.PI / 2;
-    const x1 = center + hubRadius * Math.cos(angle);
-    const y1 = center + hubRadius * Math.sin(angle);
-    const x2 = center + radius * Math.cos(angle);
-    const y2 = center + radius * Math.sin(angle);
-    return { x1, y1, x2, y2, angle: i * (360 / spokeCount) };
+    const x1 = center + R.hubOuter * Math.cos(angle);
+    const y1 = center + R.hubOuter * Math.sin(angle);
+    const x2 = center + R.outerRim * Math.cos(angle);
+    const y2 = center + R.outerRim * Math.sin(angle);
+    return { x1, y1, x2, y2 };
   });
 
-  // Decorative inner ring pattern (mandala-like)
   const innerDots = Array.from({ length: 8 }, (_, i) => {
     const angle = (i * 2 * Math.PI) / 8;
-    const r = radius * 0.55;
-    const cx = center + r * Math.cos(angle);
-    const cy = center + r * Math.sin(angle);
+    const cx = center + R.dots * Math.cos(angle);
+    const cy = center + R.dots * Math.sin(angle);
     return { cx, cy };
   });
+
+  const spokeColor = (i: number) =>
+    i % 3 === 0 ? "#CC2936" : i % 3 === 1 ? "#005ABB" : "#FF7F00";
 
   return (
     <svg
       viewBox={`0 0 ${size} ${size}`}
-      className={`${className}${animated ? " animate-spin-slow" : ""}`}
+      className={className}
       width={size}
       height={size}
-      aria-label={className.includes('no-label') ? undefined : "Carreta wheel"}
+      aria-label={className.includes("no-label") ? undefined : "Carreta wheel"}
       role="img"
     >
       <defs>
@@ -52,46 +64,64 @@ export default function CarretaWheel({
               from { transform: rotate(0deg); }
               to { transform: rotate(360deg); }
             }
-            .wheel-spin { animation: spin-slow 20s linear infinite; transform-origin: center; }
-            .wheel-spin-reverse { animation: spin-slow 25s linear infinite reverse; transform-origin: center; }
+            .wheel-spin {
+              animation: spin-slow 20s linear infinite;
+              transform-origin: ${center}px ${center}px;
+            }
+            .wheel-spin-reverse {
+              animation: spin-slow 25s linear infinite reverse;
+              transform-origin: ${center}px ${center}px;
+            }
           `
             : ""}
         </style>
       </defs>
 
       <g className={animated ? "wheel-spin" : ""}>
-        {/* Outer rim */}
+        {/* Outer rim — thick red ring */}
         <circle
           cx={center}
           cy={center}
-          r={radius}
+          r={R.outerRim}
           fill="none"
           stroke="#CC2936"
-          strokeWidth={size * 0.03}
+          strokeWidth={size * 0.028}
         />
 
-        {/* Inner rim */}
+        {/* Ring 1 — dashed gold inner rim */}
         <circle
           cx={center}
           cy={center}
-          r={radius * 0.85}
+          r={R.ring1}
           fill="none"
           stroke="#FFD700"
-          strokeWidth={size * 0.015}
-          strokeDasharray={`${size * 0.02} ${size * 0.015}`}
+          strokeWidth={size * 0.014}
+          strokeDasharray={`${size * 0.025} ${size * 0.012}`}
         />
 
-        {/* Outer decorative ring */}
+        {/* Ring 2 — blue decorative band */}
         <circle
           cx={center}
           cy={center}
-          r={radius * 0.72}
+          r={R.ring2}
           fill="none"
           stroke="#005ABB"
           strokeWidth={size * 0.012}
+          opacity={variant === "outline" ? 0.5 : 1}
         />
 
-        {/* Spokes */}
+        {/* Ring 3 — orange inner decorative band */}
+        <circle
+          cx={center}
+          cy={center}
+          r={R.ring3}
+          fill="none"
+          stroke="#FF7F00"
+          strokeWidth={size * 0.010}
+          opacity={variant === "outline" ? 0.4 : 0.85}
+        />
+
+        {/* Spokes — radiating from hub outer edge to outer rim */}
         {spokes.map((spoke, i) => (
           <line
             key={`spoke-${i}`}
@@ -99,24 +129,35 @@ export default function CarretaWheel({
             y1={spoke.y1}
             x2={spoke.x2}
             y2={spoke.y2}
-            stroke={i % 3 === 0 ? "#CC2936" : i % 3 === 1 ? "#005ABB" : "#FF7F00"}
-            strokeWidth={size * 0.022}
+            stroke={spokeColor(i)}
+            strokeWidth={size * 0.020}
             strokeLinecap="round"
+            opacity={variant === "outline" ? 0.6 : 1}
           />
         ))}
 
-        {/* Hub */}
+        {/* Hub outer ring — gold filled with red stroke */}
         <circle
           cx={center}
           cy={center}
-          r={hubRadius}
+          r={R.hubOuter}
           fill="#FFD700"
           stroke="#CC2936"
-          strokeWidth={size * 0.02}
+          strokeWidth={size * 0.018}
         />
 
-        {/* Hub center dot */}
-        <circle cx={center} cy={center} r={hubRadius * 0.35} fill="#CC2936" />
+        {/* Hub inner — red center */}
+        <circle
+          cx={center}
+          cy={center}
+          r={R.hubInner}
+          fill="#CC2936"
+          stroke="#FFD700"
+          strokeWidth={size * 0.015}
+        />
+
+        {/* Hub pin — tiny gold dot */}
+        <circle cx={center} cy={center} r={R.hubPin} fill="#FFD700" />
       </g>
 
       {/* Inner mandala dots */}
@@ -126,9 +167,9 @@ export default function CarretaWheel({
             key={`dot-${i}`}
             cx={dot.cx}
             cy={dot.cy}
-            r={size * 0.028}
+            r={size * 0.024}
             fill={i % 2 === 0 ? "#FFD700" : "#00CED1"}
-            opacity={variant === "outline" ? 0.4 : 0.7}
+            opacity={variant === "outline" ? 0.35 : 0.75}
           />
         ))}
       </g>
@@ -137,14 +178,32 @@ export default function CarretaWheel({
 }
 
 export function CarretaWheelPattern({ className = "" }: { className?: string }) {
+  // 6 lines through center at 30° intervals = 12 spokes, matching the main wheel
+  // Lines at 0°, 30°, 60°, 90°, 120°, 150° with r=53 from center (60,60)
+  // Colors cycle: red, blue, orange
+  const svg = `<svg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'>
+    <circle cx='60' cy='60' r='53' fill='none' stroke='#CC2936' stroke-width='3.5'/>
+    <circle cx='60' cy='60' r='44' fill='none' stroke='#FFD700' stroke-width='2' stroke-dasharray='3 1.5'/>
+    <circle cx='60' cy='60' r='36' fill='none' stroke='#005ABB' stroke-width='1.5'/>
+    <circle cx='60' cy='60' r='28' fill='none' stroke='#FF7F00' stroke-width='1.2'/>
+    <line x1='7' y1='60' x2='113' y2='60' stroke='#CC2936' stroke-width='2.5' stroke-linecap='round'/>
+    <line x1='60' y1='7' x2='60' y2='113' stroke='#CC2936' stroke-width='2.5' stroke-linecap='round'/>
+    <line x1='14' y1='34' x2='106' y2='86' stroke='#005ABB' stroke-width='2.5' stroke-linecap='round'/>
+    <line x1='86' y1='14' x2='34' y2='106' stroke='#005ABB' stroke-width='2.5' stroke-linecap='round'/>
+    <line x1='34' y1='14' x2='86' y2='106' stroke='#FF7F00' stroke-width='2.5' stroke-linecap='round'/>
+    <line x1='106' y1='34' x2='14' y2='86' stroke='#FF7F00' stroke-width='2.5' stroke-linecap='round'/>
+    <circle cx='60' cy='60' r='18' fill='#FFD700' stroke='#CC2936' stroke-width='2'/>
+    <circle cx='60' cy='60' r='11' fill='#CC2936' stroke='#FFD700' stroke-width='1.5'/>
+    <circle cx='60' cy='60' r='5' fill='#FFD700'/>
+  </svg>`;
+
   return (
     <div className={`relative overflow-hidden ${className}`}>
-      {/* Repeating carreta wheel pattern as a decorative background */}
       <div className="absolute inset-0 opacity-[0.04]">
         <div
           className="h-full w-full"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='60' cy='60' r='50' fill='none' stroke='%23CC2936' stroke-width='3'/%3E%3Cline x1='60' y1='12' x2='60' y2='108' stroke='%23005ABB' stroke-width='2'/%3E%3Cline x1='12' y1='60' x2='108' y2='60' stroke='%23005ABB' stroke-width='2'/%3E%3Cline x1='26' y1='26' x2='94' y2='94' stroke='%23FF7F00' stroke-width='2'/%3E%3Cline x1='26' y1='94' x2='94' y2='26' stroke='%23FF7F00' stroke-width='2'/%3E%3Ccircle cx='60' cy='60' r='8' fill='%23FFD700' stroke='%23CC2936' stroke-width='2'/%3E%3C/svg%3E")`,
+            backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(svg)}")`,
             backgroundSize: "120px 120px",
           }}
         />
