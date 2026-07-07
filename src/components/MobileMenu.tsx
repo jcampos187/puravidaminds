@@ -34,7 +34,20 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
     };
   }, [isOpen]);
 
-  const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
+  // Guaranteed overflow cleanup on unmount — runs even if the component crashes
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  const toggle = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setIsOpen((prev) => !prev);
+    },
+    [],
+  );
   const close = useCallback(() => setIsOpen(false), []);
 
   return (

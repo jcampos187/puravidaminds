@@ -61,7 +61,7 @@ export default function ArtisanCard({ artisan, itemsLabel, fallbackName = "Artis
       </div>
 
       {/* Content */}
-      <div className="p-5 pt-12">
+      <div className="p-5 pt-16">
         <h3 className="font-semibold text-[#1A1A2E] transition-colors group-hover:text-carreta-red dark:text-carreta-eggshell dark:group-hover:text-carreta-gold">
           {artisan.profile?.businessName || artisan.name || fallbackName}
         </h3>
