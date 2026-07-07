@@ -136,7 +136,7 @@ export default function MobileMenu({ isSignedIn }: MobileMenuProps) {
                   <Link
                     href="/sign-in"
                     onClick={close}
-                    className="flex w-full items-center justify-center rounded-2xl border-2 border-carreta-red/30 bg-white px-6 py-4 text-base font-bold text-carreta-red shadow-sm transition-all hover:border-carreta-red hover:bg-carreta-red/5 hover:shadow-md dark:bg-[#16162A]"
+                    className="flex w-full items-center justify-center rounded-2xl border-2 border-carreta-red/30 bg-white px-6 py-4 text-base font-bold text-carreta-red shadow-sm transition-all hover:border-carreta-red hover:shadow-md dark:bg-[#16162A]"
                   >
                     {t("nav.signIn")}
                   </Link>
