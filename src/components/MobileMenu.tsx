@@ -15,7 +15,6 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
   const { t } = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
 
-  // Lock/unlock body scroll — no html manipulation, just body
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -24,7 +23,6 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
     }
   }, [isOpen]);
 
-  // Guaranteed scroll restore on unmount
   useEffect(() => {
     return () => {
       document.body.style.overflow = "";
@@ -65,10 +63,10 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
 
       {/* Full-screen overlay menu */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-white dark:bg-[#0D0D1A]">
+        <div className="fixed inset-0 z-50 flex flex-col bg-[#F8F6F2] dark:bg-[#0D0D1A]">
           {/* Close button */}
           <div className="flex items-center justify-between border-b border-carreta-red/10 px-6 py-4">
-            <span className="text-sm font-semibold uppercase tracking-wider text-[#1A1A2E]/40 dark:text-carreta-eggshell/40">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#1A1A2E]/30 dark:text-carreta-eggshell/30">
               {t("nav.home")}
             </span>
             <button
@@ -84,18 +82,20 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
           </div>
 
           {/* Navigation */}
-          <nav className="mt-6 flex-1 space-y-1 px-4">
+          <nav className="mt-6 flex-1 space-y-3 px-5">
             <Link
               href="/products"
               onClick={close}
-              className="flex items-center gap-4 rounded-2xl bg-gradient-to-r from-carreta-blue/5 to-transparent px-5 py-5 text-lg font-semibold text-[#1A1A2E] shadow-sm transition-all hover:from-carreta-blue/10 hover:shadow-md dark:text-carreta-eggshell dark:from-carreta-blue/10 dark:hover:from-carreta-blue/20"
+              className="flex items-center gap-5 rounded-2xl border-2 border-carreta-blue/15 bg-white px-5 py-5 shadow-md transition-all hover:border-carreta-blue/40 hover:shadow-lg dark:border-carreta-blue/20 dark:bg-[#16162A] dark:hover:border-carreta-blue/40"
             >
-              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-carreta-blue/15 text-carreta-blue shadow-sm">
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-carreta-blue/15 text-2xl dark:bg-carreta-blue/20">
                 🛍️
               </span>
-              <div>
-                <p>{t("nav.browse")}</p>
-                <p className="text-xs font-normal text-[#1A1A2E]/50 dark:text-carreta-eggshell/50">
+              <div className="min-w-0">
+                <p className="text-lg font-bold text-[#1A1A2E] dark:text-carreta-eggshell">
+                  {t("nav.browse")}
+                </p>
+                <p className="mt-0.5 text-sm font-medium text-[#1A1A2E]/60 dark:text-carreta-eggshell/60">
                   {t("mobileMenu.browseSub")}
                 </p>
               </div>
@@ -103,14 +103,16 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
             <Link
               href="/artisans"
               onClick={close}
-              className="flex items-center gap-4 rounded-2xl bg-gradient-to-r from-carreta-orange/5 to-transparent px-5 py-5 text-lg font-semibold text-[#1A1A2E] shadow-sm transition-all hover:from-carreta-orange/10 hover:shadow-md dark:text-carreta-eggshell dark:from-carreta-orange/10 dark:hover:from-carreta-orange/20"
+              className="flex items-center gap-5 rounded-2xl border-2 border-carreta-orange/15 bg-white px-5 py-5 shadow-md transition-all hover:border-carreta-orange/40 hover:shadow-lg dark:border-carreta-orange/20 dark:bg-[#16162A] dark:hover:border-carreta-orange/40"
             >
-              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-carreta-gold/15 text-carreta-orange shadow-sm">
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-carreta-orange/15 text-2xl dark:bg-carreta-orange/20">
                 🎨
               </span>
-              <div>
-                <p>{t("nav.artisans")}</p>
-                <p className="text-xs font-normal text-[#1A1A2E]/50 dark:text-carreta-eggshell/50">
+              <div className="min-w-0">
+                <p className="text-lg font-bold text-[#1A1A2E] dark:text-carreta-eggshell">
+                  {t("nav.artisans")}
+                </p>
+                <p className="mt-0.5 text-sm font-medium text-[#1A1A2E]/60 dark:text-carreta-eggshell/60">
                   {t("mobileMenu.artisansSub")}
                 </p>
               </div>
@@ -118,12 +120,12 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
           </nav>
 
           {/* Auth section */}
-          <div className="border-t border-carreta-red/10 px-4 py-6">
+          <div className="border-t border-carreta-red/10 px-5 py-6">
             {isSignedIn ? (
               <Link
                 href="/dashboard"
                 onClick={close}
-                className="carreta-btn flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-base font-semibold shadow-lg shadow-carreta-red/25"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-carreta-red to-carreta-red/90 px-6 py-4 text-base font-bold text-white shadow-lg shadow-carreta-red/30 transition-all hover:shadow-xl hover:shadow-carreta-red/40"
               >
                 {t("nav.dashboard")}
               </Link>
@@ -132,14 +134,14 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
                 <Link
                   href="/sign-in"
                   onClick={close}
-                  className="flex w-full items-center justify-center rounded-2xl border-2 border-carreta-red/30 bg-carreta-red/5 px-6 py-4 text-base font-semibold text-carreta-red shadow-sm transition-all hover:border-carreta-red hover:bg-carreta-red/10 hover:shadow-md"
+                  className="flex w-full items-center justify-center rounded-2xl border-2 border-carreta-red/30 bg-white px-6 py-4 text-base font-bold text-carreta-red shadow-sm transition-all hover:border-carreta-red hover:bg-carreta-red/5 hover:shadow-md dark:bg-[#16162A]"
                 >
                   {t("nav.signIn")}
                 </Link>
                 <Link
                   href="/register"
                   onClick={close}
-                  className="carreta-btn flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-4 text-base font-semibold shadow-lg shadow-carreta-red/25"
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-carreta-red to-carreta-red/90 px-6 py-4 text-base font-bold text-white shadow-lg shadow-carreta-red/30 transition-all hover:shadow-xl hover:shadow-carreta-red/40"
                 >
                   {t("nav.signUp")}
                 </Link>
@@ -148,7 +150,7 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
           </div>
 
           {/* Toggles */}
-          <div className="flex items-center justify-center gap-4 border-t border-carreta-red/10 bg-carreta-red/[0.02] px-6 py-6">
+          <div className="flex items-center justify-center gap-4 border-t border-carreta-red/10 bg-white/50 px-6 py-5 dark:bg-[#16162A]/50">
             <ThemeToggle />
             <LanguageToggle />
           </div>
