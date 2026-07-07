@@ -65,16 +65,16 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
 
       {/* Full-screen overlay menu */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-carreta-cream dark:bg-[#1A1A2E]">
+        <div className="fixed inset-0 z-50 flex flex-col bg-white dark:bg-[#0D0D1A]">
           {/* Close button */}
-          <div className="flex items-center justify-between px-6 pt-4">
-            <span className="text-sm font-medium text-[#1A1A2E]/60 dark:text-carreta-eggshell/60">
+          <div className="flex items-center justify-between border-b border-carreta-red/10 px-6 py-4">
+            <span className="text-sm font-semibold uppercase tracking-wider text-[#1A1A2E]/40 dark:text-carreta-eggshell/40">
               {t("nav.home")}
             </span>
             <button
               onClick={close}
               type="button"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-carreta-red/10 text-carreta-red"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-carreta-red/10 text-carreta-red transition-colors hover:bg-carreta-red/20"
               aria-label={t("mobileMenu.close")}
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -84,36 +84,46 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
           </div>
 
           {/* Navigation */}
-          <nav className="mt-8 flex-1 space-y-2 px-6">
+          <nav className="mt-6 flex-1 space-y-1 px-4">
             <Link
               href="/products"
               onClick={close}
-              className="flex items-center gap-4 rounded-xl px-4 py-4 text-lg font-medium text-[#1A1A2E] transition-colors hover:bg-carreta-red/5 dark:text-carreta-eggshell dark:hover:bg-carreta-red/10"
+              className="flex items-center gap-4 rounded-2xl bg-gradient-to-r from-carreta-blue/5 to-transparent px-5 py-5 text-lg font-semibold text-[#1A1A2E] shadow-sm transition-all hover:from-carreta-blue/10 hover:shadow-md dark:text-carreta-eggshell dark:from-carreta-blue/10 dark:hover:from-carreta-blue/20"
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-carreta-blue/10 text-carreta-blue">
+              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-carreta-blue/15 text-carreta-blue shadow-sm">
                 🛍️
               </span>
-              {t("nav.browse")}
+              <div>
+                <p>{t("nav.browse")}</p>
+                <p className="text-xs font-normal text-[#1A1A2E]/50 dark:text-carreta-eggshell/50">
+                  {t("mobileMenu.browseSub")}
+                </p>
+              </div>
             </Link>
             <Link
               href="/artisans"
               onClick={close}
-              className="flex items-center gap-4 rounded-xl px-4 py-4 text-lg font-medium text-[#1A1A2E] transition-colors hover:bg-carreta-red/5 dark:text-carreta-eggshell dark:hover:bg-carreta-red/10"
+              className="flex items-center gap-4 rounded-2xl bg-gradient-to-r from-carreta-orange/5 to-transparent px-5 py-5 text-lg font-semibold text-[#1A1A2E] shadow-sm transition-all hover:from-carreta-orange/10 hover:shadow-md dark:text-carreta-eggshell dark:from-carreta-orange/10 dark:hover:from-carreta-orange/20"
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-carreta-gold/10 text-carreta-orange">
+              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-carreta-gold/15 text-carreta-orange shadow-sm">
                 🎨
               </span>
-              {t("nav.artisans")}
+              <div>
+                <p>{t("nav.artisans")}</p>
+                <p className="text-xs font-normal text-[#1A1A2E]/50 dark:text-carreta-eggshell/50">
+                  {t("mobileMenu.artisansSub")}
+                </p>
+              </div>
             </Link>
           </nav>
 
           {/* Auth section */}
-          <div className="border-t border-carreta-red/10 px-6 py-6">
+          <div className="border-t border-carreta-red/10 px-4 py-6">
             {isSignedIn ? (
               <Link
                 href="/dashboard"
                 onClick={close}
-                className="carreta-btn flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 text-base font-semibold"
+                className="carreta-btn flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-base font-semibold shadow-lg shadow-carreta-red/25"
               >
                 {t("nav.dashboard")}
               </Link>
@@ -122,14 +132,14 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
                 <Link
                   href="/sign-in"
                   onClick={close}
-                  className="flex w-full items-center justify-center rounded-full border-2 border-carreta-red/30 px-6 py-3.5 text-base font-medium text-carreta-red transition-all hover:border-carreta-red hover:bg-carreta-red/5"
+                  className="flex w-full items-center justify-center rounded-2xl border-2 border-carreta-red/30 bg-carreta-red/5 px-6 py-4 text-base font-semibold text-carreta-red shadow-sm transition-all hover:border-carreta-red hover:bg-carreta-red/10 hover:shadow-md"
                 >
                   {t("nav.signIn")}
                 </Link>
                 <Link
                   href="/register"
                   onClick={close}
-                  className="carreta-btn flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 text-base font-semibold"
+                  className="carreta-btn flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-4 text-base font-semibold shadow-lg shadow-carreta-red/25"
                 >
                   {t("nav.signUp")}
                 </Link>
@@ -138,7 +148,7 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
           </div>
 
           {/* Toggles */}
-          <div className="flex items-center justify-center gap-4 border-t border-carreta-red/10 px-6 py-6">
+          <div className="flex items-center justify-center gap-4 border-t border-carreta-red/10 bg-carreta-red/[0.02] px-6 py-6">
             <ThemeToggle />
             <LanguageToggle />
           </div>

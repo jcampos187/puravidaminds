@@ -116,6 +116,14 @@ const common: Record<string, Record<Locale, TranslationValue>> = {
     en: "Close menu",
     es: "Cerrar menú",
   },
+  "mobileMenu.browseSub": {
+    en: "Explore all artesanías",
+    es: "Explorar todas las artesanías",
+  },
+  "mobileMenu.artisansSub": {
+    en: "Meet our artisans",
+    es: "Conoce a nuestros artesanos",
+  },
 
   // ─── Theme ──────────────────────────────────────────────────
   "theme.light": {
