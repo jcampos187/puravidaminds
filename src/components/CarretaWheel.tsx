@@ -66,11 +66,13 @@ export default function CarretaWheel({
             }
             .wheel-spin {
               animation: spin-slow 20s linear infinite;
-              transform-origin: ${center}px ${center}px;
+              transform-box: fill-box;
+              transform-origin: center;
             }
             .wheel-spin-reverse {
               animation: spin-slow 25s linear infinite reverse;
-              transform-origin: ${center}px ${center}px;
+              transform-box: fill-box;
+              transform-origin: center;
             }
           `
             : ""}
