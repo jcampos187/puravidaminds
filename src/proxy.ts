@@ -10,6 +10,11 @@ export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) {
     await auth.protect();
   }
+}, {
+  authorizedParties: [
+    "https://puravidaminds.vercel.app",
+    "http://localhost:3000",
+  ],
 });
 
 export const config = {
