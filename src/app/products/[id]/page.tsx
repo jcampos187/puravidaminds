@@ -4,8 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { db } from "@/db";
 import { products, productImages, users, artisanProfiles, categories } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, and, ne, sql, desc } from "drizzle-orm";
 import ProductImageGallery from "@/components/ProductImageGallery";
+import ProductCard from "@/components/ProductCard";
 import { getTranslations } from "@/i18n/getTranslations";
 
 /** Simple UUID v4 regex — matches 8-4-4-4-12 hex format */
@@ -68,6 +69,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
       tags: products.tags,
       createdAt: products.createdAt,
       artisanId: products.artisanId,
+      categoryId: products.categoryId,
       artisanName: users.name,
       artisanAvatar: users.avatarUrl,
       artisanLocation: artisanProfiles.location,
@@ -101,6 +103,64 @@ export default async function ProductDetailPage({ params }: PageProps) {
         ? `₡${Number(product.price).toLocaleString("es-CR")}`
         : `$${Number(product.price).toFixed(2)}`
       : null;
+
+  // ── Related products (same category, exclude current) ─────────
+  const relatedProducts = product.categorySlug
+    ? await db
+        .select({
+          id: products.id,
+          title: products.title,
+          description: products.description,
+          price: products.price,
+          currency: products.currency,
+          slug: products.slug,
+          artisanId: products.artisanId,
+          categoryId: products.categoryId,
+          status: products.status,
+          tags: products.tags,
+          createdAt: products.createdAt,
+          updatedAt: products.updatedAt,
+          artisanName: users.name,
+          artisanLocation: artisanProfiles.location,
+          categoryName: categories.name,
+          categorySlug: categories.slug,
+          images: sql<
+        { url: string; altText: string | null }[]
+      >`COALESCE(json_agg(json_build_object('url', ${productImages.url}, 'altText', ${productImages.altText}) ORDER BY ${productImages.displayOrder}) FILTER (WHERE ${productImages.id} IS NOT NULL), '[]'::json)`,
+        })
+        .from(products)
+        .leftJoin(users, eq(products.artisanId, users.id))
+        .leftJoin(artisanProfiles, eq(users.id, artisanProfiles.userId))
+        .leftJoin(categories, eq(products.categoryId, categories.id))
+        .leftJoin(productImages, eq(products.id, productImages.productId))
+        .where(
+          and(
+            eq(products.categoryId, product.categoryId!),
+            ne(products.id, id),
+            eq(products.status, "active"),
+          ),
+        )
+        .groupBy(
+          products.id,
+          products.artisanId,
+          products.categoryId,
+          products.status,
+          products.tags,
+          products.createdAt,
+          products.updatedAt,
+          products.description,
+          products.title,
+          products.slug,
+          products.currency,
+          products.price,
+          users.name,
+          artisanProfiles.location,
+          categories.name,
+          categories.slug,
+        )
+        .orderBy(desc(products.createdAt))
+        .limit(4)
+    : [];
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">
@@ -233,6 +293,48 @@ export default async function ProductDetailPage({ params }: PageProps) {
           </div>
         </div>
       </div>
+
+      {/* ─── Related Products ──────────────────────────────────── */}
+      {relatedProducts.length > 0 && (
+        <section className="mt-16 border-t border-carreta-red/10 pt-12">
+          <div className="mb-8 flex items-end justify-between">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight text-[#1A1A2E] dark:text-carreta-eggshell">
+                {t("product.related.title")}
+              </h2>
+              <p className="mt-2 text-sm text-[#1A1A2E]/60 dark:text-carreta-eggshell/60">
+                {t("product.related.subtitle")}
+              </p>
+            </div>
+            <Link
+              href={`/products?category=${product.categorySlug}`}
+              className="hidden shrink-0 text-sm font-semibold text-carreta-red transition-colors hover:text-carreta-orange sm:block"
+            >
+              {t("products.all")} →
+            </Link>
+          </div>
+
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {relatedProducts.map((rp) => (
+              <ProductCard
+                key={rp.id}
+                product={rp}
+                byLabel={t("products.by")}
+                categoryLabel={rp.categorySlug ? t(`cat.${rp.categorySlug}`) : undefined}
+              />
+            ))}
+          </div>
+
+          <div className="mt-8 text-center sm:hidden">
+            <Link
+              href={`/products?category=${product.categorySlug}`}
+              className="carreta-btn inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-medium"
+            >
+              {t("products.all")} →
+            </Link>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

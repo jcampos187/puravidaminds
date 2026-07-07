@@ -85,6 +85,16 @@ const products: Record<string, Record<Locale, TranslationValue>> = {
     es: "Vendido",
   },
 
+  // ─── Related Products ────────────────────────────────────────
+  "product.related.title": {
+    en: "Related Artesanías",
+    es: "Artesanías Relacionadas",
+  },
+  "product.related.subtitle": {
+    en: "You might also like these pieces from the same category",
+    es: "También te pueden gustar estas piezas de la misma categoría",
+  },
+
   // ─── Categories Names ──────────────────────────────────────
   "cat.wood-carvings": {
     en: "Wood Carvings",
