@@ -11,7 +11,7 @@ interface MobileMenuProps {
   userName?: string | null;
 }
 
-export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
+export default function MobileMenu({ isSignedIn }: MobileMenuProps) {
   const { t } = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -21,13 +21,10 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
     } else {
       document.body.style.overflow = "";
     }
-  }, [isOpen]);
-
-  useEffect(() => {
     return () => {
       document.body.style.overflow = "";
     };
-  }, []);
+  }, [isOpen]);
 
   const toggle = useCallback(() => setIsOpen((v) => !v), []);
   const close = useCallback(() => setIsOpen(false), []);
@@ -64,27 +61,30 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
       {/* Full-screen overlay menu */}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex flex-col bg-[#F8F6F2] dark:bg-[#0D0D1A]">
-          {/* Close button — stays at top */}
-          <div className="flex items-center justify-between border-b border-carreta-red/10 px-6 py-4">
+          {/* Header bar: Home label | toggles | close button */}
+          <div className="flex items-center justify-between border-b border-carreta-red/10 px-6 py-3">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#1A1A2E]/30 dark:text-carreta-eggshell/30">
               {t("nav.home")}
             </span>
-            <button
-              onClick={close}
-              type="button"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-carreta-red/10 text-carreta-red transition-colors hover:bg-carreta-red/20"
-              aria-label={t("mobileMenu.close")}
-            >
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <LanguageToggle />
+              <button
+                onClick={close}
+                type="button"
+                className="ml-1 flex h-10 w-10 items-center justify-center rounded-full bg-carreta-red/10 text-carreta-red transition-colors hover:bg-carreta-red/20"
+                aria-label={t("mobileMenu.close")}
+              >
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
 
-          {/* Scrollable middle — nav + auth */}
-          <div className="flex-1 overflow-y-auto overscroll-contain px-5">
-            {/* Navigation */}
-            <nav className="mt-6 space-y-3">
+          {/* Navigation + Auth */}
+          <div className="flex flex-1 flex-col justify-center px-5">
+            <nav className="space-y-3">
               <Link
                 href="/products"
                 onClick={close}
@@ -121,8 +121,8 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
               </Link>
             </nav>
 
-            {/* Auth section */}
-            <div className="border-t border-carreta-red/10 py-6">
+            {/* Auth */}
+            <div className="mt-8">
               {isSignedIn ? (
                 <Link
                   href="/dashboard"
@@ -150,12 +150,6 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
                 </div>
               )}
             </div>
-          </div>
-
-          {/* Toggles — always at bottom, never overlapping */}
-          <div className="flex items-center justify-center gap-4 border-t border-carreta-red/10 bg-white/50 px-6 py-5 dark:bg-[#16162A]/50">
-            <ThemeToggle />
-            <LanguageToggle />
           </div>
         </div>
       )}
