@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LanguageToggle from "./LanguageToggle";
@@ -12,42 +12,59 @@ interface MobileMenuProps {
   userName?: string | null;
 }
 
+/** Lock body + html scroll and return a restore function. */
+function lockScroll() {
+  const { body, documentElement: html } = document;
+  const prevBodyOverflow = body.style.overflow;
+  const prevHtmlOverflow = html.style.overflow;
+  body.style.overflow = "hidden";
+  html.style.overflow = "hidden";
+  return () => {
+    body.style.overflow = prevBodyOverflow;
+    html.style.overflow = prevHtmlOverflow;
+  };
+}
+
 export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
   const { t } = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const isFirstRender = useRef(true);
 
-  // Close menu on route change
+  // Close menu on route change — skip hydration mismatch on first render
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     setIsOpen(false);
   }, [pathname]);
 
-  // Prevent body scroll when menu is open
+  // Lock/unlock scroll when menu toggles
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    if (!isOpen) return;
+    const restore = lockScroll();
+    return () => restore();
   }, [isOpen]);
 
-  // Guaranteed overflow cleanup on unmount — runs even if the component crashes
+  // Guard: restore scroll on unmount no matter what
   useEffect(() => {
     return () => {
-      document.body.style.overflow = "";
+      const { body, documentElement: html } = document;
+      body.style.overflow = "";
+      html.style.overflow = "";
     };
   }, []);
 
   const toggle = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
+      e.preventDefault();
       setIsOpen((prev) => !prev);
     },
     [],
   );
+
   const close = useCallback(() => setIsOpen(false), []);
 
   return (
@@ -55,6 +72,7 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
       {/* Hamburger button — larger tap target */}
       <button
         onClick={toggle}
+        type="button"
         className="relative flex h-12 w-12 items-center justify-center rounded-xl border-2 border-carreta-red/20 transition-all active:scale-95 hover:border-carreta-red touch-manipulation"
         aria-label={isOpen ? t("mobileMenu.close") : t("mobileMenu.open")}
         aria-expanded={isOpen}
@@ -85,20 +103,22 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
           <div
             className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm animate-fade-in"
             onClick={close}
+            aria-hidden="true"
           />
 
           {/* Menu panel */}
           <div
-            className="fixed bottom-0 left-0 right-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-3xl border-t-2 border-carreta-red/20 bg-carreta-cream shadow-2xl dark:bg-[#1A1A2E] animate-slide-up"
+            className="fixed bottom-0 left-0 right-0 z-50 max-h-[85vh] overflow-y-auto overscroll-contain rounded-t-3xl border-t-2 border-carreta-red/20 bg-carreta-cream shadow-2xl dark:bg-[#1A1A2E] animate-slide-up"
           >
             <div className="px-6 pb-8 pt-6">
               {/* Drag handle — tap to close */}
               <button
                 onClick={close}
+                type="button"
                 className="mx-auto mb-6 flex h-7 w-14 items-center justify-center rounded-full transition-all hover:scale-110 active:scale-95"
                 aria-label="Close menu"
               >
-                <span className="h-1.5 w-10 rounded-full bg-carreta-red/30 transition-colors group-hover:bg-carreta-red/60" />
+                <span className="h-1.5 w-10 rounded-full bg-carreta-red/30" />
               </button>
 
               {/* Navigation links */}
@@ -175,8 +195,6 @@ export default function MobileMenu({ isSignedIn, userName }: MobileMenuProps) {
           </div>
         </>
       )}
-
-
     </div>
   );
 }
