@@ -181,7 +181,7 @@ const seedProducts: ProductSeed[] = [
     images: [
       { url: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=800&q=80", alt: "Carreta típica colorida vista frontal" },
       { url: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=800&q=80", alt: "Detalle de pintura geométrica en la carreta" },
-      { url: "https://images.unsplash.com/photo-1578301978018-3000b1f6a5f0?w=800&q=80", alt: "Carreta típica de perfil" },
+      { url: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=800&q=80", alt: "Carreta típica de perfil (talla en madera)" },
     ],
   },
   {
@@ -211,7 +211,7 @@ const seedProducts: ProductSeed[] = [
     tags: "ceramic,pottery,Chorotega,Guaitil,traditional",
     images: [
       { url: "https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?w=800&q=80", alt: "Jarra Chorotega de barro" },
-      { url: "https://images.unsplash.com/photo-1578749556068-53b1f4ac0e31?w=800&q=80", alt: "Detalle de los patrones geométricos" },
+      { url: "https://images.unsplash.com/photo-1557426272-fc759fdf7a8d?w=800&q=80", alt: "Detalle de los patrones geométricos" },
       { url: "https://images.unsplash.com/photo-1606925797300-0b35e9d1794e?w=800&q=80", alt: "Vista superior de la jarra" },
     ],
   },
@@ -227,7 +227,7 @@ const seedProducts: ProductSeed[] = [
     tags: "ceramics,plates,animales,Costa Rica,decorative",
     images: [
       { url: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80", alt: "Set de platos decorativos con animales" },
-      { url: "https://images.unsplash.com/photo-1578749556068-53b1f4ac0e31?w=800&q=80", alt: "Plato con diseño de perezoso" },
+      { url: "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80", alt: "Plato con diseño de perezoso" },
     ],
   },
   {
@@ -241,9 +241,9 @@ const seedProducts: ProductSeed[] = [
     currency: "CRC",
     tags: "hamaca,textile,cotton,handwoven,San Ramón",
     images: [
-      { url: "https://images.unsplash.com/photo-1586350977771-b3b3abd85f6b?w=800&q=80", alt: "Hamaca doble tejida a mano" },
-      { url: "https://images.unsplash.com/photo-1540638349511-46b1f302eb3e?w=800&q=80", alt: "Detalle del tejido de la hamaca" },
-      { url: "https://images.unsplash.com/photo-1604871000636-074fac511bf2?w=800&q=80", alt: "Hamaca colgada en jardín tropical" },
+      { url: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80", alt: "Hamaca doble tejida a mano" },
+      { url: "https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=800&q=80", alt: "Detalle del tejido de la hamaca" },
+      { url: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80", alt: "Hamaca colgada en jardín tropical" },
     ],
   },
   {
@@ -273,7 +273,7 @@ const seedProducts: ProductSeed[] = [
     tags: "jewelry,tagua,seed,eco-friendly,handmade",
     images: [
       { url: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&q=80", alt: "Collar de tagua y plata" },
-      { url: "https://images.unsplash.com/photo-1603975217915-1c23100a3f44?w=800&q=80", alt: "Detalle de las cuentas de tagua" },
+      { url: "https://images.unsplash.com/photo-1544572571-ab94fd872ce4?w=800&q=80", alt: "Detalle de las cuentas de tagua" },
     ],
   },
   {
@@ -287,7 +287,7 @@ const seedProducts: ProductSeed[] = [
     currency: "CRC",
     tags: "earrings,frog,tagua,silver,costa rica",
     images: [
-      { url: "https://images.unsplash.com/photo-1635767798638-3662cb5b1e71?w=800&q=80", alt: "Aretes de rana dardo" },
+      { url: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=800&q=80", alt: "Aretes de rana dardo" },
     ],
   },
   {
@@ -318,7 +318,7 @@ const seedProducts: ProductSeed[] = [
     tags: "chocolate,cacao,artisan,Turrialba,organic",
     images: [
       { url: "https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=800&q=80", alt: "Barras de chocolate artesanal" },
-      { url: "https://images.unsplash.com/photo-1548907040-4baa42d0f2cc?w=800&q=80", alt: "Cacao en grano y chocolate" },
+      { url: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=800&q=80", alt: "Barras de chocolate artesanal" },
     ],
   },
 ];
