@@ -18,6 +18,7 @@ export default function ThemeToggle({ className = "", showLabel = false, label }
       onClick={toggleTheme}
       className={`inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-medium transition-all hover:bg-carreta-gold/10 dark:hover:bg-carreta-gold/10 ${className}`}
       aria-label={theme === "dark" ? t("theme.switchToLight") : t("theme.switchToDark")}
+      suppressHydrationWarning
     >
       {theme === "dark" ? (
         /* Sun icon for dark mode */

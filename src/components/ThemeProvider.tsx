@@ -51,7 +51,6 @@ export function ThemeProvider({ children, initialServerTheme = "light" }: ThemeP
       ? "dark"
       : "light";
   });
-
   // Sync DOM class on mount (SSR can't touch DOM)
   useEffect(() => {
     applyTheme(theme);
