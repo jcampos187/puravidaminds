@@ -1,4 +1,5 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import { eq } from "drizzle-orm";
@@ -340,25 +341,20 @@ async function seed() {
   console.log("━━━ Categories ━━━");
   const categoryMap = new Map<string, string>(); // slug → id
   for (const cat of seedCategories) {
-    try {
+    // Find existing category first to avoid insert conflicts
+    const existing = await db
+      .select({ id: categories.id })
+      .from(categories)
+      .where(eq(categories.slug, cat.slug))
+      .limit(1);
+
+    if (existing.length > 0) {
+      categoryMap.set(cat.slug, existing[0].id);
+      console.log(`  ⏭️  Skipped (exists): ${cat.name}`);
+    } else {
       const [inserted] = await db.insert(categories).values(cat).returning({ id: categories.id });
       categoryMap.set(cat.slug, inserted.id);
       console.log(`  ✅ Created: ${cat.name}`);
-    } catch (err: unknown) {
-      if (err && typeof err === "object" && "code" in err && (err as Record<string, unknown>).code === "23505") {
-        // Already exists — fetch its id
-        const [existing] = await db
-          .select({ id: categories.id })
-          .from(categories)
-          .where(eq(categories.slug, cat.slug))
-          .limit(1);
-        if (existing) {
-          categoryMap.set(cat.slug, existing.id);
-          console.log(`  ⏭️  Skipped (already exists): ${cat.name}`);
-        }
-      } else {
-        console.error(`  ❌ Error creating ${cat.name}:`, err);
-      }
     }
   }
 
@@ -367,8 +363,17 @@ async function seed() {
   const artisanIds: string[] = [];
 
   for (const artisan of seedArtisans) {
-    try {
-      // Try creating the user
+    // Check if this artisan already exists by clerkId
+    const existingUser = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.clerkId, artisan.clerkId))
+      .limit(1);
+
+    if (existingUser.length > 0) {
+      artisanIds.push(existingUser[0].id);
+      console.log(`  ⏭️  Skipped (exists): ${artisan.name}`);
+    } else {
       const [user] = await db
         .insert(users)
         .values({
@@ -379,7 +384,6 @@ async function seed() {
         })
         .returning({ id: users.id });
 
-      // Create artisan profile
       await db.insert(artisanProfiles).values({
         userId: user.id,
         ...artisan.profile,
@@ -387,21 +391,6 @@ async function seed() {
 
       artisanIds.push(user.id);
       console.log(`  ✅ Created: ${artisan.name} — ${artisan.profile.businessName}`);
-    } catch (err: unknown) {
-      if (err && typeof err === "object" && "code" in err && (err as Record<string, unknown>).code === "23505") {
-        // User already exists — fetch their id
-        const [existing] = await db
-          .select({ id: users.id })
-          .from(users)
-          .where(eq(users.clerkId, artisan.clerkId))
-          .limit(1);
-        if (existing) {
-          artisanIds.push(existing.id);
-          console.log(`  ⏭️  Skipped (already exists): ${artisan.name}`);
-        }
-      } else {
-        console.error(`  ❌ Error creating ${artisan.name}:`, err);
-      }
     }
   }
 
