@@ -318,7 +318,7 @@ const seedProducts: ProductSeed[] = [
     tags: "chocolate,cacao,artisan,Turrialba,organic",
     images: [
       { url: "https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=800&q=80", alt: "Barras de chocolate artesanal" },
-      { url: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=800&q=80", alt: "Barras de chocolate artesanal" },
+      { url: "https://images.unsplash.com/photo-1542843137-8791a6904d14?w=800&q=80", alt: "Barras de chocolate artesanal oscuro con nueces" },
     ],
   },
 ];
