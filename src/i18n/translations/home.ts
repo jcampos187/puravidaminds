@@ -7,12 +7,12 @@ const home: Record<string, Record<Locale, TranslationValue>> = {
     es: "Artesanía Costarricense Auténtica",
   },
   "hero.title.pura": {
-    en: "Pura Vida",
-    es: "Pura Vida",
+    en: "Pura Vida Minds",
+    es: "Pura Vida Minds",
   },
   "hero.title.hecho": {
-    en: "Hecho a Mano",
-    es: "Hecho a Mano",
+    en: "ARTESANÍAS Hecho a Mano",
+    es: "ARTESANÍAS Hecho a Mano",
   },
   "hero.subtitle": {
     en: "Discover the soul of Costa Rica through the hands of its master artisans. From the painted wheels of Sarchí to the weaving looms of the Central Valley — every piece carries a story.",
