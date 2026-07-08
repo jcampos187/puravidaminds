@@ -109,11 +109,7 @@ export default async function Footer() {
               <li>{t("footer.madeIn")} 🇨🇷</li>
               <li>
                 <span className="text-carreta-gold">✉</span>{" "}
-                hola@puravidaartesania.com
-              </li>
-              <li>
-                <span className="text-carreta-gold">📱</span>{" "}
-                +506 8888-ARTE
+                puravidaminds@gmail.com
               </li>
             </ul>
           </div>
