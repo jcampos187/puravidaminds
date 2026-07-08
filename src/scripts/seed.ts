@@ -287,7 +287,6 @@ const seedProducts: ProductSeed[] = [
     currency: "CRC",
     tags: "earrings,frog,tagua,silver,costa rica",
     images: [
-      { url: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=800&q=80", alt: "Aretes de rana dardo" },
       { url: "/images/aretes-dardo-2.jpg", alt: "Aretes de rana dardo dorada - detalle" },
       { url: "/images/aretes-dardo-3.jpg", alt: "Aretes de rana dardo dorada - símbolos" },
     ],
