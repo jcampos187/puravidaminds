@@ -179,9 +179,8 @@ const seedProducts: ProductSeed[] = [
     currency: "CRC",
     tags: "carreta,wood,traditional,Sarchí,souvenir",
     images: [
-      { url: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=800&q=80", alt: "Carreta típica colorida vista frontal" },
-      { url: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=800&q=80", alt: "Detalle de pintura geométrica en la carreta" },
-      { url: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=800&q=80", alt: "Carreta típica de perfil (talla en madera)" },
+      { url: "/images/carreta-1.jpg", alt: "Carreta típica pintada a mano - obra de arte" },
+      { url: "/images/carreta-2.jpg", alt: "Carreta típica pintada a mano - artesanía costarricense" },
     ],
   },
   {
