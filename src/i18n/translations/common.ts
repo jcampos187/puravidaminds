@@ -142,6 +142,60 @@ const common: Record<string, Record<Locale, TranslationValue>> = {
     en: "Switch to light mode",
     es: "Cambiar a modo claro",
   },
+
+  // ─── Contact Form ─────────────────────────────────────────
+  "contact.form.name": {
+    en: "Name",
+    es: "Nombre",
+  },
+  "contact.form.namePlaceholder": {
+    en: "Your name",
+    es: "Tu nombre",
+  },
+  "contact.form.email": {
+    en: "Email",
+    es: "Correo",
+  },
+  "contact.form.emailPlaceholder": {
+    en: "your@email.com",
+    es: "tu@correo.com",
+  },
+  "contact.form.subject": {
+    en: "Subject",
+    es: "Asunto",
+  },
+  "contact.form.subjectPlaceholder": {
+    en: "What is this about?",
+    es: "¿Sobre qué trata?",
+  },
+  "contact.form.message": {
+    en: "Message",
+    es: "Mensaje",
+  },
+  "contact.form.messagePlaceholder": {
+    en: "Tell us more...",
+    es: "Cuéntanos más...",
+  },
+  "contact.form.submit": {
+    en: "Send Message",
+    es: "Enviar Mensaje",
+  },
+  "contact.form.sending": {
+    en: "Sending...",
+    es: "Enviando...",
+  },
+  "contact.form.success": {
+    en: "✅ Message sent! We'll get back to you soon.",
+    es: "✅ ¡Mensaje enviado! Te responderemos pronto.",
+  },
+  "contact.form.error": {
+    en: "Something went wrong. Please try again.",
+    es: "Algo salió mal. Por favor intenta de nuevo.",
+  },
+  "contact.form.footerHint": {
+    en: "Send us a message — we'd love to hear from you:",
+    es: "Envíanos un mensaje — nos encantaría saber de ti:",
+  },
 };
 
 export default common;

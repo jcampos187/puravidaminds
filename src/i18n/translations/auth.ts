@@ -124,6 +124,22 @@ const auth: Record<string, Record<Locale, TranslationValue>> = {
     en: "By signing up, you agree to our Terms and Privacy Policy.",
     es: "Al registrarte, aceptas nuestros Términos y Política de Privacidad.",
   },
+  "auth.signUp.acceptTerms": {
+    en: "I have read and accept the",
+    es: "He leído y acepto los",
+  },
+  "auth.signUp.termsLink": {
+    en: "Terms & Conditions",
+    es: "Términos y Condiciones",
+  },
+  "auth.signUp.privacyLink": {
+    en: "Privacy Policy",
+    es: "Política de Privacidad",
+  },
+  "auth.signUp.and": {
+    en: "and the",
+    es: "y la",
+  },
 
   // ─── Verification ──────────────────────────────────────────
   "auth.verify.title": {

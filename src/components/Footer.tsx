@@ -1,8 +1,10 @@
 import Link from "next/link";
 import CarretaWheel from "./CarretaWheel";
+import ContactForm from "./ContactForm";
 import { getTranslations } from "@/i18n/getTranslations";
 
 export default async function Footer() {
+  const contactForm = <ContactForm />;
   const { t } = await getTranslations();
 
   const categoryLinks = [
@@ -105,13 +107,10 @@ export default async function Footer() {
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-carreta-gold">
               {t("footer.connect")}
             </h3>
-            <ul className="space-y-3 text-sm text-carreta-eggshell/70">
-              <li>{t("footer.madeIn")} 🇨🇷</li>
-              <li>
-                <span className="text-carreta-gold">✉</span>{" "}
-                puravidaminds@gmail.com
-              </li>
-            </ul>
+            <p className="mb-3 text-xs text-carreta-eggshell/60">{t("contact.form.footerHint")}</p>
+            <div className="rounded-xl border border-carreta-eggshell/10 bg-white/5 p-3">
+              {contactForm}
+            </div>
           </div>
         </div>
 

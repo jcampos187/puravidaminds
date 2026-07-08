@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useSignUp } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import CarretaWheel from "./CarretaWheel";
@@ -26,6 +27,7 @@ export function CustomSignUpForm() {
   const [website, setWebsite] = useState("");
   const [instagram, setInstagram] = useState("");
   const [facebook, setFacebook] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   function formatClerkErrorMessage(err: unknown): string {
     if (err && typeof err === "object") {
@@ -222,8 +224,29 @@ export function CustomSignUpForm() {
             </div>
           </div>
 
+          <div className="flex items-start gap-3 rounded-xl border-2 border-carreta-red/10 bg-white/50 p-4 dark:bg-[#22223A]/50">
+            <input
+              id="acceptTerms"
+              type="checkbox"
+              checked={acceptedTerms}
+              onChange={(e) => setAcceptedTerms(e.target.checked)}
+              className="mt-0.5 h-4 w-4 shrink-0 rounded border-2 border-carreta-red/30 text-carreta-red focus:ring-carreta-red"
+              required
+            />
+            <label htmlFor="acceptTerms" className="text-xs leading-relaxed text-[#1A1A2E]/70 dark:text-carreta-eggshell/70">
+              {t("auth.signUp.acceptTerms")}{" "}
+              <Link href="/terms" className="font-medium text-carreta-red underline underline-offset-2 hover:text-carreta-red/80">
+                {t("auth.signUp.termsLink")}
+              </Link>{" "}
+              {t("auth.signUp.and")}{" "}
+              <Link href="/privacy" className="font-medium text-carreta-red underline underline-offset-2 hover:text-carreta-red/80">
+                {t("auth.signUp.privacyLink")}
+              </Link>
+            </label>
+          </div>
+
           <div id="clerk-captcha" />
-          <button type="submit" disabled={isSubmitting || !email || !password || !name} className="carreta-btn flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold disabled:opacity-50">
+          <button type="submit" disabled={isSubmitting || !email || !password || !name || !acceptedTerms} className="carreta-btn flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold disabled:opacity-50">
             {isSubmitting ? <><CarretaWheel size={18} animated /> {t("auth.signUp.submitting")}</> : t("auth.signUp.submit")}
           </button>
           <p className="text-center text-xs text-[#1A1A2E]/50 dark:text-carreta-eggshell/50">{t("auth.signUp.terms")}</p>
