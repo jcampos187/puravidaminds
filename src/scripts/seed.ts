@@ -257,7 +257,7 @@ const seedProducts: ProductSeed[] = [
     tags: "bolso,handbag,textile,handwoven,geometric",
     images: [
       { url: "https://images.unsplash.com/photo-1544816155-12df9643f363?w=800&q=80", alt: "Bolso tejido geométrico" },
-      { url: "https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=800&q=80", alt: "Bolso visto desde arriba" },
+      { url: "/images/bolso-2.jpg", alt: "Bolso tejido con diseño geométrico - artesanía" },
     ],
   },
   {
