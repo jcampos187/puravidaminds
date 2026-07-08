@@ -211,8 +211,8 @@ const seedProducts: ProductSeed[] = [
     tags: "ceramic,pottery,Chorotega,Guaitil,traditional",
     images: [
       { url: "https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?w=800&q=80", alt: "Jarra Chorotega de barro" },
-      { url: "https://images.unsplash.com/photo-1557426272-fc759fdf7a8d?w=800&q=80", alt: "Detalle de los patrones geométricos" },
-      { url: "https://images.unsplash.com/photo-1606925797300-0b35e9d1794e?w=800&q=80", alt: "Vista superior de la jarra" },
+      { url: "/images/jarra-2.jpg", alt: "Jarra Chorotega tradicional - talla en madera" },
+      { url: "/images/jarra-3.jpg", alt: "Jarra Chorotega tradicional - artesanía" },
     ],
   },
   {
