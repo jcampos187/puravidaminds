@@ -227,7 +227,7 @@ const seedProducts: ProductSeed[] = [
     tags: "ceramics,plates,animales,Costa Rica,decorative",
     images: [
       { url: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80", alt: "Set de platos decorativos con animales" },
-      { url: "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80", alt: "Plato con diseño de perezoso" },
+      { url: "/images/platos-2.jpg", alt: "Set de 4 platos decorativos - artesanía" },
     ],
   },
   {
