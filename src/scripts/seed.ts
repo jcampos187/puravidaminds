@@ -195,8 +195,8 @@ const seedProducts: ProductSeed[] = [
     currency: "CRC",
     tags: "tucán,wood carving,balsa,bird,Costa Rica",
     images: [
-      { url: "https://images.unsplash.com/photo-1558021212-51b6ecfa0db9?w=800&q=80", alt: "Tucán tallado en madera" },
-      { url: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&q=80", alt: "Vista lateral del tucán de madera" },
+      { url: "/images/tucan-1.jpg", alt: "Tucán tallado en balsa - figura artesanal" },
+      { url: "/images/tucan-2.jpg", alt: "Tucán tallado en balsa - artesanía en madera" },
     ],
   },
   {
