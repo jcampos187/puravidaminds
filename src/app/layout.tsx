@@ -19,7 +19,33 @@ export const metadata: Metadata = {
     "carretas",
     "Costa Rican crafts",
     "artisans",
+    "pura vida",
+    "handmade",
+    "Costa Rican souvenirs",
   ],
+  openGraph: {
+    title: "Pura Vida Artesanías — Authentic Costa Rican Handcrafts",
+    description:
+      "Discover authentic Costa Rican handcrafted products. Connect directly with skilled artisans from Sarchí and across Costa Rica. Pura Vida.",
+    url: "https://puravidaminds.vercel.app",
+    siteName: "Pura Vida Artesanías",
+    locale: "en_US",
+    alternateLocale: "es_CR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Pura Vida Artesanías — Authentic Costa Rican Handcrafts",
+    description:
+      "Discover authentic Costa Rican handcrafted products. Connect directly with skilled artisans from Sarchí and across Costa Rica.",
+  },
+  alternates: {
+    canonical: "https://puravidaminds.vercel.app",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default async function RootLayout({

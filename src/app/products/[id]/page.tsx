@@ -25,6 +25,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const [product] = await db
     .select({
       title: products.title,
+      description: products.description,
       artisanBusinessName: artisanProfiles.businessName,
       artisanName: users.name,
     })
@@ -37,17 +38,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!product) return { title: "Product Not Found" };
 
   const artisanName = product.artisanBusinessName || product.artisanName || "Artisan";
+  const desc = product.description?.substring(0, 160) || "";
 
   if (locale === "es") {
     return {
       title: `${product.title} | Pura Vida Artesanías`,
-      description: `Artesanía de ${artisanName}. Descubre este producto hecho a mano en Costa Rica.`,
+      description: `Artesanía de ${artisanName}. ${desc}`,
+      openGraph: {
+        title: `${product.title} | Pura Vida Artesanías`,
+        description: `Artesanía de ${artisanName}. Descubre este producto hecho a mano en Costa Rica.`,
+      },
     };
   }
 
   return {
     title: `${product.title} | Pura Vida Artesanías`,
-    description: `Handcrafted by ${artisanName}. Discover this authentic Costa Rican product.`,
+    description: `Handcrafted by ${artisanName}. ${desc}`,      openGraph: {
+      title: `${product.title} | Pura Vida Artesanías`,
+      description: `Handcrafted by ${artisanName}. Discover this authentic Costa Rican product.`,
+    },
   };
 }
 
@@ -162,8 +171,28 @@ export default async function ProductDetailPage({ params }: PageProps) {
         .limit(4)
     : [];
 
+  // ── JSON-LD Structured Data ──────────────────────────────
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description: product.description?.substring(0, 200),
+    image: images.length > 0 ? images[0].url : undefined,
+    offers: product.price ? {
+      "@type": "Offer",
+      price: product.price,
+      priceCurrency: product.currency || "USD",
+      availability: "https://schema.org/InStock",
+    } : undefined,
+  };
+
   return (
-    <div className="mx-auto max-w-7xl px-6 py-12">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <div className="mx-auto max-w-7xl px-6 py-12">
       {/* Breadcrumb */}
       <nav className="mb-8 flex items-center gap-2 text-sm text-[#1A1A2E]/60 dark:text-carreta-eggshell/60">
         <Link href="/" className="hover:text-carreta-red">{t("nav.home")}</Link>
@@ -336,5 +365,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
         </section>
       )}
     </div>
+    </>
   );
 }
