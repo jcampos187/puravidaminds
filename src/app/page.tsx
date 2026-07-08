@@ -145,6 +145,10 @@ export default async function Home() {
               <span className="carreta-gradient-text">{t("hero.title.pura")}</span>
               <br />
               <span className="text-[#1A1A2E] dark:text-carreta-eggshell">
+                {t("hero.title.artesanias")}
+              </span>
+              <br />
+              <span className="text-lg font-semibold tracking-widest text-[#1A1A2E]/60 dark:text-carreta-eggshell/60 sm:text-xl md:text-2xl">
                 {t("hero.title.hecho")}
               </span>
             </h1>

@@ -10,9 +10,13 @@ const home: Record<string, Record<Locale, TranslationValue>> = {
     en: "Pura Vida Minds",
     es: "Pura Vida Minds",
   },
+  "hero.title.artesanias": {
+    en: "Artesanías",
+    es: "Artesanías",
+  },
   "hero.title.hecho": {
-    en: "ARTESANÍAS Hecho a Mano",
-    es: "ARTESANÍAS Hecho a Mano",
+    en: "Hand made",
+    es: "Hecho a mano",
   },
   "hero.subtitle": {
     en: "Discover the soul of Costa Rica through the hands of its master artisans. From the painted wheels of Sarchí to the weaving looms of the Central Valley — every piece carries a story.",
