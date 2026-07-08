@@ -144,7 +144,7 @@ export default async function Home() {
             <h1 className="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
               <span className="carreta-gradient-text">{t("hero.title.pura")}</span>
               <br />
-              <span className="text-[#1A1A2E] dark:text-carreta-eggshell">
+              <span className="text-carreta-blue dark:text-carreta-turquoise">
                 {t("hero.title.artesanias")}
               </span>
               <br />
