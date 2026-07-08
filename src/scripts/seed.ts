@@ -241,9 +241,8 @@ const seedProducts: ProductSeed[] = [
     currency: "CRC",
     tags: "hamaca,textile,cotton,handwoven,San Ramón",
     images: [
-      { url: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80", alt: "Hamaca doble tejida a mano" },
-      { url: "https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=800&q=80", alt: "Detalle del tejido de la hamaca" },
-      { url: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80", alt: "Hamaca colgada en jardín tropical" },
+      { url: "/images/hamaca-1.jpg", alt: "Hamaca doble tejida a mano - artesanos" },
+      { url: "/images/hamaca-2.jpg", alt: "Hamaca doble tejida a mano - textiles y artesanías" },
     ],
   },
   {
