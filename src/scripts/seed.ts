@@ -273,7 +273,7 @@ const seedProducts: ProductSeed[] = [
     tags: "jewelry,tagua,seed,eco-friendly,handmade",
     images: [
       { url: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&q=80", alt: "Collar de tagua y plata" },
-      { url: "https://images.unsplash.com/photo-1544572571-ab94fd872ce4?w=800&q=80", alt: "Detalle de las cuentas de tagua" },
+      { url: "/images/collar-tagua-2.jpg", alt: "Collar de semillas de tagua - detalle" },
     ],
   },
   {
