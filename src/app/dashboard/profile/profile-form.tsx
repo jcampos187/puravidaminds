@@ -156,18 +156,19 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
         />
       </div>
 
-      {/* Bio */}
+      {/* Bio (required) */}
       <div>
         <label
           htmlFor="bio"
           className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell"
         >
-          {t("profileForm.bio.label")}
+          {t("profileForm.bio.label")} *
         </label>
         <textarea
           id="bio"
           name="bio"
           rows={4}
+          required
           defaultValue={initialData?.bio || ""}
           placeholder={t("profileForm.bio.placeholder")}
           className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
@@ -181,12 +182,13 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
             htmlFor="phone"
             className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell"
           >
-            {t("profileForm.phone.label")}
+            {t("profileForm.phone.label")} *
           </label>
           <input
             id="phone"
             name="phone"
             type="tel"
+            required
             defaultValue={initialData?.phone || ""}
             placeholder="+506 8888 8888"
             className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
@@ -198,12 +200,13 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
             htmlFor="whatsapp"
             className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell"
           >
-            {t("profileForm.whatsapp.label")}
+            {t("profileForm.whatsapp.label")} *
           </label>
           <input
             id="whatsapp"
             name="whatsapp"
             type="tel"
+            required
             defaultValue={initialData?.whatsapp || ""}
             placeholder="+506 8888 9999"
             className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"

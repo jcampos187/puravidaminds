@@ -22,6 +22,7 @@ export function CustomSignUpForm() {
   const [code, setCode] = useState("");
 
   const [businessName, setBusinessName] = useState("");
+  const [bio, setBio] = useState("");
   const [phone, setPhone] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [website, setWebsite] = useState("");
@@ -125,6 +126,7 @@ export function CustomSignUpForm() {
           email,
           name,
           businessName: businessName || null,
+          bio: bio || null,
           phone: phone || null,
           whatsapp: whatsapp || null,
           website: website || null,
@@ -201,13 +203,25 @@ export function CustomSignUpForm() {
                 <label htmlFor="businessName" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.businessName")}</label>
                 <input id="businessName" type="text" value={businessName} onChange={(e) => setBusinessName(e.target.value)} placeholder={t("auth.signUp.businessNamePlaceholder")} autoComplete="organization" className="w-full rounded-xl border-2 border-carreta-gold/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-gold dark:bg-[#22223A] dark:text-carreta-eggshell" />
               </div>
-              <div>
-                <label htmlFor="phone" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.phone")}</label>
-                <input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={t("auth.signUp.phonePlaceholder")} autoComplete="tel" className="w-full rounded-xl border-2 border-carreta-gold/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-gold dark:bg-[#22223A] dark:text-carreta-eggshell" />
+              <div className="sm:col-span-2">
+                <label htmlFor="bio" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.bio")} *</label>
+                <textarea
+                  id="bio"
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  placeholder={t("auth.signUp.bioPlaceholder")}
+                  rows={3}
+                  required
+                  className="w-full rounded-xl border-2 border-carreta-gold/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-gold dark:bg-[#22223A] dark:text-carreta-eggshell"
+                />
               </div>
               <div>
-                <label htmlFor="whatsapp" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.whatsapp")}</label>
-                <input id="whatsapp" type="tel" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder={t("auth.signUp.whatsappPlaceholder")} autoComplete="tel" className="w-full rounded-xl border-2 border-carreta-gold/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-gold dark:bg-[#22223A] dark:text-carreta-eggshell" />
+                <label htmlFor="phone" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.phone")} *</label>
+                <input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={t("auth.signUp.phonePlaceholder")} autoComplete="tel" required className="w-full rounded-xl border-2 border-carreta-gold/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-gold dark:bg-[#22223A] dark:text-carreta-eggshell" />
+              </div>
+              <div>
+                <label htmlFor="whatsapp" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.whatsapp")} *</label>
+                <input id="whatsapp" type="tel" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder={t("auth.signUp.whatsappPlaceholder")} autoComplete="tel" required className="w-full rounded-xl border-2 border-carreta-gold/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-gold dark:bg-[#22223A] dark:text-carreta-eggshell" />
               </div>
               <div>
                 <label htmlFor="website" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.website")}</label>

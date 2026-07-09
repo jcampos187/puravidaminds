@@ -61,8 +61,8 @@ const auth: Record<string, Record<Locale, TranslationValue>> = {
     es: "Perfil de Artesano",
   },
   "auth.signUp.artisanProfileHint": {
-    en: "Optional — you can fill these in later from your dashboard.",
-    es: "Opcional — puedes completarlos después desde tu panel.",
+    en: "Required fields so customers can learn about you and contact you.",
+    es: "Campos obligatorios para que los clientes te conozcan y te contacten.",
   },
   "auth.signUp.businessName": {
     en: "Business Name",
@@ -111,6 +111,14 @@ const auth: Record<string, Record<Locale, TranslationValue>> = {
   "auth.signUp.facebookPlaceholder": {
     en: "https://facebook.com/...",
     es: "https://facebook.com/...",
+  },
+  "auth.signUp.bio": {
+    en: "Bio",
+    es: "Biografía",
+  },
+  "auth.signUp.bioPlaceholder": {
+    en: "Tell us about yourself and your craft...",
+    es: "Cuéntanos sobre ti y tu arte...",
   },
   "auth.signUp.submit": {
     en: "Create Account & Join",

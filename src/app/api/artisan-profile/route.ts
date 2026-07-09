@@ -32,6 +32,20 @@ export async function PUT(request: Request) {
 
   // Auto-create local user for new sign-ups (e.g. from custom sign-up form)
   if (!localUser) {
+    // Check for duplicate email before creating
+    const [existingUser] = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.email, signUpEmail))
+      .limit(1);
+
+    if (existingUser) {
+      return NextResponse.json(
+        { error: "An account with this email already exists. Please sign in instead." },
+        { status: 409 }
+      );
+    }
+
     const [created] = await db
       .insert(users)
       .values({
@@ -57,6 +71,26 @@ export async function PUT(request: Request) {
       facebook,
       coverImageUrl,
     } = body;
+
+    // Validate required fields
+    if (!bio || !(bio as string).trim()) {
+      return NextResponse.json(
+        { error: "Bio is required. Please tell us about yourself." },
+        { status: 400 }
+      );
+    }
+    if (!phone || !(phone as string).trim()) {
+      return NextResponse.json(
+        { error: "Phone number is required for customers to contact you." },
+        { status: 400 }
+      );
+    }
+    if (!whatsapp || !(whatsapp as string).trim()) {
+      return NextResponse.json(
+        { error: "WhatsApp number is required for customers to contact you." },
+        { status: 400 }
+      );
+    }
 
     // Upsert artisan profile
     const [existing] = await db
