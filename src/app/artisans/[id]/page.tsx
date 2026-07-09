@@ -161,7 +161,7 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
             )}
           </div>
 
-          <div className="flex-1 pb-2">
+          <div className="flex-1 pb-6">
             <div className="flex items-center gap-3">
               <h1 className="text-3xl font-bold tracking-tight text-[#1A1A2E] dark:text-carreta-eggshell">
                 {displayName}
