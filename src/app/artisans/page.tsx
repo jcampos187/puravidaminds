@@ -46,7 +46,7 @@ export default async function ArtisansPage() {
     .from(users)
     .innerJoin(artisanProfiles, eq(users.id, artisanProfiles.userId))
     .leftJoin(products, eq(users.id, products.artisanId))
-    .where(sql`${users.name} IS NOT NULL`)
+    .where(sql`${users.name} IS NOT NULL AND ${artisanProfiles.isVerified} = true`)
     .groupBy(users.id, users.name, users.email, users.avatarUrl, artisanProfiles.id, artisanProfiles.businessName, artisanProfiles.bio, artisanProfiles.location, artisanProfiles.coverImageUrl, artisanProfiles.isVerified)
     .orderBy(desc(artisanProfiles.isVerified), desc(sql`MAX(${products.createdAt})`));
 

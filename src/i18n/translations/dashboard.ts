@@ -318,6 +318,120 @@ const dashboard: Record<string, Record<Locale, TranslationValue>> = {
     en: "Cancel",
     es: "Cancelar",
   },
+
+  // ─── Admin ───────────────────────────────────────────────────
+  "admin.title": {
+    en: "Admin Dashboard",
+    es: "Panel de Administración",
+  },
+  "admin.subtitle": {
+    en: "Review and manage artisans and products.",
+    es: "Revisa y gestiona artesanos y productos.",
+  },
+  "admin.nav.pending": {
+    en: "Pending Reviews",
+    es: "Revisiones Pendientes",
+  },
+  "admin.nav.artisans": {
+    en: "Artisan Approvals",
+    es: "Aprobaciones de Artesanos",
+  },
+  "admin.nav.products": {
+    en: "Product Approvals",
+    es: "Aprobaciones de Productos",
+  },
+  "admin.pendingArtisans": {
+    en: "Pending Artisan Applications",
+    es: "Solicitudes de Artesanos Pendientes",
+  },
+  "admin.pendingProducts": {
+    en: "Pending Product Reviews",
+    es: "Revisiones de Productos Pendientes",
+  },
+  "admin.noPendingArtisans": {
+    en: "No pending artisan applications.",
+    es: "No hay solicitudes de artesanos pendientes.",
+  },
+  "admin.noPendingProducts": {
+    en: "No pending product reviews.",
+    es: "No hay revisiones de productos pendientes.",
+  },
+  "admin.approve": {
+    en: "Approve",
+    es: "Aprobar",
+  },
+  "admin.decline": {
+    en: "Decline",
+    es: "Rechazar",
+  },
+  "admin.approved": {
+    en: "Approved",
+    es: "Aprobado",
+  },
+  "admin.declined": {
+    en: "Declined",
+    es: "Rechazado",
+  },
+  "admin.approveArtisan": {
+    en: "Approve Artisan",
+    es: "Aprobar Artesano",
+  },
+  "admin.declineArtisan": {
+    en: "Decline Artisan",
+    es: "Rechazar Artesano",
+  },
+  "admin.approveProduct": {
+    en: "Approve Product",
+    es: "Aprobar Producto",
+  },
+  "admin.declineProduct": {
+    en: "Decline Product",
+    es: "Rechazar Producto",
+  },
+  "admin.backToDashboard": {
+    en: "← Back to Admin Dashboard",
+    es: "← Volver al Panel de Admin",
+  },
+  "admin.goToDashboard": {
+    en: "Go to Admin Dashboard",
+    es: "Ir al Panel de Admin",
+  },
+  "admin.table.artisan": {
+    en: "Artisan",
+    es: "Artesano",
+  },
+  "admin.table.email": {
+    en: "Email",
+    es: "Correo",
+  },
+  "admin.table.business": {
+    en: "Business",
+    es: "Negocio",
+  },
+  "admin.table.submitted": {
+    en: "Submitted",
+    es: "Enviado",
+  },
+  "admin.table.status": {
+    en: "Status",
+    es: "Estado",
+  },
+  "admin.table.product": {
+    en: "Product",
+    es: "Producto",
+  },
+  "admin.table.artisanName": {
+    en: "Artisan",
+    es: "Artesano",
+  },
+  "admin.review": {
+    en: "Review",
+    es: "Revisar",
+  },
+  "product.status.pending": {
+    en: "Pending",
+    es: "Pendiente",
+  },
 };
 
 export default dashboard;

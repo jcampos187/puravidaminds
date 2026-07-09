@@ -3,7 +3,7 @@ import Image from "next/image";
 import type { Product } from "@/db/schema";
 
 interface ProductCardProps {
-  product: Product & {
+  product: Omit<Product, "reviewedAt" | "reviewedBy"> & {
     images?: { url: string; altText: string | null }[];
     artisanName?: string | null;
     artisanLocation?: string | null;

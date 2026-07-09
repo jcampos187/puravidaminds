@@ -35,6 +35,7 @@ export default async function DashboardPage() {
     .where(eq(products.artisanId, localUser.id));
 
   const isArtisan = localUser.role === "artisan";
+  const isAdmin = localUser.role === "admin";
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">
@@ -164,6 +165,31 @@ export default async function DashboardPage() {
           </Link>
         </div>
       </div>
+
+      {/* Admin Quick Link */}
+      {isAdmin && (
+        <div className="mb-10">
+          <h2 className="mb-6 text-xl font-semibold text-[#1A1A2E] dark:text-carreta-eggshell">
+            Administration
+          </h2>
+          <Link
+            href="/dashboard/admin"
+            className="carreta-card group flex items-center gap-4 rounded-xl bg-white p-6 dark:bg-[#22223A]"
+          >
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-carreta-red/10 text-2xl text-carreta-red">
+              🛡️
+            </span>
+            <div>
+              <h3 className="font-semibold text-[#1A1A2E] dark:text-carreta-eggshell">
+                {t("admin.goToDashboard")}
+              </h3>
+              <p className="text-sm text-[#1A1A2E]/60 dark:text-carreta-eggshell/60">
+                {t("admin.subtitle")}
+              </p>
+            </div>
+          </Link>
+        </div>
+      )}
 
       {/* Upgrade to Artisan CTA */}
       {!isArtisan && (

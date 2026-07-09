@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { title, description, price, currency, categoryId, tags, status, imageUrls } = body;
+    const { title, description, price, currency, categoryId, tags, imageUrls } = body;
 
     if (!title || !description) {
       return NextResponse.json(
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
         currency: currency || "CRC",
         categoryId: categoryId || null,
         tags: tags || null,
-        status: status || "active",
+        status: "pending",
       })
       .returning();
 

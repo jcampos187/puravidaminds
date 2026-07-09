@@ -11,7 +11,7 @@ import {
 
 // ─── Enums ───────────────────────────────────────────────────────
 export const userRoleEnum = pgEnum("user_role", ["customer", "artisan", "admin"]);
-export const productStatusEnum = pgEnum("product_status", ["active", "inactive", "sold"]);
+export const productStatusEnum = pgEnum("product_status", ["active", "inactive", "sold", "pending"]);
 
 // ─── Users ───────────────────────────────────────────────────────
 export const users = pgTable("users", {
@@ -71,8 +71,10 @@ export const products = pgTable("products", {
   description: text("description").notNull(),
   price: decimal("price", { precision: 10, scale: 2 }),
   currency: text("currency").default("CRC").notNull(),
-  status: productStatusEnum("status").default("active").notNull(),
+  status: productStatusEnum("status").default("pending").notNull(),
   tags: text("tags"), // comma-separated
+  reviewedAt: timestamp("reviewed_at"),
+  reviewedBy: uuid("reviewed_by").references(() => users.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

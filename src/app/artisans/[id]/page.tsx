@@ -112,7 +112,7 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
     .leftJoin(categories, eq(products.categoryId, categories.id))
     .leftJoin(users, eq(products.artisanId, users.id))
     .leftJoin(artisanProfiles, eq(users.id, artisanProfiles.userId))
-    .where(eq(products.artisanId, id))
+    .where(sql`${products.artisanId} = ${id} AND ${products.status} = 'active'`)
     .groupBy(products.id, users.name, artisanProfiles.location, categories.name, categories.slug)
     .orderBy(desc(products.createdAt));
 

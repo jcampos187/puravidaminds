@@ -38,6 +38,7 @@ export async function PUT(request: Request) {
         email: signUpEmail,
         name: signUpName,
         role: "artisan",
+        isActive: true,
       })
       .returning();
     localUser = created;
@@ -91,6 +92,7 @@ export async function PUT(request: Request) {
         instagram: (instagram as string) || null,
         facebook: (facebook as string) || null,
         coverImageUrl: (coverImageUrl as string) || null,
+        isVerified: false,
       });
     }
 
