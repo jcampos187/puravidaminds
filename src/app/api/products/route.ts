@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "@/db";
 import { products, productImages, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { notifyNewProduct } from "@/lib/notifications";
 
 export async function POST(request: Request) {
   const { userId: clerkId } = await auth();
@@ -71,6 +72,14 @@ export async function POST(request: Request) {
         .set({ role: "artisan" })
         .where(eq(users.id, localUser.id));
     }
+
+    // Notify admin about pending product
+    const priceDisplay = price
+      ? currency === "CRC"
+        ? `₡${Number(price).toLocaleString("es-CR")}`
+        : `$${Number(price).toFixed(2)}`
+      : null;
+    await notifyNewProduct(title, localUser.name, priceDisplay);
 
     return NextResponse.json(product, { status: 201 });
   } catch (error) {

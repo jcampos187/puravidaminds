@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "@/db";
 import { users, artisanProfiles } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { notifyNewArtisan } from "@/lib/notifications";
 
 export async function PUT(request: Request) {
   const { userId: clerkId } = await auth();
@@ -94,6 +95,14 @@ export async function PUT(request: Request) {
         coverImageUrl: (coverImageUrl as string) || null,
         isVerified: false,
       });
+
+      // Notify admin about new artisan registration
+      await notifyNewArtisan(
+        localUser.name || signUpName || "Unknown",
+        localUser.email || signUpEmail,
+        (businessName as string) || null,
+        (location as string) || null
+      );
     }
 
     // Update user role
