@@ -33,7 +33,7 @@ export async function POST(request: Request) {
 
     const { error } = await resend.emails.send({
       from: "Contacto Pura Vida Minds <onboarding@resend.dev>",
-      to: "puravidaminds@gmail.com",
+      to: "kayfas12@gmail.com",    // Temporary — update to puravidaminds@gmail.com once a domain is verified on Resend
       replyTo: email,
       subject: subject
         ? `[Pura Vida Minds] ${subject}`
