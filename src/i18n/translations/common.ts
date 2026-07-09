@@ -96,6 +96,18 @@ const common: Record<string, Record<Locale, TranslationValue>> = {
     en: "Privacy Policy",
     es: "Política de Privacidad",
   },
+  "footer.followUs": {
+    en: "Follow Us",
+    es: "Síguenos",
+  },
+  "footer.facebook": {
+    en: "Facebook",
+    es: "Facebook",
+  },
+  "footer.instagram": {
+    en: "Instagram",
+    es: "Instagram",
+  },
 
   // ─── Accessibility ──────────────────────────────────────────
   "accessibility.carretaWheel": {
