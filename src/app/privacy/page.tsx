@@ -50,7 +50,7 @@ export default async function PrivacyPage() {
 
           <Section title="1. Introducción">
             <p>
-              En Pura Vida Artesanías ("nosotros", "nuestro", "la Plataforma"),
+              En Pura Vida Artesanías (&quot;nosotros&quot;, &quot;nuestro&quot;, &quot;la Plataforma&quot;),
               nos tomamos muy en serio la privacidad de nuestros usuarios. Esta
               Política de Privacidad explica cómo recopilamos, usamos,
               compartimos y protegemos su información personal cuando utiliza
@@ -361,7 +361,7 @@ export default async function PrivacyPage() {
 
         <Section title="1. Introduction">
           <p>
-            At Pura Vida Artesanías ("we," "our," "the Platform"), we take your
+            At Pura Vida Artesanías (&quot;we,&quot; &quot;our,&quot; &quot;the Platform&quot;), we take your
             privacy seriously. This Privacy Policy explains how we collect, use,
             share, and protect your personal information when you use our website
             and services.
@@ -482,7 +482,7 @@ export default async function PrivacyPage() {
 
         <Section title="6. Your Rights (Costa Rica Law 8968)">
           <p>
-            In accordance with Costa Rica's Law for the Protection of Individuals
+            In accordance with Costa Rica&apos;s Law for the Protection of Individuals
             regarding the Processing of their Personal Data (Law 8968), you have
             the following rights regarding your personal information:
           </p>

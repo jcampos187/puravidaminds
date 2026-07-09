@@ -152,13 +152,17 @@ export default function ProductImageGallery({
 
   // Refs for touch handlers (avoid stale closures reading state)
   const zoomRef = useRef(zoom);
-  zoomRef.current = zoom;
   const dragOffsetRef = useRef(dragOffset);
-  dragOffsetRef.current = dragOffset;
   const dragStartRef = useRef(dragStart);
-  dragStartRef.current = dragStart;
   const isDraggingRef = useRef(isDragging);
-  isDraggingRef.current = isDragging;
+
+  // Sync refs with state in useEffect to avoid updating refs during render
+  useEffect(() => {
+    zoomRef.current = zoom;
+    dragOffsetRef.current = dragOffset;
+    dragStartRef.current = dragStart;
+    isDraggingRef.current = isDragging;
+  }, [zoom, dragOffset, dragStart, isDragging]);
   const touchStartRef = useRef({ x: 0, y: 0, time: 0 });
   const touchSwipedRef = useRef(false);
   const pinchRef = useRef({ initialDist: 0, initialZoom: 1, active: false });

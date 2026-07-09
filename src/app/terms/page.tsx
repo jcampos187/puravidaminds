@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function TermsPage() {
-  const { t, locale } = await getTranslations();
+  const { locale } = await getTranslations();
 
   if (locale === "es") {
     return (
@@ -45,8 +45,8 @@ export default async function TermsPage() {
           </div>
 
           <Section title="1. Aceptación de los Términos">
-            <p>Al acceder o utilizar la plataforma Pura Vida Artesanías (el "Sitio"), usted acepta estar sujeto a estos Términos y Condiciones. Si no está de acuerdo con alguna parte de estos términos, no podrá acceder al Sitio ni utilizar nuestros servicios.</p>
-            <p>La plataforma opera como un mercado en línea que conecta a artesanos costarricenses ("Vendedores") con compradores ("Compradores"). Pura Vida Artesanías actúa únicamente como intermediario y no es parte en ninguna transacción entre Vendedores y Compradores.</p>
+            <p>Al acceder o utilizar la plataforma Pura Vida Artesanías (el &quot;Sitio&quot;), usted acepta estar sujeto a estos Términos y Condiciones. Si no está de acuerdo con alguna parte de estos términos, no podrá acceder al Sitio ni utilizar nuestros servicios.</p>
+            <p>La plataforma opera como un mercado en línea que conecta a artesanos costarricenses (&quot;Vendedores&quot;) con compradores (&quot;Compradores&quot;). Pura Vida Artesanías actúa únicamente como intermediario y no es parte en ninguna transacción entre Vendedores y Compradores.</p>
           </Section>
 
           <Section title="2. Registro de Cuenta">
@@ -96,7 +96,7 @@ export default async function TermsPage() {
           </Section>
 
           <Section title="6. Exención de Garantías">
-            <p>La plataforma se proporciona "tal cual" y "según disponibilidad", sin garantías de ningún tipo, ya sean expresas o implícitas, incluyendo pero no limitado a garantías de comerciabilidad, idoneidad para un propósito particular y no infracción.</p>
+            <p>La plataforma se proporciona &quot;tal cual&quot; y &quot;según disponibilidad&quot;, sin garantías de ningún tipo, ya sean expresas o implícitas, incluyendo pero no limitado a garantías de comerciabilidad, idoneidad para un propósito particular y no infracción.</p>
             <p>No garantizamos que:</p>
             <ul className="list-disc pl-6 space-y-1">
               <li>La plataforma sea ininterrumpida, oportuna, segura o libre de errores</li>
@@ -106,7 +106,7 @@ export default async function TermsPage() {
           </Section>
 
           <Section title="7. Propiedad Intelectual">
-            <p><strong>Del Sitio:</strong> Todo el contenido de la plataforma, incluyendo logos, diseños, texto, gráficos y el nombre "Pura Vida Artesanías", es propiedad de Pura Vida Minds y está protegido por leyes de propiedad intelectual.</p>
+            <p><strong>Del Sitio:</strong> Todo el contenido de la plataforma, incluyendo logos, diseños, texto, gráficos y el nombre &quot;Pura Vida Artesanías&quot;, es propiedad de Pura Vida Minds y está protegido por leyes de propiedad intelectual.</p>
             <p><strong>De los Artesanos:</strong> Los artesanos retienen todos los derechos de propiedad intelectual sobre sus productos, fotos y descripciones. Al publicar en la plataforma, otorgan a Pura Vida Artesanías una licencia no exclusiva para mostrar y promocionar sus productos en el Sitio y redes sociales asociadas.</p>
           </Section>
 
@@ -169,8 +169,8 @@ export default async function TermsPage() {
         </div>
 
         <Section title="1. Acceptance of Terms">
-          <p>By accessing or using the Pura Vida Artesanías platform (the "Site"), you agree to be bound by these Terms and Conditions. If you do not agree with any part of these terms, you may not access the Site or use our services.</p>
-          <p>The platform operates as an online marketplace connecting Costa Rican artisans ("Sellers") with buyers ("Buyers"). Pura Vida Artesanías acts solely as an intermediary and is not a party to any transaction between Sellers and Buyers.</p>
+          <p>By accessing or using the Pura Vida Artesanías platform (the &quot;Site&quot;), you agree to be bound by these Terms and Conditions. If you do not agree with any part of these terms, you may not access the Site or use our services.</p>
+          <p>The platform operates as an online marketplace connecting Costa Rican artisans (&quot;Sellers&quot;) with buyers (&quot;Buyers&quot;). Pura Vida Artesanías acts solely as an intermediary and is not a party to any transaction between Sellers and Buyers.</p>
         </Section>
 
         <Section title="2. Account Registration">
@@ -219,18 +219,15 @@ export default async function TermsPage() {
           <p>In no event shall the total liability of Pura Vida Artesanías exceed the total amount paid by the user in the 12 months preceding the claim.</p>
         </Section>
 
-        <Section title="6. Disclaimer of Warranties">
-          <p>The platform is provided "as is" and "as available," without warranties of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, and non-infringement.</p>
+        <Section title="6. Disclaimer of Warranties">            <p>The platform is provided &quot;as is&quot; and &quot;as available,&quot; without warranties of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, and non-infringement.</p>
           <p>We do not guarantee that:</p>
           <ul className="list-disc pl-6 space-y-1">
-            <li>The platform will be uninterrupted, timely, secure, or error-free</li>
-            <li>Listed products comply with your country's regulations</li>
+            <li>The platform will be uninterrupted, timely, secure, or error-free</li>              <li>Listed products comply with your country&apos;s regulations</li>
             <li>Artisans will fulfill placed orders</li>
           </ul>
         </Section>
 
-        <Section title="7. Intellectual Property">
-          <p><strong>Site Content:</strong> All content on the platform, including logos, designs, text, graphics, and the "Pura Vida Artesanías" name, is owned by Pura Vida Minds and protected by intellectual property laws.</p>
+        <Section title="7. Intellectual Property">            <p><strong>Site Content:</strong> All content on the platform, including logos, designs, text, graphics, and the &quot;Pura Vida Artesanías&quot; name, is owned by Pura Vida Minds and protected by intellectual property laws.</p>
           <p><strong>Artisan Content:</strong> Artisans retain all intellectual property rights to their products, photos, and descriptions. By listing on the platform, they grant Pura Vida Artesanías a non-exclusive license to display and promote their products on the Site and associated social media.</p>
         </Section>
 
@@ -259,7 +256,7 @@ export default async function TermsPage() {
         </Section>
 
         <Section title="12. Contact">
-          <p>For questions about these terms, contact us through the Site's contact form or by email.</p>
+          <p>For questions about these terms, contact us through the Site&apos;s contact form or by email.</p>
         </Section>
 
         <div className="mt-8 pt-6 border-t border-carreta-red/10">

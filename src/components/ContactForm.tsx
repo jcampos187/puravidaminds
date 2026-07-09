@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useTranslations } from "@/i18n/useTranslations";
 import CarretaWheel from "./CarretaWheel";
 
@@ -12,6 +12,13 @@ export default function ContactForm() {
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+
+  // After showing success for 4 seconds, reset the form so user can send again
+  useEffect(() => {
+    if (status !== "success") return;
+    const timer = setTimeout(() => setStatus("idle"), 4000);
+    return () => clearTimeout(timer);
+  }, [status]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();

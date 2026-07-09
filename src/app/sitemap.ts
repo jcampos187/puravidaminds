@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { db } from "@/db";
 import { products, users, artisanProfiles } from "@/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://puravidaminds.vercel.app";
