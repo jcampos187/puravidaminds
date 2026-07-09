@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "@/db";
 import { users, products } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { notifyProductReviewResult } from "@/lib/notifications";
 
 export async function PATCH(request: Request) {
   const { userId: clerkId } = await auth();
@@ -27,6 +28,28 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
 
+    // Fetch the product and its artisan for the notification email
+    const [product] = await db
+      .select({
+        id: products.id,
+        title: products.title,
+        artisanId: products.artisanId,
+      })
+      .from(products)
+      .where(eq(products.id, productId))
+      .limit(1);
+
+    if (!product) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
+    // Fetch the artisan's email and name
+    const [artisanUser] = await db
+      .select({ name: users.name, email: users.email })
+      .from(users)
+      .where(eq(users.id, product.artisanId))
+      .limit(1);
+
     if (action === "approve") {
       await db
         .update(products)
@@ -37,6 +60,16 @@ export async function PATCH(request: Request) {
           updatedAt: new Date(),
         })
         .where(eq(products.id, productId));
+
+      // Send approval email to the artisan
+      if (artisanUser) {
+        await notifyProductReviewResult(
+          artisanUser.email,
+          artisanUser.name || "Artisan",
+          product.title,
+          true
+        );
+      }
     } else {
       await db
         .update(products)
@@ -47,6 +80,16 @@ export async function PATCH(request: Request) {
           updatedAt: new Date(),
         })
         .where(eq(products.id, productId));
+
+      // Send decline email to the artisan
+      if (artisanUser) {
+        await notifyProductReviewResult(
+          artisanUser.email,
+          artisanUser.name || "Artisan",
+          product.title,
+          false
+        );
+      }
     }
 
     return NextResponse.json({ success: true });

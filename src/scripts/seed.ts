@@ -70,6 +70,20 @@ const seedCategories = [
       "Hand-tooled leather goods including belts, bags, wallets, and traditional accessories.",
     displayOrder: 8,
   },
+  {
+    name: "Food & Drinks",
+    slug: "food-drinks",
+    description:
+      "Traditional Costa Rican foods, gourmet snacks, preserves, honey, and artisanal beverages.",
+    displayOrder: 9,
+  },
+  {
+    name: "Natural Care",
+    slug: "natural-care",
+    description:
+      "Handmade soaps, shampoos, lotions, and natural body care products made with local ingredients.",
+    displayOrder: 10,
+  },
 ];
 
 const seedArtisans = [

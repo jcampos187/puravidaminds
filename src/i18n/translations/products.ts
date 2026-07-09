@@ -128,6 +128,14 @@ const products: Record<string, Record<Locale, TranslationValue>> = {
     en: "Leatherwork",
     es: "Marroquinería",
   },
+  "cat.food-drinks": {
+    en: "Food & Drinks",
+    es: "Alimentos y Bebidas",
+  },
+  "cat.natural-care": {
+    en: "Natural Care",
+    es: "Cuidado Natural",
+  },
 
   // ─── Units ─────────────────────────────────────────────────
   "unit.artesania": {

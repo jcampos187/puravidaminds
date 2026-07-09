@@ -128,6 +128,14 @@ const home: Record<string, Record<Locale, TranslationValue>> = {
     en: "Hand-tooled leather goods crafted by master artisans",
     es: "Artículos de cuero hechos a mano por maestros artesanos",
   },
+  "cat-desc.food-drinks": {
+    en: "Traditional foods, drinks, and gourmet treats",
+    es: "Alimentos, bebidas y delicias gourmet tradicionales",
+  },
+  "cat-desc.natural-care": {
+    en: "Handmade soaps and natural body care products",
+    es: "Jabones artesanales y productos naturales para el cuidado del cuerpo",
+  },
 
   // ─── Category Names ───────────────────────────────────────
   "cat.home-decor": {

@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "@/db";
 import { users, artisanProfiles } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { notifyArtisanReviewResult } from "@/lib/notifications";
 
 export async function PATCH(request: Request) {
   const { userId: clerkId } = await auth();
@@ -27,6 +28,26 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
 
+    // Fetch the artisan user's info for the notification email
+    const [artisanUser] = await db
+      .select({ name: users.name, email: users.email })
+      .from(users)
+      .where(eq(users.id, artisanUserId))
+      .limit(1);
+
+    if (!artisanUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // Fetch the artisan profile for business name
+    const [artisanProfile] = await db
+      .select({ businessName: artisanProfiles.businessName })
+      .from(artisanProfiles)
+      .where(eq(artisanProfiles.userId, artisanUserId))
+      .limit(1);
+
+    const businessName = artisanProfile?.businessName ?? null;
+
     if (action === "approve") {
       // Approve the artisan
       await db
@@ -39,12 +60,33 @@ export async function PATCH(request: Request) {
         .update(users)
         .set({ role: "artisan" })
         .where(eq(users.id, artisanUserId));
+
+      // Send approval email to the artisan
+      await notifyArtisanReviewResult(
+        artisanUser.email,
+        artisanUser.name || "Artisan",
+        businessName,
+        true
+      );
     } else {
-      // Decline — set role back to customer, deactivate
+      // Decline — remove the artisan profile so it no longer shows in pending
+      await db
+        .delete(artisanProfiles)
+        .where(eq(artisanProfiles.userId, artisanUserId));
+
+      // Reset user role to customer and deactivate
       await db
         .update(users)
         .set({ role: "customer", isActive: false })
         .where(eq(users.id, artisanUserId));
+
+      // Send decline email to the artisan
+      await notifyArtisanReviewResult(
+        artisanUser.email,
+        artisanUser.name || "Artisan",
+        businessName,
+        false
+      );
     }
 
     return NextResponse.json({ success: true });
