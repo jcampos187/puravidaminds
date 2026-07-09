@@ -10,14 +10,14 @@ export async function generateMetadata(): Promise<Metadata> {
     return {
       title: "Términos y Condiciones | Pura Vida Artesanías",
       description:
-        "Términos y condiciones para el uso de la plataforma Pura Vida Artesanías, un mercado en línea que conecta artesanos costarricenses con compradores en todo el mundo.",
+        "Términos y condiciones para el uso de la plataforma Pura Vida Artesanías, un sitio web que exhibe artesanos costarricenses y sus productos artesanales.",
     };
   }
 
   return {
     title: "Terms & Conditions | Pura Vida Artesanías",
     description:
-      "Terms and conditions for using the Pura Vida Artesanías marketplace connecting Costa Rican artisans with buyers worldwide.",
+      "Terms and conditions for using the Pura Vida Artesanías website showcasing Costa Rican artisans and their handcrafted products.",
   };
 }
 
@@ -46,7 +46,7 @@ export default async function TermsPage() {
 
           <Section title="1. Aceptación de los Términos">
             <p>Al acceder o utilizar la plataforma Pura Vida Artesanías (el &quot;Sitio&quot;), usted acepta estar sujeto a estos Términos y Condiciones. Si no está de acuerdo con alguna parte de estos términos, no podrá acceder al Sitio ni utilizar nuestros servicios.</p>
-            <p>La plataforma opera como un mercado en línea que conecta a artesanos costarricenses (&quot;Vendedores&quot;) con compradores (&quot;Compradores&quot;). Pura Vida Artesanías actúa únicamente como intermediario y no es parte en ninguna transacción entre Vendedores y Compradores.</p>
+            <p>La plataforma opera como un sitio web que exhibe artesanos costarricenses y sus productos artesanales. Pura Vida Artesanías brinda un espacio para que los artesanos compartan su trabajo y los visitantes conozcan la artesanía costarricense auténtica.</p>
           </Section>
 
           <Section title="2. Registro de Cuenta">
@@ -170,7 +170,7 @@ export default async function TermsPage() {
 
         <Section title="1. Acceptance of Terms">
           <p>By accessing or using the Pura Vida Artesanías platform (the &quot;Site&quot;), you agree to be bound by these Terms and Conditions. If you do not agree with any part of these terms, you may not access the Site or use our services.</p>
-          <p>The platform operates as an online marketplace connecting Costa Rican artisans (&quot;Sellers&quot;) with buyers (&quot;Buyers&quot;). Pura Vida Artesanías acts solely as an intermediary and is not a party to any transaction between Sellers and Buyers.</p>
+          <p>The platform operates as a website showcasing Costa Rican artisans and their handcrafted products. Pura Vida Artesanías provides a space for artisans to share their work and for visitors to learn about authentic Costa Rican craftsmanship.</p>
         </Section>
 
         <Section title="2. Account Registration">
