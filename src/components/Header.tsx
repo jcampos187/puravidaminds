@@ -42,6 +42,12 @@ export default async function Header() {
           >
             {t("nav.artisans")}
           </Link>
+          <Link
+            href="/#contact"
+            className="text-sm font-medium text-[#1A1A2E]/70 transition-colors hover:text-carreta-red dark:text-carreta-eggshell/70 dark:hover:text-carreta-gold"
+          >
+            {t("nav.contact")}
+          </Link>
 
           <LanguageToggle />
           <ThemeToggle />

@@ -103,7 +103,7 @@ export default async function Footer() {
           </div>
 
           {/* Connect */}
-          <div>
+          <div id="contact">
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-carreta-gold">
               {t("footer.connect")}
             </h3>

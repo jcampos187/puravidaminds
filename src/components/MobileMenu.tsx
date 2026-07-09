@@ -119,6 +119,23 @@ export default function MobileMenu({ isSignedIn }: MobileMenuProps) {
                   </p>
                 </div>
               </Link>
+              <Link
+                href="/#contact"
+                onClick={close}
+                className="flex items-center gap-5 rounded-2xl border-2 border-carreta-red/15 bg-white px-5 py-5 shadow-md transition-all hover:border-carreta-red/40 hover:shadow-lg dark:border-carreta-red/20 dark:bg-[#16162A] dark:hover:border-carreta-red/40"
+              >
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-carreta-red/15 text-2xl dark:bg-carreta-red/20">
+                  ✉️
+                </span>
+                <div className="min-w-0">
+                  <p className="text-lg font-bold text-[#1A1A2E] dark:text-carreta-eggshell">
+                    {t("nav.contact")}
+                  </p>
+                  <p className="mt-0.5 text-sm font-medium text-[#1A1A2E]/60 dark:text-carreta-eggshell/60">
+                    {t("contact.form.footerHint")}
+                  </p>
+                </div>
+              </Link>
             </nav>
 
             {/* Auth */}

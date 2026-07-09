@@ -62,6 +62,10 @@ const common: Record<string, Record<Locale, TranslationValue>> = {
     en: "Join as an Artisan",
     es: "Únete como Artesano",
   },
+  "nav.contact": {
+    en: "Contact Us",
+    es: "Contáctanos",
+  },
 
   // ─── Footer ────────────────────────────────────────────────
   "footer.explore": {
