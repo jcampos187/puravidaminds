@@ -1,10 +1,21 @@
-# Pura Vida Minds 🎨
+# Pura Vida Minds 🇨🇷🎨
 
 [![Smoke Test](https://github.com/jcampos187/puravidaminds/actions/workflows/smoke-test.yml/badge.svg)](https://github.com/jcampos187/puravidaminds/actions/workflows/smoke-test.yml)
 
 A bilingual (EN/ES) web platform showcasing Costa Rican artisans and their handmade crafts. Built with Next.js, Clerk auth, Drizzle ORM, Neon Postgres, and Upstash Redis.
 
 **Production:** [puravidaminds.vercel.app](https://puravidaminds.vercel.app)
+
+## Features
+
+- 🌐 Bilingual marketplace (English / Español)
+- 🧑‍🎨 Artisan profiles with bios, photos, and social links
+- 🛍️ Product listings with image galleries and categories
+- 🔐 Secure authentication via Clerk
+- 🛡️ Server-side password validation with strength indicator
+- 📧 Contact form with email notifications
+- ⚙️ Admin dashboard for reviewing artisans and products
+- 🔄 Automatic CI/CD with GitHub Actions + Vercel
 
 ## Tech Stack
 
