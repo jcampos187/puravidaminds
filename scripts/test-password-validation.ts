@@ -174,9 +174,11 @@ async function runTests(): Promise<void> {
     }
   } else {
     console.log(`  🌐 Testing against Vercel deployment: ${BASE_URL}`);
-    // Warm-up ping to avoid cold-start timeouts on the first test
+    // Warm-up pings to avoid cold-start timeouts — API functions cold-start independently
     console.log("  🌡️  Warming up...");
+    const contactEndpoint = `${BASE_URL.replace(/\/+$/, "")}/api/contact`;
     await fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" }).catch(() => {});
+    await fetch(contactEndpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" }).catch(() => {});
     console.log();
   }
 
