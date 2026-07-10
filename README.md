@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pura Vida Minds 🎨
+
+[![Smoke Test](https://github.com/jcampos187/puravidaminds/actions/workflows/smoke-test.yml/badge.svg)](https://github.com/jcampos187/puravidaminds/actions/workflows/smoke-test.yml)
+
+A bilingual (EN/ES) web platform showcasing Costa Rican artisans and their handmade crafts. Built with Next.js, Clerk auth, Drizzle ORM, Neon Postgres, and Upstash Redis.
+
+**Production:** [puravidaminds.vercel.app](https://puravidaminds.vercel.app)
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (Turbopack)
+- **Auth:** Clerk
+- **Database:** Neon Postgres + Drizzle ORM
+- **Cache/Rate Limiting:** Upstash Redis
+- **Email:** Resend
+- **File Uploads:** UploadThing
+- **Deployment:** Vercel
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Production build |
+| `npm run lint` | ESLint check |
+| `npx tsx scripts/smoke-test.ts` | Deployment smoke test (use `SMOKE_TEST_URL` env) |
+| `npx tsx scripts/test-password-validation.ts` | Password validation tests (use `VERIFICATION_URL` env) |
