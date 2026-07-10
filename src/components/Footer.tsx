@@ -150,8 +150,12 @@ export default async function Footer() {
         <div className="mt-10 border-t border-carreta-eggshell/10 pt-8 text-center">
           <p className="text-sm text-carreta-eggshell/50">
             © {new Date().getFullYear()} Pura Vida Artesanías.{" "}
-            {t("site.footer.copyright")}{" "}
-            <span className="text-carreta-gold">Pura Vida</span> 🇨🇷
+            {t("site.footer.copyright")}
+          </p>
+          <p className="mt-2 text-xs text-carreta-eggshell/40">
+            Hecho con <span className="text-carreta-red" role="img" aria-label="amor">❤️</span>{" "}
+            en <span className="text-carreta-gold">Costa Rica</span>{" "}
+            <span role="img" aria-label="Bandera de Costa Rica">🇨🇷</span>
           </p>
         </div>
       </div>
