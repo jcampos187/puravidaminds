@@ -1,0 +1,62 @@
+name: Smoke Test
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  SMOKE_TEST_URL: https://puravidaminds.vercel.app
+
+jobs:
+  wait-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Wait for Vercel deployment
+        # Note: For precise deployment-waiting (verifying the NEW commit is live),
+        # add a VERCEL_TOKEN secret to your repo and uncomment the Vercel API check below.
+        # Without it, this step confirms the PRODUCTION site is reachable, which is
+        # usually sufficient since Vercel deploys within 1-2 minutes of a push.
+        run: |
+          echo "🌐 Waiting for production site to be reachable..."
+          echo "  (For precise commit-level deployment waiting, set VERCEL_TOKEN secret)"
+          
+          for i in $(seq 1 30); do
+            STATUS=$(curl -s -o /tmp/vercel-check.html -w '%{http_code}' "${{ env.SMOKE_TEST_URL }}" 2>/dev/null || echo "000")
+            
+            if [ "$STATUS" = "200" ] && grep -qi "Pura" /tmp/vercel-check.html 2>/dev/null; then
+              echo "  ✅ Production site is live! (HTTP $STATUS)"
+              exit 0
+            fi
+            
+            printf "."
+            sleep 10
+          done
+          
+          echo ""
+          echo "❌ Timed out waiting for site"
+          exit 1
+
+      - name: Run password validation tests
+        run: npx tsx scripts/test-password-validation.ts
+        env:
+          VERIFICATION_URL: ${{ env.SMOKE_TEST_URL }}
+
+      - name: Run deployment smoke test
+        run: npx tsx scripts/smoke-test.ts
+        env:
+          SMOKE_TEST_URL: ${{ env.SMOKE_TEST_URL }}
