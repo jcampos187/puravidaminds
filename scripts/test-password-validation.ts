@@ -8,6 +8,10 @@
  *   Vercel deploy: VERIFICATION_URL=https://your-app.vercel.app npx tsx scripts/test-password-validation.ts
  */
 
+// Export marker to make this a module so TypeScript doesn't conflict
+// with other scripts that declare the same variable names.
+export {};
+
 const BASE_URL = process.env.VERIFICATION_URL || "http://localhost:3000";
 const ENDPOINT = `${BASE_URL.replace(/\/+$/, "")}/api/validate-password`;
 

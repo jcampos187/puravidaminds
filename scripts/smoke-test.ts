@@ -8,6 +8,10 @@
  *   Vercel deploy: SMOKE_TEST_URL=https://your-app.vercel.app npx tsx scripts/smoke-test.ts
  */
 
+// Export marker to make this a module so TypeScript doesn't conflict
+// with other scripts that declare the same variable names.
+export {};
+
 const BASE_URL = (process.env.SMOKE_TEST_URL || "http://localhost:3000").replace(/\/+$/, "");
 
 interface SmokeCheck {
