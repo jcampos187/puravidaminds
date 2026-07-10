@@ -25,9 +25,9 @@ interface ValidationResult {
 
 export async function POST(request: Request) {
   try {
-    // Rate limiting
+    // Rate limiting — async Redis-backed check
     const ip = getClientIp(request);
-    const rateLimit = checkRateLimit(ip, RATE_LIMIT_CONFIG);
+    const rateLimit = await checkRateLimit(ip, RATE_LIMIT_CONFIG);
 
     const headers = {
       "X-RateLimit-Limit": String(RATE_LIMIT_CONFIG.maxRequests),

@@ -1,16 +1,16 @@
 /**
- * Simple in-memory rate limiter.
+ * Global Redis-backed rate limiter using Upstash.
  *
- * Tracks request counts per IP address within a fixed time window.
- * Old entries are cleaned up on each check to prevent memory leaks.
- *
- * Note: On Vercel serverless, each instance has its own memory, so this
- * provides basic rate limiting per-instance. For strict global limits,
- * use a Redis-based solution instead.
+ * Uses atomic INCR + EXPIRE to track request counts per IP across all Vercel instances.
+ * Falls back to permissive (always allowed) if Redis is unavailable so the app
+ * degrades gracefully instead of blocking legitimate traffic.
  */
 
-interface RateLimitEntry {
-  count: number;
+import { redis } from "@/lib/redis";
+
+interface RateLimitResult {
+  allowed: boolean;
+  remaining: number;
   resetAt: number;
 }
 
@@ -20,53 +20,51 @@ interface RateLimitConfig {
 }
 
 const DEFAULT_CONFIG: RateLimitConfig = {
-  maxRequests: 10, // 10 requests
-  windowMs: 60_000, // per 60 seconds
+  maxRequests: 10,
+  windowMs: 60_000,
 };
 
-const store = new Map<string, RateLimitEntry>();
-
 /**
- * Checks if a request from the given IP is within the rate limit.
- * If allowed, increments the counter. Returns an object with `allowed` boolean
- * and remaining requests / reset time for response headers.
+ * Checks whether `identifier` (typically an IP address) has exceeded the rate
+ * limit. Returns the result synchronously so callers receive immediate feedback
+ * without awaiting a promise at the response layer.
+ *
+ * The function itself is async because it queries Redis, but the caller should
+ * `await` the result, not try to return it early.
  */
-export function checkRateLimit(
-  ip: string,
+export async function checkRateLimit(
+  identifier: string,
   config: Partial<RateLimitConfig> = {}
-): {
-  allowed: boolean;
-  remaining: number;
-  resetAt: number;
-} {
+): Promise<RateLimitResult> {
   const { maxRequests, windowMs } = { ...DEFAULT_CONFIG, ...config };
-  const now = Date.now();
 
-  // Clean up expired entries periodically (every ~100 checks)
-  if (Math.random() < 0.01) {
-    for (const [key, entry] of store) {
-      if (entry.resetAt <= now) {
-        store.delete(key);
-      }
+  try {
+    const key = `ratelimit:${identifier}`;
+
+    // INCR is atomic — safe under concurrent requests
+    const count = await redis.incr(key);
+
+    if (count === 1) {
+      // First request in this window — set expiry
+      await redis.expire(key, Math.ceil(windowMs / 1000));
     }
+
+    const ttl = await redis.ttl(key);
+    const resetAt = Date.now() + Math.max(ttl, 0) * 1000;
+
+    if (count > maxRequests) {
+      return { allowed: false, remaining: 0, resetAt };
+    }
+
+    return {
+      allowed: true,
+      remaining: Math.max(0, maxRequests - count),
+      resetAt,
+    };
+  } catch {
+    // Redis unavailable — allow the request through gracefully
+    return { allowed: true, remaining: 1, resetAt: Date.now() + windowMs };
   }
-
-  const entry = store.get(ip);
-
-  if (!entry || entry.resetAt <= now) {
-    // First request or window expired — create new entry
-    store.set(ip, { count: 1, resetAt: now + windowMs });
-    return { allowed: true, remaining: maxRequests - 1, resetAt: now + windowMs };
-  }
-
-  if (entry.count >= maxRequests) {
-    // Rate limit exceeded
-    return { allowed: false, remaining: 0, resetAt: entry.resetAt };
-  }
-
-  // Within limit — increment
-  entry.count += 1;
-  return { allowed: true, remaining: maxRequests - entry.count, resetAt: entry.resetAt };
 }
 
 /**
