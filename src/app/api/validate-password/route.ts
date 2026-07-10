@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { checkRateLimit, getClientIp } from "@/lib/rate-limiter";
+import { checkRateLimit, getClientIp, buildRateLimitHeaders } from "@/lib/rate-limiter";
 
 const MIN_LENGTH = 8;
 const UPPER_RE = /[A-Z]/;
@@ -27,18 +27,12 @@ export async function POST(request: Request) {
   try {
     // Rate limiting — async Redis-backed check
     const ip = getClientIp(request);
-    const rateLimit = await checkRateLimit(ip, RATE_LIMIT_CONFIG);
-
-    const headers = {
-      "X-RateLimit-Limit": String(RATE_LIMIT_CONFIG.maxRequests),
-      "X-RateLimit-Remaining": String(rateLimit.remaining),
-      "X-RateLimit-Reset": String(Math.ceil(rateLimit.resetAt / 1000)),
-    };
+    const rateLimit = await checkRateLimit(`validate-password:${ip}`, RATE_LIMIT_CONFIG);
 
     if (!rateLimit.allowed) {
       return NextResponse.json(
         { error: "Too many requests. Please wait before trying again." },
-        { status: 429, headers }
+        { status: 429, headers: buildRateLimitHeaders(rateLimit, RATE_LIMIT_CONFIG.maxRequests) }
       );
     }
 
@@ -72,7 +66,9 @@ export async function POST(request: Request) {
       result.error = "Password does not meet security requirements.";
     }
 
-    return NextResponse.json(result, { headers });  } catch {
+    return NextResponse.json(result, {
+      headers: buildRateLimitHeaders(rateLimit, RATE_LIMIT_CONFIG.maxRequests),
+    });  } catch {
     // Rate limit was already counted at the top of try — just return error
     return NextResponse.json(
       { error: "Invalid request body." },

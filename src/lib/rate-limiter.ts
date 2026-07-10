@@ -68,6 +68,20 @@ export async function checkRateLimit(
 }
 
 /**
+ * Builds standard rate-limit response headers for use in NextResponse.
+ */
+export function buildRateLimitHeaders(
+  rateLimit: RateLimitResult,
+  maxRequests: number
+): Record<string, string> {
+  return {
+    "X-RateLimit-Limit": String(maxRequests),
+    "X-RateLimit-Remaining": String(rateLimit.remaining),
+    "X-RateLimit-Reset": String(Math.ceil(rateLimit.resetAt / 1000)),
+  };
+}
+
+/**
  * Extracts the client IP from a Request object.
  * Checks common headers used by Vercel, Cloudflare, and other proxies.
  */

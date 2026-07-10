@@ -4,8 +4,26 @@ import { db } from "@/db";
 import { products, productImages, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { notifyNewProduct } from "@/lib/notifications";
+import { checkRateLimit, getClientIp, buildRateLimitHeaders } from "@/lib/rate-limiter";
+
+// 10 product creations per minute per IP
+const RATE_LIMIT_CONFIG = { maxRequests: 10, windowMs: 60_000 };
 
 export async function POST(request: Request) {
+  // Rate limiting
+  const ip = getClientIp(request);
+  const rateLimit = await checkRateLimit(`product:create:${ip}`, RATE_LIMIT_CONFIG);
+
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait before trying again." },
+      {
+        status: 429,
+        headers: buildRateLimitHeaders(rateLimit, RATE_LIMIT_CONFIG.maxRequests),
+      }
+    );
+  }
+
   const { userId: clerkId } = await auth();
   if (!clerkId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

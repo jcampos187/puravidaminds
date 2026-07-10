@@ -3,12 +3,30 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "@/db";
 import { products, productImages, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { checkRateLimit, getClientIp, buildRateLimitHeaders } from "@/lib/rate-limiter";
+
+// 20 product updates/deletes per minute per IP
+const RATE_LIMIT_CONFIG = { maxRequests: 20, windowMs: 60_000 };
 
 interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
 export async function PATCH(request: Request, { params }: RouteParams) {
+  // Rate limiting — isolated counter from product creation and deletes
+  const ip = getClientIp(request);
+  const rateLimit = await checkRateLimit(`product:update:${ip}`, RATE_LIMIT_CONFIG);
+
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait before trying again." },
+      {
+        status: 429,
+        headers: buildRateLimitHeaders(rateLimit, RATE_LIMIT_CONFIG.maxRequests),
+      }
+    );
+  }
+
   const { id } = await params;
   const { userId: clerkId } = await auth();
   if (!clerkId) {
@@ -88,6 +106,20 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 }
 
 export async function DELETE(request: Request, { params }: RouteParams) {
+  // Rate limiting — isolated counter from product creation and updates
+  const ip = getClientIp(request);
+  const rateLimit = await checkRateLimit(`product:delete:${ip}`, RATE_LIMIT_CONFIG);
+
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait before trying again." },
+      {
+        status: 429,
+        headers: buildRateLimitHeaders(rateLimit, RATE_LIMIT_CONFIG.maxRequests),
+      }
+    );
+  }
+
   const { id } = await params;
   const { userId: clerkId } = await auth();
   if (!clerkId) {
