@@ -18,6 +18,22 @@ const securityHeaders = [
     value:
       "camera=(), display-capture=(), geolocation=(), microphone=(), payment=(), usb=()",
   },
+  {
+    key: "Content-Security-Policy",
+    value: [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: blob: https://utfs.io https://img.clerk.com https://images.unsplash.com",
+      "font-src 'self' data:",
+      "connect-src 'self' https://api.clerk.com",
+      "frame-src 'self' https://clerk.com",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "upgrade-insecure-requests",
+    ].join("; "),
+  },
 ];
 
 const nextConfig: NextConfig = {

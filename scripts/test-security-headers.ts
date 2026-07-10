@@ -19,11 +19,6 @@ interface HeaderCheck {
   expectedHeaders: Record<string, string>;
 }
 
-// Note: Content-Security-Policy (CSP) is intentionally NOT set here because
-// Next.js uses inline scripts and styles that require complex nonce/hash
-// configuration. Adding a restrictive CSP without proper tuning would break
-// the app. This is a known gap for future improvement.
-//
 // Note: CORS headers (Access-Control-Allow-Origin, etc.) are intentionally NOT
 // verified because this app serves its own API — no third-party cross-origin
 // requests are expected. If the API is ever consumed by external clients in
@@ -39,6 +34,12 @@ const checks: HeaderCheck[] = [
       "x-content-type-options": "nosniff",
       "referrer-policy": "strict-origin-when-cross-origin",
       "permissions-policy": "camera=(), display-capture=(), geolocation=(), microphone=(), payment=(), usb=()",
+      // CSP: verify all key directives are present
+      "content-security-policy":
+        "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';" +
+        " img-src 'self' data: blob: https://utfs.io https://img.clerk.com https://images.unsplash.com;" +
+        " connect-src 'self' https://api.clerk.com; frame-src 'self' https://clerk.com;" +
+        " object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests",
     },
   },
   {
@@ -51,6 +52,11 @@ const checks: HeaderCheck[] = [
       "x-content-type-options": "nosniff",
       "referrer-policy": "strict-origin-when-cross-origin",
       "permissions-policy": "camera=(), display-capture=(), geolocation=(), microphone=(), payment=(), usb=()",
+      "content-security-policy":
+        "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';" +
+        " img-src 'self' data: blob: https://utfs.io https://img.clerk.com https://images.unsplash.com;" +
+        " connect-src 'self' https://api.clerk.com; frame-src 'self' https://clerk.com;" +
+        " object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests",
     },
   },
   {
@@ -136,15 +142,21 @@ async function runCheck(check: HeaderCheck): Promise<CheckResult> {
 
 /**
  * Compare header values with some flexibility:
- * - HSTS value can start with the expected prefix (min version check)
- * - Other headers should match exactly
+ * - HSTS: check it starts with the expected value (Vercel may add directives)
+ * - CSP: check each expected directive is present in the actual value
+ * - Other headers: exact match
  */
 function compareHeaderValues(key: string, expected: string, actual: string): boolean {
   const lowerKey = key.toLowerCase();
 
   if (lowerKey === "strict-transport-security") {
-    // HSTS can have additional config; check it starts with the expected value
     return actual.startsWith(expected);
+  }
+
+  if (lowerKey === "content-security-policy") {
+    // CSP can have additional directives; check each expected directive is present
+    const expectedParts = expected.split(";").map((p) => p.trim()).filter(Boolean);
+    return expectedParts.every((part) => actual.includes(part));
   }
 
   return actual === expected;
