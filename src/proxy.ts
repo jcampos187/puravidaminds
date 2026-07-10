@@ -1,9 +1,11 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
+// Note: API routes (/api/*) are NOT protected here because they have their own
+// explicit auth checks that return proper JSON 401 responses. Clerk's auth.protect()
+// rewrites unauthenticated requests to /_not-found (HTML 200), which masks the
+// actual auth boundary for API consumers.
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
-  "/api/products(.*)",
-  "/api/artisan-profile(.*)",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
