@@ -38,22 +38,9 @@ const checks: SmokeCheck[] = [
   { name: "Register page", type: "page", method: "GET", path: "/register", expectStatus: 200 },
 
   // ── API Routes ──
-  {
-    name: "Password validation — strong password",
-    type: "api",
-    method: "POST",
-    path: "/api/validate-password",
-    expectStatus: 200,
-    expectJson: true,
-  },
-  {
-    name: "Password validation — missing password (400)",
-    type: "api",
-    method: "POST",
-    path: "/api/validate-password",
-    expectStatus: 400,
-    expectJson: true,
-  },
+  // Note: /api/validate-password is NOT tested here — it has a dedicated
+  // comprehensive test suite (scripts/test-password-validation.ts) with 17
+  // scenarios. Running it here would consume its rate limit and cause 429 errors.
   {
     name: "Contact form — missing fields (400)",
     type: "api",
@@ -86,13 +73,6 @@ async function runCheck(check: SmokeCheck): Promise<CheckResult> {
   try {
     const headers: Record<string, string> = {};
     let body: string | undefined;
-
-    if (check.method === "POST" && check.path === "/api/validate-password") {
-      headers["Content-Type"] = "application/json";
-      body = JSON.stringify(
-        check.expectStatus === 400 ? {} : { password: "Sm0ke!Test99" }
-      );
-    }
 
     if (check.method === "POST" && check.path === "/api/contact") {
       headers["Content-Type"] = "application/json";
@@ -152,11 +132,6 @@ async function main(): Promise<void> {
   if (process.env.SMOKE_TEST_URL) {
     console.log("  🌡️  Warming up (cold-start prevention)...");
     await fetch(BASE_URL, { signal: AbortSignal.timeout(10000) }).catch(() => {});
-    await fetch(`${BASE_URL}/api/validate-password`, {
-      method: "POST",
-      body: "{}",
-      signal: AbortSignal.timeout(10000),
-    }).catch(() => {});
     await fetch(`${BASE_URL}/api/contact`, {
       method: "POST",
       body: "{}",
