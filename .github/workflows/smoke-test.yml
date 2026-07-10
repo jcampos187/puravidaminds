@@ -26,29 +26,64 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Wait for Vercel deployment
-        # Note: For precise deployment-waiting (verifying the NEW commit is live),
-        # add a VERCEL_TOKEN secret to your repo and uncomment the Vercel API check below.
-        # Without it, this step confirms the PRODUCTION site is reachable, which is
-        # usually sufficient since Vercel deploys within 1-2 minutes of a push.
+      - name: Wait for Vercel deployment (commit-level)
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
-          echo "🌐 Waiting for production site to be reachable..."
-          echo "  (For precise commit-level deployment waiting, set VERCEL_TOKEN secret)"
-          
-          for i in $(seq 1 30); do
-            STATUS=$(curl -s -o /tmp/vercel-check.html -w '%{http_code}' "${{ env.SMOKE_TEST_URL }}" 2>/dev/null || echo "000")
-            
-            if [ "$STATUS" = "200" ] && grep -qi "Pura" /tmp/vercel-check.html 2>/dev/null; then
-              echo "  ✅ Production site is live! (HTTP $STATUS)"
-              exit 0
-            fi
-            
-            printf "."
-            sleep 10
+          COMMIT_SHA="${{ github.sha }}"
+
+          # ── Fallback: no token → just check site is reachable ──
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "⚠️  No VERCEL_TOKEN secret — polling site..."
+            for i in $(seq 1 30); do
+              STATUS=$(curl -s -o /dev/null -w '%{http_code}' \
+                "${{ env.SMOKE_TEST_URL }}" 2>/dev/null || echo "000")
+              if [ "$STATUS" = "200" ]; then
+                echo "  ✅ Site reachable (HTTP $STATUS)"
+                exit 0
+              fi
+              printf "."
+              sleep 10
+            done
+            echo ""; echo "❌ Timed out"; exit 1
+          fi
+
+          echo "🌐 Waiting for deployment of commit ${COMMIT_SHA:0:7}..."
+
+          # ── Poll Vercel API until deployment is READY ──
+          for i in $(seq 1 60); do
+            RESPONSE=$(curl -s -H "Authorization: Bearer $VERCEL_TOKEN" \
+              "https://api.vercel.com/v1/deployments?project=puravidaminds&limit=50")
+
+            STATE=$(echo "$RESPONSE" | jq -r --arg sha "$COMMIT_SHA" '
+              [.deployments[] | select(.meta.githubCommitSha == $sha) | .state][0] // "not_found"
+            ' 2>/dev/null || echo "error")
+
+            case "$STATE" in
+              READY)
+                echo "  ✅ Deployment READY for commit ${COMMIT_SHA:0:7}!"
+                exit 0
+                ;;
+              ERROR|FAILED)
+                echo "  ❌ Deployment failed ($STATE)!"
+                exit 1
+                ;;
+              error)
+                printf "?"  # API call failed
+                ;;
+              not_found)
+                printf "."  # deployment not yet created by Vercel
+                ;;
+              *)
+                printf "%c" "${STATE:0:1}"  # B=Building, Q=Queued, etc.
+                ;;
+            esac
+
+            sleep 5
           done
-          
+
           echo ""
-          echo "❌ Timed out waiting for site"
+          echo "❌ Timed out waiting for deployment"
           exit 1
 
       - name: Run password validation tests
