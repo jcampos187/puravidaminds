@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { useSignUp } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
@@ -18,6 +18,22 @@ export function CustomSignUpForm() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordTouched, setPasswordTouched] = useState(false);
+
+  const confirmPasswordRef = useRef<HTMLInputElement>(null);
+
+  const passwordStrength = {
+    minLength: password.length >= 8,
+    hasUpper: /[A-Z]/.test(password),
+    hasLower: /[a-z]/.test(password),
+    hasNumber: /[0-9]/.test(password),
+    hasSpecial: /[!@#$%^&*(),.?":{}|<>_]/.test(password),
+  };
+
+  const metCount = Object.values(passwordStrength).filter(Boolean).length;
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
 
@@ -49,9 +65,34 @@ export function CustomSignUpForm() {
   async function handleAuthSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+
+    if (password !== confirmPassword) {
+      setError(t("auth.signUp.passwordMismatch"));
+      return;
+    }
+
+    // Server-side password validation before sending to Clerk
     setIsSubmitting(true);
 
     try {
+      const validationRes = await fetch("/api/validate-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+
+      if (!validationRes.ok) {
+        setError(t("auth.signUp.serverValidationError"));
+        return;
+      }
+
+      const validationData = await validationRes.json();
+
+      if (!validationData.valid) {
+        setError(t("auth.signUp.serverValidationFailed"));
+        return;
+      }
+
       const createResult = await signUp.create({
         emailAddress: email,
         firstName: name,
@@ -190,7 +231,109 @@ export function CustomSignUpForm() {
               </div>
               <div>
                 <label htmlFor="password" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.password")}</label>
-                <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder={t("auth.signUp.passwordPlaceholder")} autoComplete="new-password" minLength={8} className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell" required />
+                <div className="relative">
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => { setPassword(e.target.value); setError(null); setPasswordTouched(true); }}
+                    onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); confirmPasswordRef.current?.focus(); } }}
+                    placeholder={t("auth.signUp.passwordPlaceholder")}
+                    autoComplete="new-password"
+                    minLength={8}
+                    className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 pr-12 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((p) => !p)}
+                    aria-label={showPassword ? t("auth.signUp.hidePassword") : t("auth.signUp.showPassword")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#1A1A2E]/40 transition-colors hover:text-[#1A1A2E]/70 dark:text-carreta-eggshell/40 dark:hover:text-carreta-eggshell/70"
+                  >
+                    {showPassword ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                        <line x1="1" y1="1" x2="23" y2="23" />
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+                {/* Password strength indicator */}
+                {passwordTouched && password.length > 0 && (
+                  <div className="mt-3 rounded-lg border border-carreta-red/10 bg-white/50 p-3 transition-all dark:bg-[#22223A]/50">
+                    <p className="mb-2 text-xs font-medium text-[#1A1A2E]/70 dark:text-carreta-eggshell/70">{t("auth.signUp.passwordStrength")}</p>
+                    <div className="mb-2 h-1.5 w-full overflow-hidden rounded-full bg-[#1A1A2E]/10 dark:bg-carreta-eggshell/10">
+                      <div
+                        className="h-full rounded-full transition-all duration-300"
+                        style={{
+                          width: `${(metCount / 5) * 100}%`,
+                          backgroundColor:
+                            metCount <= 2 ? "#ef4444" : metCount <= 3 ? "#f59e0b" : metCount <= 4 ? "#22c55e" : "#16a34a",
+                        }}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                      {[
+                        { key: "minLength", met: passwordStrength.minLength, label: t("auth.signUp.passwordMinLength") },
+                        { key: "hasUpper", met: passwordStrength.hasUpper, label: t("auth.signUp.passwordUpper") },
+                        { key: "hasLower", met: passwordStrength.hasLower, label: t("auth.signUp.passwordLower") },
+                        { key: "hasNumber", met: passwordStrength.hasNumber, label: t("auth.signUp.passwordNumber") },
+                        { key: "hasSpecial", met: passwordStrength.hasSpecial, label: t("auth.signUp.passwordSpecial") },
+                      ].map((item) => (
+                        <div key={item.key} className="flex items-center gap-1.5 text-xs">
+                          <span className={`shrink-0 transition-colors ${item.met ? "text-green-600 dark:text-green-400" : "text-[#1A1A2E]/30 dark:text-carreta-eggshell/30"}`}>
+                            {item.met ? "✓" : "○"}
+                          </span>
+                          <span className={`transition-colors ${item.met ? "text-green-700 dark:text-green-300" : "text-[#1A1A2E]/50 dark:text-carreta-eggshell/50"}`}>
+                            {item.label}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div>
+                <label htmlFor="confirmPassword" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.confirmPassword")}</label>
+                <div className="relative">
+                  <input
+                    ref={confirmPasswordRef}
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => { setConfirmPassword(e.target.value); setError(null); }}
+                    placeholder={t("auth.signUp.confirmPasswordPlaceholder")}
+                    autoComplete="new-password"
+                    minLength={8}
+                    className={`w-full rounded-xl border-2 bg-white px-5 py-3 pr-12 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell ${confirmPassword && password !== confirmPassword ? "border-red-500" : "border-carreta-red/20"}`}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword((p) => !p)}
+                    aria-label={showConfirmPassword ? t("auth.signUp.hidePassword") : t("auth.signUp.showPassword")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#1A1A2E]/40 transition-colors hover:text-[#1A1A2E]/70 dark:text-carreta-eggshell/40 dark:hover:text-carreta-eggshell/70"
+                  >
+                    {showConfirmPassword ? (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                        <line x1="1" y1="1" x2="23" y2="23" />
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -260,7 +403,7 @@ export function CustomSignUpForm() {
           </div>
 
           <div id="clerk-captcha" />
-          <button type="submit" disabled={isSubmitting || !email || !password || !name || !acceptedTerms} className="carreta-btn flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold disabled:opacity-50">
+          <button type="submit" disabled={isSubmitting || !email || !password || !confirmPassword || !name || !acceptedTerms} className="carreta-btn flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold disabled:opacity-50">
             {isSubmitting ? <><CarretaWheel size={18} animated /> {t("auth.signUp.submitting")}</> : t("auth.signUp.submit")}
           </button>
           <p className="text-center text-xs text-[#1A1A2E]/50 dark:text-carreta-eggshell/50">{t("auth.signUp.terms")}</p>

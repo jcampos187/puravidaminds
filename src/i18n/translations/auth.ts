@@ -56,6 +56,58 @@ const auth: Record<string, Record<Locale, TranslationValue>> = {
     en: "At least 8 characters",
     es: "Al menos 8 caracteres",
   },
+  "auth.signUp.confirmPassword": {
+    en: "Confirm Password",
+    es: "Confirmar Contraseña",
+  },
+  "auth.signUp.confirmPasswordPlaceholder": {
+    en: "Repeat your password",
+    es: "Repite tu contraseña",
+  },
+  "auth.signUp.passwordMismatch": {
+    en: "Passwords do not match",
+    es: "Las contraseñas no coinciden",
+  },
+  "auth.signUp.passwordStrength": {
+    en: "Password must contain:",
+    es: "La contraseña debe contener:",
+  },
+  "auth.signUp.passwordMinLength": {
+    en: "At least 8 characters",
+    es: "Al menos 8 caracteres",
+  },
+  "auth.signUp.passwordUpper": {
+    en: "One uppercase letter",
+    es: "Una letra mayúscula",
+  },
+  "auth.signUp.passwordLower": {
+    en: "One lowercase letter",
+    es: "Una letra minúscula",
+  },
+  "auth.signUp.passwordNumber": {
+    en: "One number",
+    es: "Un número",
+  },
+  "auth.signUp.passwordSpecial": {
+    en: "One special character",
+    es: "Un carácter especial",
+  },
+  "auth.signUp.showPassword": {
+    en: "Show password",
+    es: "Mostrar contraseña",
+  },
+  "auth.signUp.hidePassword": {
+    en: "Hide password",
+    es: "Ocultar contraseña",
+  },
+  "auth.signUp.serverValidationError": {
+    en: "Server validation unavailable. Please try again.",
+    es: "Validación del servidor no disponible. Intenta de nuevo.",
+  },
+  "auth.signUp.serverValidationFailed": {
+    en: "Password is not strong enough. Please check the requirements.",
+    es: "La contraseña no es lo suficientemente segura. Revisa los requisitos.",
+  },
   "auth.signUp.artisanProfile": {
     en: "Artisan Profile",
     es: "Perfil de Artesano",
