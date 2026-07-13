@@ -17,23 +17,23 @@ const securityHeaders = [
     key: "Permissions-Policy",
     value:
       "camera=(), display-capture=(), geolocation=(), microphone=(), payment=(), usb=()",
-  },
-  {
-    key: "Content-Security-Policy",
-    value: [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://utfs.io https://img.clerk.com https://images.unsplash.com",
-      "font-src 'self' data:",
-      "connect-src 'self' https://api.clerk.com",
-      "frame-src 'self' https://clerk.com",
-      "object-src 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "upgrade-insecure-requests",
-    ].join("; "),
-  },
+  },    {
+      key: "Content-Security-Policy",
+      value: [
+        "default-src 'self'",
+        "script-src 'self' https://*.clerk.accounts.dev https://challenges.cloudflare.com 'unsafe-inline'",
+        "style-src 'self' https://*.clerk.accounts.dev 'unsafe-inline'",
+        "img-src 'self' data: blob: https://*.clerk.com https://utfs.io https://images.unsplash.com",
+        "font-src 'self' data:",
+        "connect-src 'self' https://*.clerk.com https://*.clerk.accounts.dev wss://*.clerk.com",
+        "frame-src 'self' https://*.clerk.com https://*.clerk.accounts.dev https://challenges.cloudflare.com",
+        "worker-src 'self' blob:",
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+        "upgrade-insecure-requests",
+      ].join("; "),
+    },
 ];
 
 const nextConfig: NextConfig = {
