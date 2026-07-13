@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { db } from "@/db";
-import { users, products, productImages, categories } from "@/db/schema";
+import { users, artisanProfiles, products, productImages, categories } from "@/db/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import CarretaWheel from "@/components/CarretaWheel";
 import { getTranslations } from "@/i18n/getTranslations";
@@ -20,6 +20,14 @@ export default async function MyProductsPage() {
     .limit(1);
 
   if (!localUser) redirect("/dashboard");
+
+  // Ensure the user has completed their artisan profile
+  const [profileCheck] = await db
+    .select({ id: artisanProfiles.id })
+    .from(artisanProfiles)
+    .where(eq(artisanProfiles.userId, localUser.id))
+    .limit(1);
+  if (!profileCheck) redirect("/dashboard/profile?setup=true");
 
   const myProducts = await db
     .select({

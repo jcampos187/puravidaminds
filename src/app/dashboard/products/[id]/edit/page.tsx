@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { notFound, redirect } from "next/navigation";
 import { db } from "@/db";
-import { users, products, productImages, categories } from "@/db/schema";
+import { users, artisanProfiles, products, productImages, categories } from "@/db/schema";
 import { eq, asc } from "drizzle-orm";
 import CarretaWheel from "@/components/CarretaWheel";
 import { ProductForm } from "../../new/product-form";
@@ -23,6 +23,14 @@ export default async function EditProductPage({ params }: PageProps) {
     .where(eq(users.clerkId, clerkId))
     .limit(1);
   if (!localUser) redirect("/dashboard");
+
+  // Ensure the user has completed their artisan profile
+  const [profileCheck] = await db
+    .select({ id: artisanProfiles.id })
+    .from(artisanProfiles)
+    .where(eq(artisanProfiles.userId, localUser.id))
+    .limit(1);
+  if (!profileCheck) redirect("/dashboard/profile?setup=true");
 
   // Get the product and ensure it belongs to this user
   const [product] = await db

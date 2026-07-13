@@ -1,7 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
-import { categories } from "@/db/schema";
+import { users, artisanProfiles, categories } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import CarretaWheel from "@/components/CarretaWheel";
 import { ProductForm } from "./product-form";
 import { getTranslations } from "@/i18n/getTranslations";
@@ -10,6 +11,21 @@ export default async function NewProductPage() {
   const { t } = await getTranslations();
   const { userId: clerkId } = await auth();
   if (!clerkId) redirect("/sign-in");
+
+  // Get local user and verify they have an artisan profile
+  const [localUser] = await db
+    .select()
+    .from(users)
+    .where(eq(users.clerkId, clerkId))
+    .limit(1);
+  if (!localUser) redirect("/dashboard/profile?setup=true");
+
+  const [profileCheck] = await db
+    .select({ id: artisanProfiles.id })
+    .from(artisanProfiles)
+    .where(eq(artisanProfiles.userId, localUser.id))
+    .limit(1);
+  if (!profileCheck) redirect("/dashboard/profile?setup=true");
 
   const allCategories = await db
     .select()
