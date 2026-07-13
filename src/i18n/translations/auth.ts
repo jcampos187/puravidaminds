@@ -108,6 +108,14 @@ const auth: Record<string, Record<Locale, TranslationValue>> = {
     en: "Password is not strong enough. Please check the requirements.",
     es: "La contraseña no es lo suficientemente segura. Revisa los requisitos.",
   },
+  "auth.signUp.timeout": {
+    en: "The request timed out. Please check your internet connection and try again.",
+    es: "La solicitud tardó demasiado. Verifica tu conexión a internet e inténtalo de nuevo.",
+  },
+  "auth.signUp.emailSendFailed": {
+    en: "Failed to send verification email. Please check your email address and try again.",
+    es: "No se pudo enviar el correo de verificación. Verifica tu dirección de correo e inténtalo de nuevo.",
+  },
   "auth.signUp.artisanProfile": {
     en: "Artisan Profile",
     es: "Perfil de Artesano",

@@ -7,6 +7,21 @@ import { useRouter } from "next/navigation";
 import CarretaWheel from "./CarretaWheel";
 import { useTranslations } from "@/i18n/useTranslations";
 
+const REQUEST_TIMEOUT_MS = 15_000;
+
+/**
+ * Wraps a promise with a timeout so it doesn't hang indefinitely.
+ * Used for Clerk SDK calls which don't accept AbortSignal natively.
+ */
+function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`Request timed out after ${ms / 1000}s: ${label}`)), ms)
+    ),
+  ]);
+}
+
 export function CustomSignUpForm() {
   const { t } = useTranslations();
   const { signUp, errors: clerkErrors } = useSignUp();
@@ -75,14 +90,25 @@ export function CustomSignUpForm() {
     setIsSubmitting(true);
 
     try {
-      const validationRes = await fetch("/api/validate-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
-      });
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+      let validationRes: Response;
+      try {
+        validationRes = await fetch("/api/validate-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password }),
+          signal: controller.signal,
+        });
+      } finally {
+        clearTimeout(timeoutId);
+      }
 
       if (!validationRes.ok) {
-        setError(t("auth.signUp.serverValidationError"));
+        const body = await validationRes.json().catch(() => ({}));
+        setError(body?.error || t("auth.signUp.serverValidationError"));
+        setIsSubmitting(false);
         return;
       }
 
@@ -90,13 +116,18 @@ export function CustomSignUpForm() {
 
       if (!validationData.valid) {
         setError(t("auth.signUp.serverValidationFailed"));
+        setIsSubmitting(false);
         return;
       }
 
-      const createResult = await signUp.create({
-        emailAddress: email,
-        firstName: name,
-      });
+      const createResult = await withTimeout(
+        signUp.create({
+          emailAddress: email,
+          firstName: name,
+        }),
+        REQUEST_TIMEOUT_MS,
+        "Creating Clerk account"
+      );
 
       if (createResult?.error) {
         console.error("Clerk signUp.create error:", createResult.error);
@@ -105,7 +136,11 @@ export function CustomSignUpForm() {
         return;
       }
 
-      const pwdResult = await signUp.password({ password });
+      const pwdResult = await withTimeout(
+        signUp.password({ password }),
+        REQUEST_TIMEOUT_MS,
+        "Setting password"
+      );
 
       if (pwdResult?.error) {
         console.error("Clerk signUp.password error:", pwdResult.error);
@@ -115,17 +150,41 @@ export function CustomSignUpForm() {
       }
 
       try {
-        await signUp.verifications.sendEmailCode();
+        await withTimeout(
+          signUp.verifications.sendEmailCode(),
+          REQUEST_TIMEOUT_MS,
+          "Sending verification email"
+        );
         setStep("verify");
-      } catch {
-        await signUp.finalize();
-        await saveProfile();
-        setStep("complete");
-        setTimeout(() => router.push("/dashboard"), 1500);
+      } catch (emailErr) {
+        // If sending email code fails (timeout or Clerk issue), auto-finalize
+        // so the user isn't stuck with an incomplete sign-up.
+        console.warn("Email verification failed, auto-finalizing:", emailErr);
+        try {
+          await withTimeout(
+            signUp.finalize(),
+            REQUEST_TIMEOUT_MS,
+            "Finalizing sign-up"
+          );
+          await saveProfile();
+          setStep("complete");
+          setTimeout(() => router.push("/dashboard"), 1500);
+        } catch (finalizeErr) {
+          console.error("Auto-finalize failed:", finalizeErr);
+          setError(
+            emailErr instanceof Error && emailErr.message.includes("timed out")
+              ? t("auth.signUp.timeout")
+              : t("auth.signUp.emailSendFailed")
+          );
+        }
       }
     } catch (err: unknown) {
       console.error("Clerk signUp exception:", err);
-      setError(formatClerkErrorMessage(err));
+      if (err instanceof Error && (err.name === "AbortError" || err.message.includes("timed out"))) {
+        setError(t("auth.signUp.timeout"));
+      } else {
+        setError(formatClerkErrorMessage(err));
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -137,7 +196,11 @@ export function CustomSignUpForm() {
     setIsSubmitting(true);
 
     try {
-      const verifyResult = await signUp.verifications.verifyEmailCode({ code });
+      const verifyResult = await withTimeout(
+        signUp.verifications.verifyEmailCode({ code }),
+        REQUEST_TIMEOUT_MS,
+        "Verifying email code"
+      );
 
       if (verifyResult?.error) {
         console.error("Clerk verifyEmailCode error:", verifyResult.error);
@@ -146,13 +209,21 @@ export function CustomSignUpForm() {
         return;
       }
 
-      await signUp.finalize();
+      await withTimeout(
+        signUp.finalize(),
+        REQUEST_TIMEOUT_MS,
+        "Finalizing sign-up"
+      );
       await saveProfile();
       setStep("complete");
       setTimeout(() => router.push("/dashboard"), 1500);
     } catch (err: unknown) {
       console.error("Clerk signUp exception:", err);
-      setError(formatClerkErrorMessage(err));
+      if (err instanceof Error && err.message.includes("timed out")) {
+        setError(t("auth.signUp.timeout"));
+      } else {
+        setError(formatClerkErrorMessage(err));
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -160,7 +231,10 @@ export function CustomSignUpForm() {
 
   async function saveProfile() {
     try {
-      await fetch("/api/artisan-profile", {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+      const res = await fetch("/api/artisan-profile", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -174,9 +248,17 @@ export function CustomSignUpForm() {
           instagram: instagram || null,
           facebook: facebook || null,
         }),
+        signal: controller.signal,
       });
-    } catch {
-      console.warn("Profile save failed — user can complete later");
+
+      clearTimeout(timeoutId);
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        console.warn("Profile save returned error:", body?.error || res.status);
+      }
+    } catch (err) {
+      console.warn("Profile save failed — user can complete later:", err);
     }
   }
 
