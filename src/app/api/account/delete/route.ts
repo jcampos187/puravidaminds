@@ -21,35 +21,18 @@ export async function POST() {
   }
 
   try {
-    // 1. Delete local user — artisan_profiles, products, and product_images
-    //    are cascade-deleted by the DB schema:
-    //    - artisanProfiles.userId → users.id (onDelete: cascade)
-    //    - products.artisanId → users.id (onDelete: cascade)
-    //    - productImages.productId → products.id (onDelete: cascade)
+    // Delete local user — artisan_profiles, products, and product_images
+    // are cascade-deleted by the DB schema:
+    //   - artisanProfiles.userId → users.id (onDelete: cascade)
+    //   - products.artisanId → users.id (onDelete: cascade)
+    //   - productImages.productId → products.id (onDelete: cascade)
+    //
+    // The Clerk user is intentionally NOT deleted here so that the
+    // client-side signOut() call can properly clear the session without
+    // running into an inconsistent state. The sign-in page validates
+    // against the local users table, so orphaned Clerk accounts cannot
+    // sign in.
     await db.delete(users).where(eq(users.id, localUser.id));
-
-    // 2. Delete the Clerk user via the Backend API so they can't sign in again
-    if (process.env.CLERK_SECRET_KEY) {
-      const res = await fetch(`https://api.clerk.com/v1/users/${clerkId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
-        },
-      });
-
-      if (!res.ok) {
-        const body = await res.text().catch(() => "");
-        console.error(
-          `Clerk API returned ${res.status} when deleting user ${clerkId}:`,
-          body
-        );
-        // Non-fatal — the local user is already deleted
-      }
-    } else {
-      console.warn(
-        "CLERK_SECRET_KEY not configured — Clerk user not deleted."
-      );
-    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
