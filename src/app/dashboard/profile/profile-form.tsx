@@ -294,12 +294,11 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
 
 function DeleteAccountSection({ signOut }: { signOut: () => Promise<void> }) {
   const { t } = useTranslations();
+  const router = useRouter();
   const [showConfirm, setShowConfirm] = useState(false);
   const [confirmText, setConfirmText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [deleted, setDeleted] = useState(false);
-
   async function handleDelete() {
     setIsDeleting(true);
     setError(null);
@@ -312,23 +311,13 @@ function DeleteAccountSection({ signOut }: { signOut: () => Promise<void> }) {
         throw new Error(body.error || "Failed to delete account");
       }
 
-      setDeleted(true);
-      // Sign out after a brief delay so the user sees the success message
-      setTimeout(() => signOut(), 1500);
+      // Sign out and redirect to home page
+      await signOut();
+      router.push("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
       setIsDeleting(false);
     }
-  }
-
-  if (deleted) {
-    return (
-      <div className="rounded-xl border-2 border-green-200 bg-green-50 p-6 text-center dark:border-green-800 dark:bg-green-950/30">
-        <p className="text-sm font-medium text-green-700 dark:text-green-400">
-          {t("account.delete.success")}
-        </p>
-      </div>
-    );
   }
 
   return (
