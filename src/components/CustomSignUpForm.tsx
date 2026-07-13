@@ -284,7 +284,7 @@ export function CustomSignUpForm() {
             <p className="text-sm text-[#1A1A2E]/70 dark:text-carreta-eggshell/70">{t("auth.verify.sent", email)}</p>
           </div>              <div>
                 <label htmlFor="code" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.verify.title")}</label>
-                <input id="code" type="text" value={code} onChange={(e) => setCode(e.target.value)} placeholder={t("auth.verify.placeholder")} autoComplete="one-time-code" className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell" required />
+                <input id="code" type="text" value={code} onChange={(e) => setCode(e.target.value)} placeholder={t("auth.verify.placeholder")} autoComplete="one-time-code" className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" required />
           </div>
           <div id="clerk-captcha" />
           <button type="submit" disabled={isSubmitting || !code} className="carreta-btn w-full rounded-xl py-3 text-sm font-semibold disabled:opacity-50">{isSubmitting ? t("auth.verify.submitting") : t("auth.verify.submit")}</button>
@@ -297,11 +297,11 @@ export function CustomSignUpForm() {
             <div className="space-y-4 rounded-xl border-2 border-carreta-red/10 bg-white/50 p-4 dark:bg-[#22223A]/50">
               <div>
                 <label htmlFor="fullName" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.fullName")}</label>
-                <input id="fullName" type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t("auth.signUp.fullNamePlaceholder")} autoComplete="name" className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell" required />
+                <input id="fullName" type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t("auth.signUp.fullNamePlaceholder")} autoComplete="name" className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" required />
               </div>
               <div>
                 <label htmlFor="email" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.email")}</label>
-                <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t("auth.signUp.emailPlaceholder")} autoComplete="email" className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell" required />
+                <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t("auth.signUp.emailPlaceholder")} autoComplete="email" className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" required />
               </div>
               <div>
                 <label htmlFor="password" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.password")}</label>
@@ -315,7 +315,7 @@ export function CustomSignUpForm() {
                     placeholder={t("auth.signUp.passwordPlaceholder")}
                     autoComplete="new-password"
                     minLength={8}
-                    className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 pr-12 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+                    className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 pr-12 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
                     required
                   />
                   <button
@@ -385,7 +385,7 @@ export function CustomSignUpForm() {
                     placeholder={t("auth.signUp.confirmPasswordPlaceholder")}
                     autoComplete="new-password"
                     minLength={8}
-                    className={`w-full rounded-xl border-2 bg-white px-5 py-3 pr-12 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell ${confirmPassword && password !== confirmPassword ? "border-red-500" : "border-carreta-red/20"}`}
+                    className={`w-full rounded-xl border-2 bg-white px-5 py-3 pr-12 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell ${confirmPassword && password !== confirmPassword ? "border-red-500" : "border-carreta-blue/20"}`}
                     required
                   />
                   <button
@@ -418,7 +418,7 @@ export function CustomSignUpForm() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
                 <label htmlFor="businessName" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.businessName")}</label>
-                <input id="businessName" type="text" value={businessName} onChange={(e) => setBusinessName(e.target.value)} placeholder={t("auth.signUp.businessNamePlaceholder")} autoComplete="organization" className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell" />
+                <input id="businessName" type="text" value={businessName} onChange={(e) => setBusinessName(e.target.value)} placeholder={t("auth.signUp.businessNamePlaceholder")} autoComplete="organization" className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" />
               </div>
               <div className="sm:col-span-2">
                 <label htmlFor="bio" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.bio")} *</label>
@@ -429,28 +429,28 @@ export function CustomSignUpForm() {
                   placeholder={t("auth.signUp.bioPlaceholder")}
                   rows={3}
                   required
-                  className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+                  className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
                 />
               </div>
               <div>
                 <label htmlFor="phone" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.phone")} *</label>
-                <input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={t("auth.signUp.phonePlaceholder")} autoComplete="tel" required className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell" />
+                <input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={t("auth.signUp.phonePlaceholder")} autoComplete="tel" required className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" />
               </div>
               <div>
                 <label htmlFor="whatsapp" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.whatsapp")} *</label>
-                <input id="whatsapp" type="tel" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder={t("auth.signUp.whatsappPlaceholder")} autoComplete="tel" required className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell" />
+                <input id="whatsapp" type="tel" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder={t("auth.signUp.whatsappPlaceholder")} autoComplete="tel" required className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" />
               </div>
               <div>
                 <label htmlFor="website" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.website")}</label>
-                <input id="website" type="url" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder={t("auth.signUp.websitePlaceholder")} autoComplete="url" className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell" />
+                <input id="website" type="url" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder={t("auth.signUp.websitePlaceholder")} autoComplete="url" className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" />
               </div>
               <div>
                 <label htmlFor="instagram" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.instagram")}</label>
-                <input id="instagram" type="text" value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder={t("auth.signUp.instagramPlaceholder")} autoComplete="off" className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell" />
+                <input id="instagram" type="text" value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder={t("auth.signUp.instagramPlaceholder")} autoComplete="off" className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" />
               </div>
               <div>
                 <label htmlFor="facebook" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.facebook")}</label>
-                <input id="facebook" type="url" value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder={t("auth.signUp.facebookPlaceholder")} autoComplete="off" className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell" />
+                <input id="facebook" type="url" value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder={t("auth.signUp.facebookPlaceholder")} autoComplete="off" className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" />
               </div>
             </div>
           </div>

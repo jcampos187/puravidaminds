@@ -93,7 +93,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
         <label className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">
           {t("profileForm.cover.label")}
         </label>
-        <div className="rounded-xl border-2 border-dashed border-carreta-red/20 bg-white p-6 dark:bg-[#22223A]">
+        <div className="rounded-xl border-2 border-dashed border-carreta-blue/20 bg-white p-6 dark:bg-[#22223A]">
           <UploadButton
             endpoint="artisanCover"
             onClientUploadComplete={(res) => {
@@ -136,7 +136,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
           type="text"
           defaultValue={initialData?.businessName || ""}
           placeholder={t("profileForm.businessName.placeholder")}
-          className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+          className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
         />
       </div>
 
@@ -154,7 +154,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
           type="text"
           defaultValue={initialData?.location || ""}
           placeholder={t("profileForm.location.placeholder")}
-          className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+          className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
         />
       </div>
 
@@ -173,7 +173,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
           required
           defaultValue={initialData?.bio || ""}
           placeholder={t("profileForm.bio.placeholder")}
-          className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+          className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
         />
       </div>
 
@@ -193,7 +193,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
             required
             defaultValue={initialData?.phone || ""}
             placeholder="+506 8888 8888"
-            className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+            className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
           />
         </div>
 
@@ -211,7 +211,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
             required
             defaultValue={initialData?.whatsapp || ""}
             placeholder="+506 8888 9999"
-            className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+            className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
           />
         </div>
 
@@ -228,7 +228,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
             type="url"
             defaultValue={initialData?.website || ""}
             placeholder="https://myartesanias.com"
-            className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+            className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
           />
         </div>
 
@@ -245,7 +245,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
             type="text"
             defaultValue={initialData?.instagram || ""}
             placeholder="e.g. @misartesanias"
-            className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+            className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
           />
         </div>
 
@@ -262,7 +262,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
             type="url"
             defaultValue={initialData?.facebook || ""}
             placeholder="https://facebook.com/misartesanias"
-            className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+            className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
           />
         </div>
       </div>
@@ -286,7 +286,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
       </div>
 
       {/* ── Danger Zone: Delete Account ── */}
-      <hr className="my-10 border-carreta-red/20" />
+      <hr className="my-10 border-carreta-blue/20" />
       <DeleteAccountSection signOut={signOut} />
     </form>
   );

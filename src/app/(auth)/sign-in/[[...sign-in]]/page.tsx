@@ -118,7 +118,7 @@ export default function SignInPage() {
               placeholder={t("auth.signIn.emailPlaceholder")}
               autoComplete="email"
               required
-              className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+              className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
             />
           </div>
 

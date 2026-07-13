@@ -128,7 +128,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             name="q"
             defaultValue={params.q || ""}
             placeholder={t("products.search")}
-            className="w-full rounded-full border-2 border-carreta-red/20 bg-white px-5 py-3.5 pl-12 text-[16px] sm:text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell dark:placeholder-carreta-eggshell/40"
+            className="w-full rounded-full border-2 border-carreta-blue/20 bg-white px-5 py-3.5 pl-12 text-[16px] sm:text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell dark:placeholder-carreta-eggshell/40"
           />
           <svg
             className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#1A1A2E]/40 dark:text-carreta-eggshell/40"
@@ -171,7 +171,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
 
       {/* Results */}
       {allProducts.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-carreta-red/20 bg-white/50 px-6 py-20 dark:bg-[#22223A]/50">
+        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-carreta-blue/20 bg-white/50 px-6 py-20 dark:bg-[#22223A]/50">
           <CarretaWheel size={64} variant="outline" className="opacity-30" />
           <h3 className="mt-6 text-lg font-semibold text-[#1A1A2E] dark:text-carreta-eggshell">
             {t("products.empty")}
