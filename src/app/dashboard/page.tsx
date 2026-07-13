@@ -34,7 +34,6 @@ export default async function DashboardPage() {
     .from(products)
     .where(eq(products.artisanId, localUser.id));
 
-  const isArtisan = localUser.role === "artisan";
   const isAdmin = localUser.role === "admin";
 
   return (
@@ -48,9 +47,7 @@ export default async function DashboardPage() {
               {t("dashboard.welcome", clerkUser.firstName || "friend")}
             </h1>
             <p className="mt-1 text-[#1A1A2E]/60 dark:text-carreta-eggshell/60">
-              {isArtisan
-                ? t("dashboard.subtitle.artisan")
-                : t("dashboard.subtitle.customer")}
+              {t("dashboard.subtitle.artisan")}
             </p>
           </div>
         </div>
@@ -187,26 +184,6 @@ export default async function DashboardPage() {
                 {t("admin.subtitle")}
               </p>
             </div>
-          </Link>
-        </div>
-      )}
-
-      {/* Upgrade to Artisan CTA */}
-      {!isArtisan && (
-        <div className="rounded-xl border-2 border-carreta-gold/30 bg-gradient-to-br from-carreta-gold/5 to-carreta-orange/5 p-8 text-center">
-          <CarretaWheel size={48} variant="outline" className="mx-auto" />
-          <h2 className="mt-4 text-xl font-bold text-[#1A1A2E] dark:text-carreta-eggshell">
-            {t("dashboard.becomeArtisan")}
-          </h2>
-          <p className="mt-2 text-[#1A1A2E]/70 dark:text-carreta-eggshell/70">
-            {t("dashboard.becomeArtisan.sub")}
-          </p>
-          <Link
-            href="/dashboard/profile"
-            className="carreta-btn mt-6 inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-semibold"
-          >
-            <CarretaWheel size={18} variant="outline" />
-            {t("dashboard.becomeArtisan")}
           </Link>
         </div>
       )}
