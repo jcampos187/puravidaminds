@@ -311,9 +311,9 @@ function DeleteAccountSection({ signOut }: { signOut: () => Promise<void> }) {
         throw new Error(body.error || "Failed to delete account");
       }
 
-      // Sign out and redirect to home page
+      // Sign out and hard-navigate to home to avoid race conditions
       await signOut();
-      router.push("/");
+      window.location.href = "/";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
       setIsDeleting(false);
