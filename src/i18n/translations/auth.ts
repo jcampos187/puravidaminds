@@ -10,6 +10,34 @@ const auth: Record<string, Record<Locale, TranslationValue>> = {
     en: "Sign in to manage your artesanías and connect with buyers.",
     es: "Inicia sesión para gestionar tus artesanías y conectar con compradores.",
   },
+  "auth.signIn.emailLabel": {
+    en: "Email",
+    es: "Correo Electrónico",
+  },
+  "auth.signIn.emailPlaceholder": {
+    en: "your@email.com",
+    es: "tu@correo.com",
+  },
+  "auth.signIn.continue": {
+    en: "Continue",
+    es: "Continuar",
+  },
+  "auth.signIn.checking": {
+    en: "Checking...",
+    es: "Verificando...",
+  },
+  "auth.signIn.notFound": {
+    en: "No account found with this email. Only registered artisans can sign in. If you haven't joined yet, create an account below.",
+    es: "No se encontró una cuenta con este correo. Solo los artesanos registrados pueden iniciar sesión. Si aún no te has unido, crea una cuenta.",
+  },
+  "auth.signIn.noAccount": {
+    en: "Don't have an account?",
+    es: "¿No tienes cuenta?",
+  },
+  "auth.signIn.joinLink": {
+    en: "Join as Artisan",
+    es: "Únete como Artesano",
+  },
   "auth.signUp.title": {
     en: "Join Pura Vida Artesanías",
     es: "Únete a Pura Vida Artesanías",
