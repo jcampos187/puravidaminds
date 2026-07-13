@@ -7,6 +7,21 @@ import { useRouter } from "next/navigation";
 import CarretaWheel from "./CarretaWheel";
 import { useTranslations } from "@/i18n/useTranslations";
 
+const REQUEST_TIMEOUT_MS = 15_000;
+
+/**
+ * Wraps a promise with a timeout so it doesn't hang indefinitely.
+ * Used for Clerk SDK calls which don't accept AbortSignal natively.
+ */
+function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`Request timed out after ${ms / 1000}s: ${label}`)), ms)
+    ),
+  ]);
+}
+
 export function CustomSignUpForm() {
   const { t } = useTranslations();
   const { signUp, errors: clerkErrors } = useSignUp();
@@ -75,14 +90,25 @@ export function CustomSignUpForm() {
     setIsSubmitting(true);
 
     try {
-      const validationRes = await fetch("/api/validate-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
-      });
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+      let validationRes: Response;
+      try {
+        validationRes = await fetch("/api/validate-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password }),
+          signal: controller.signal,
+        });
+      } finally {
+        clearTimeout(timeoutId);
+      }
 
       if (!validationRes.ok) {
-        setError(t("auth.signUp.serverValidationError"));
+        const body = await validationRes.json().catch(() => ({}));
+        setError(body?.error || t("auth.signUp.serverValidationError"));
+        setIsSubmitting(false);
         return;
       }
 
@@ -90,13 +116,18 @@ export function CustomSignUpForm() {
 
       if (!validationData.valid) {
         setError(t("auth.signUp.serverValidationFailed"));
+        setIsSubmitting(false);
         return;
       }
 
-      const createResult = await signUp.create({
-        emailAddress: email,
-        firstName: name,
-      });
+      const createResult = await withTimeout(
+        signUp.create({
+          emailAddress: email,
+          firstName: name,
+        }),
+        REQUEST_TIMEOUT_MS,
+        "Creating Clerk account"
+      );
 
       if (createResult?.error) {
         console.error("Clerk signUp.create error:", createResult.error);
@@ -105,7 +136,11 @@ export function CustomSignUpForm() {
         return;
       }
 
-      const pwdResult = await signUp.password({ password });
+      const pwdResult = await withTimeout(
+        signUp.password({ password }),
+        REQUEST_TIMEOUT_MS,
+        "Setting password"
+      );
 
       if (pwdResult?.error) {
         console.error("Clerk signUp.password error:", pwdResult.error);
@@ -115,17 +150,41 @@ export function CustomSignUpForm() {
       }
 
       try {
-        await signUp.verifications.sendEmailCode();
+        await withTimeout(
+          signUp.verifications.sendEmailCode(),
+          REQUEST_TIMEOUT_MS,
+          "Sending verification email"
+        );
         setStep("verify");
-      } catch {
-        await signUp.finalize();
-        await saveProfile();
-        setStep("complete");
-        setTimeout(() => router.push("/dashboard"), 1500);
+      } catch (emailErr) {
+        // If sending email code fails (timeout or Clerk issue), auto-finalize
+        // so the user isn't stuck with an incomplete sign-up.
+        console.warn("Email verification failed, auto-finalizing:", emailErr);
+        try {
+          await withTimeout(
+            signUp.finalize(),
+            REQUEST_TIMEOUT_MS,
+            "Finalizing sign-up"
+          );
+          await saveProfile();
+          setStep("complete");
+          setTimeout(() => router.push("/dashboard"), 1500);
+        } catch (finalizeErr) {
+          console.error("Auto-finalize failed:", finalizeErr);
+          setError(
+            emailErr instanceof Error && emailErr.message.includes("timed out")
+              ? t("auth.signUp.timeout")
+              : t("auth.signUp.emailSendFailed")
+          );
+        }
       }
     } catch (err: unknown) {
       console.error("Clerk signUp exception:", err);
-      setError(formatClerkErrorMessage(err));
+      if (err instanceof Error && (err.name === "AbortError" || err.message.includes("timed out"))) {
+        setError(t("auth.signUp.timeout"));
+      } else {
+        setError(formatClerkErrorMessage(err));
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -137,7 +196,11 @@ export function CustomSignUpForm() {
     setIsSubmitting(true);
 
     try {
-      const verifyResult = await signUp.verifications.verifyEmailCode({ code });
+      const verifyResult = await withTimeout(
+        signUp.verifications.verifyEmailCode({ code }),
+        REQUEST_TIMEOUT_MS,
+        "Verifying email code"
+      );
 
       if (verifyResult?.error) {
         console.error("Clerk verifyEmailCode error:", verifyResult.error);
@@ -146,13 +209,21 @@ export function CustomSignUpForm() {
         return;
       }
 
-      await signUp.finalize();
+      await withTimeout(
+        signUp.finalize(),
+        REQUEST_TIMEOUT_MS,
+        "Finalizing sign-up"
+      );
       await saveProfile();
       setStep("complete");
       setTimeout(() => router.push("/dashboard"), 1500);
     } catch (err: unknown) {
       console.error("Clerk signUp exception:", err);
-      setError(formatClerkErrorMessage(err));
+      if (err instanceof Error && err.message.includes("timed out")) {
+        setError(t("auth.signUp.timeout"));
+      } else {
+        setError(formatClerkErrorMessage(err));
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -160,7 +231,10 @@ export function CustomSignUpForm() {
 
   async function saveProfile() {
     try {
-      await fetch("/api/artisan-profile", {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+      const res = await fetch("/api/artisan-profile", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -174,22 +248,22 @@ export function CustomSignUpForm() {
           instagram: instagram || null,
           facebook: facebook || null,
         }),
+        signal: controller.signal,
       });
-    } catch {
-      console.warn("Profile save failed — user can complete later");
+
+      clearTimeout(timeoutId);
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        console.warn("Profile save returned error:", body?.error || res.status);
+      }
+    } catch (err) {
+      console.warn("Profile save failed — user can complete later:", err);
     }
   }
 
   return (
     <div id="custom-signup-form" className="w-full max-w-lg text-left">
-      {/* Step indicator */}
-      <div className="mb-8 flex items-center justify-center gap-2">
-        <span className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold ${step === "signup" ? "bg-carreta-red text-white" : "bg-carreta-red/10 text-carreta-red"}`}>1</span>
-        <span className="h-px w-8 bg-carreta-red/30" />
-        <span className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold ${step === "verify" ? "bg-carreta-red text-white" : step === "complete" ? "bg-green-500 text-white" : "bg-carreta-red/10 text-carreta-red"}`}>{step === "complete" ? "✓" : "2"}</span>
-        <span className="h-px w-8 bg-carreta-red/30" />
-        <span className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold ${step === "complete" ? "bg-green-500 text-white" : "bg-carreta-red/10 text-carreta-red"}`}>3</span>
-      </div>
 
       {displayError && (
         <div className="mb-6 rounded-xl border-2 border-red-200 bg-red-50 px-5 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-950/30 dark:text-red-400">{displayError}</div>
@@ -210,7 +284,7 @@ export function CustomSignUpForm() {
             <p className="text-sm text-[#1A1A2E]/70 dark:text-carreta-eggshell/70">{t("auth.verify.sent", email)}</p>
           </div>              <div>
                 <label htmlFor="code" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.verify.title")}</label>
-                <input id="code" type="text" value={code} onChange={(e) => setCode(e.target.value)} placeholder={t("auth.verify.placeholder")} autoComplete="one-time-code" className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell" required />
+                <input id="code" type="text" value={code} onChange={(e) => setCode(e.target.value)} placeholder={t("auth.verify.placeholder")} autoComplete="one-time-code" className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" required />
           </div>
           <div id="clerk-captcha" />
           <button type="submit" disabled={isSubmitting || !code} className="carreta-btn w-full rounded-xl py-3 text-sm font-semibold disabled:opacity-50">{isSubmitting ? t("auth.verify.submitting") : t("auth.verify.submit")}</button>
@@ -223,11 +297,11 @@ export function CustomSignUpForm() {
             <div className="space-y-4 rounded-xl border-2 border-carreta-red/10 bg-white/50 p-4 dark:bg-[#22223A]/50">
               <div>
                 <label htmlFor="fullName" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.fullName")}</label>
-                <input id="fullName" type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t("auth.signUp.fullNamePlaceholder")} autoComplete="name" className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell" required />
+                <input id="fullName" type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t("auth.signUp.fullNamePlaceholder")} autoComplete="name" className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" required />
               </div>
               <div>
                 <label htmlFor="email" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.email")}</label>
-                <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t("auth.signUp.emailPlaceholder")} autoComplete="email" className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell" required />
+                <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t("auth.signUp.emailPlaceholder")} autoComplete="email" className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" required />
               </div>
               <div>
                 <label htmlFor="password" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.password")}</label>
@@ -241,7 +315,7 @@ export function CustomSignUpForm() {
                     placeholder={t("auth.signUp.passwordPlaceholder")}
                     autoComplete="new-password"
                     minLength={8}
-                    className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 pr-12 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+                    className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 pr-12 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
                     required
                   />
                   <button
@@ -311,7 +385,7 @@ export function CustomSignUpForm() {
                     placeholder={t("auth.signUp.confirmPasswordPlaceholder")}
                     autoComplete="new-password"
                     minLength={8}
-                    className={`w-full rounded-xl border-2 bg-white px-5 py-3 pr-12 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell ${confirmPassword && password !== confirmPassword ? "border-red-500" : "border-carreta-red/20"}`}
+                    className={`w-full rounded-xl border-2 bg-white px-5 py-3 pr-12 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell ${confirmPassword && password !== confirmPassword ? "border-red-500" : "border-carreta-blue/20"}`}
                     required
                   />
                   <button
@@ -339,12 +413,12 @@ export function CustomSignUpForm() {
           </div>
 
           <div>
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-carreta-gold">{t("auth.signUp.artisanProfile")}</h3>
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-carreta-red">{t("auth.signUp.artisanProfile")}</h3>
             <p className="mb-3 text-xs text-[#1A1A2E]/50 dark:text-carreta-eggshell/50">{t("auth.signUp.artisanProfileHint")}</p>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
                 <label htmlFor="businessName" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.businessName")}</label>
-                <input id="businessName" type="text" value={businessName} onChange={(e) => setBusinessName(e.target.value)} placeholder={t("auth.signUp.businessNamePlaceholder")} autoComplete="organization" className="w-full rounded-xl border-2 border-carreta-gold/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-gold dark:bg-[#22223A] dark:text-carreta-eggshell" />
+                <input id="businessName" type="text" value={businessName} onChange={(e) => setBusinessName(e.target.value)} placeholder={t("auth.signUp.businessNamePlaceholder")} autoComplete="organization" className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" />
               </div>
               <div className="sm:col-span-2">
                 <label htmlFor="bio" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.bio")} *</label>
@@ -355,28 +429,28 @@ export function CustomSignUpForm() {
                   placeholder={t("auth.signUp.bioPlaceholder")}
                   rows={3}
                   required
-                  className="w-full rounded-xl border-2 border-carreta-gold/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-gold dark:bg-[#22223A] dark:text-carreta-eggshell"
+                  className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
                 />
               </div>
               <div>
                 <label htmlFor="phone" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.phone")} *</label>
-                <input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={t("auth.signUp.phonePlaceholder")} autoComplete="tel" required className="w-full rounded-xl border-2 border-carreta-gold/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-gold dark:bg-[#22223A] dark:text-carreta-eggshell" />
+                <input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={t("auth.signUp.phonePlaceholder")} autoComplete="tel" required className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" />
               </div>
               <div>
                 <label htmlFor="whatsapp" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.whatsapp")} *</label>
-                <input id="whatsapp" type="tel" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder={t("auth.signUp.whatsappPlaceholder")} autoComplete="tel" required className="w-full rounded-xl border-2 border-carreta-gold/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-gold dark:bg-[#22223A] dark:text-carreta-eggshell" />
+                <input id="whatsapp" type="tel" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder={t("auth.signUp.whatsappPlaceholder")} autoComplete="tel" required className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" />
               </div>
               <div>
                 <label htmlFor="website" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.website")}</label>
-                <input id="website" type="url" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder={t("auth.signUp.websitePlaceholder")} autoComplete="url" className="w-full rounded-xl border-2 border-carreta-gold/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-gold dark:bg-[#22223A] dark:text-carreta-eggshell" />
+                <input id="website" type="url" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder={t("auth.signUp.websitePlaceholder")} autoComplete="url" className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" />
               </div>
               <div>
                 <label htmlFor="instagram" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.instagram")}</label>
-                <input id="instagram" type="text" value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder={t("auth.signUp.instagramPlaceholder")} autoComplete="off" className="w-full rounded-xl border-2 border-carreta-gold/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-gold dark:bg-[#22223A] dark:text-carreta-eggshell" />
+                <input id="instagram" type="text" value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder={t("auth.signUp.instagramPlaceholder")} autoComplete="off" className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" />
               </div>
               <div>
                 <label htmlFor="facebook" className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">{t("auth.signUp.facebook")}</label>
-                <input id="facebook" type="url" value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder={t("auth.signUp.facebookPlaceholder")} autoComplete="off" className="w-full rounded-xl border-2 border-carreta-gold/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-gold dark:bg-[#22223A] dark:text-carreta-eggshell" />
+                <input id="facebook" type="url" value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder={t("auth.signUp.facebookPlaceholder")} autoComplete="off" className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell" />
               </div>
             </div>
           </div>

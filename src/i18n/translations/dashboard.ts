@@ -58,13 +58,42 @@ const dashboard: Record<string, Record<Locale, TranslationValue>> = {
     en: "No recent activity. Start by adding your first product!",
     es: "Sin actividad reciente. ¡Empieza añadiendo tu primer producto!",
   },
-  "dashboard.becomeArtisan": {
-    en: "Become an Artisan",
-    es: "Conviértete en Artesano",
+  // ─── Account Deletion ────────────────────────────────────────
+  "account.delete.title": {
+    en: "Danger Zone",
+    es: "Zona de Peligro",
   },
-  "dashboard.becomeArtisan.sub": {
-    en: "Set up your artisan profile to share your creations with the world.",
-    es: "Configura tu perfil de artesano para compartir tus creaciones con el mundo.",
+  "account.delete.description": {
+    en: "Once you delete your account, there is no going back. Please be certain.",
+    es: "Una vez que elimines tu cuenta, no hay vuelta atrás. Por favor, asegúrate.",
+  },
+  "account.delete.button": {
+    en: "Delete Account",
+    es: "Eliminar Cuenta",
+  },
+  "account.delete.confirm": {
+    en: "Type DELETE to confirm:",
+    es: "Escribe DELETE para confirmar:",
+  },
+  "account.delete.placeholder": {
+    en: "Type DELETE to confirm",
+    es: "Escribe DELETE para confirmar",
+  },
+  "account.delete.confirmButton": {
+    en: "Permanently Delete",
+    es: "Eliminar Permanentemente",
+  },
+  "account.delete.deleting": {
+    en: "Deleting...",
+    es: "Eliminando...",
+  },
+  "account.delete.cancel": {
+    en: "Cancel",
+    es: "Cancelar",
+  },
+  "account.delete.success": {
+    en: "Your account has been deleted. You will be signed out momentarily.",
+    es: "Tu cuenta ha sido eliminada. Serás redirigido en un momento.",
   },
   "dashboard.profile": {
     en: "Artisan Profile",

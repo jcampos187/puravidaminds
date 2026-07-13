@@ -100,7 +100,7 @@ export function ProductForm({ categories, initialData, isEditing }: ProductFormP
           required
           defaultValue={initialData?.title || ""}
           placeholder={t("productForm.title.placeholder")}
-          className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+          className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
         />
       </div>
 
@@ -119,7 +119,7 @@ export function ProductForm({ categories, initialData, isEditing }: ProductFormP
           rows={5}
           defaultValue={initialData?.description || ""}
           placeholder={t("productForm.desc.placeholder")}
-          className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+          className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
         />
       </div>
 
@@ -140,7 +140,7 @@ export function ProductForm({ categories, initialData, isEditing }: ProductFormP
             min="0"
             defaultValue={initialData?.price || ""}
             placeholder={t("productForm.price.placeholder")}
-            className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+            className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
           />
         </div>
 
@@ -155,7 +155,7 @@ export function ProductForm({ categories, initialData, isEditing }: ProductFormP
             id="currency"
             name="currency"
             defaultValue={initialData?.currency || "CRC"}
-            className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+            className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
           >
             <option value="CRC">₡ CRC (Costa Rican Colón)</option>
             <option value="USD">$ USD (US Dollar)</option>
@@ -175,7 +175,7 @@ export function ProductForm({ categories, initialData, isEditing }: ProductFormP
           id="categoryId"
           name="categoryId"
           defaultValue={initialData?.categoryId || ""}
-          className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+          className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
         >
           <option value="">{t("productForm.category.placeholder")}</option>
           {categories.map((cat) => (
@@ -200,7 +200,7 @@ export function ProductForm({ categories, initialData, isEditing }: ProductFormP
           type="text"
           defaultValue={initialData?.tags || ""}
           placeholder={t("productForm.tags.placeholder")}
-          className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+          className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] placeholder-[#1A1A2E]/40 outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
         />
       </div>
 
@@ -216,7 +216,7 @@ export function ProductForm({ categories, initialData, isEditing }: ProductFormP
           id="status"
           name="status"
           defaultValue={initialData?.status || "active"}
-          className="w-full rounded-xl border-2 border-carreta-red/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] outline-none transition-all focus:border-carreta-red dark:bg-[#22223A] dark:text-carreta-eggshell"
+          className="w-full rounded-xl border-2 border-carreta-blue/20 bg-white px-5 py-3 text-sm text-[#1A1A2E] outline-none transition-all focus:border-carreta-blue dark:bg-[#22223A] dark:text-carreta-eggshell"
         >
           <option value="active">{t("productForm.status.active")}</option>
           <option value="inactive">{t("productForm.status.inactive")}</option>
@@ -228,7 +228,7 @@ export function ProductForm({ categories, initialData, isEditing }: ProductFormP
         <label className="mb-2 block text-sm font-medium text-[#1A1A2E] dark:text-carreta-eggshell">
           {t("productForm.images.label")}
         </label>
-        <div className="rounded-xl border-2 border-dashed border-carreta-red/20 bg-white p-6 dark:bg-[#22223A]">
+        <div className="rounded-xl border-2 border-dashed border-carreta-blue/20 bg-white p-6 dark:bg-[#22223A]">
           <UploadButton
             endpoint="productImage"
             onClientUploadComplete={(res) => {
