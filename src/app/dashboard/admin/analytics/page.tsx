@@ -17,55 +17,71 @@ interface ArtisanClickStats {
 }
 
 async function getTotalClicks() {
-  const [result] = await db
-    .select({ count: sql<number>`count(*)::int` })
-    .from(clickEvents);
-  return result?.count || 0;
+  try {
+    const [result] = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(clickEvents);
+    return result?.count || 0;
+  } catch {
+    return 0;
+  }
 }
 
 async function getClicksByType(): Promise<ClickStats[]> {
-  return db
-    .select({
-      eventType: clickEvents.eventType,
-      count: sql<number>`count(*)::int`,
-    })
-    .from(clickEvents)
-    .groupBy(clickEvents.eventType)
-    .orderBy(sql`count(*) desc`);
+  try {
+    return await db
+      .select({
+        eventType: clickEvents.eventType,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(clickEvents)
+      .groupBy(clickEvents.eventType)
+      .orderBy(sql`count(*) desc`);
+  } catch {
+    return [];
+  }
 }
 
 async function getRecentClicks(limit = 20) {
-  return db
-    .select({
-      id: clickEvents.id,
-      eventType: clickEvents.eventType,
-      target: clickEvents.target,
-      pageUrl: clickEvents.pageUrl,
-      artisanName: users.name,
-      artisanBusinessName: artisanProfiles.businessName,
-      createdAt: clickEvents.createdAt,
-    })
-    .from(clickEvents)
-    .leftJoin(users, eq(clickEvents.artisanId, users.id))
-    .leftJoin(artisanProfiles, eq(users.id, artisanProfiles.userId))
-    .orderBy(sql`${clickEvents.createdAt} desc`)
-    .limit(limit);
+  try {
+    return await db
+      .select({
+        id: clickEvents.id,
+        eventType: clickEvents.eventType,
+        target: clickEvents.target,
+        pageUrl: clickEvents.pageUrl,
+        artisanName: users.name,
+        artisanBusinessName: artisanProfiles.businessName,
+        createdAt: clickEvents.createdAt,
+      })
+      .from(clickEvents)
+      .leftJoin(users, eq(clickEvents.artisanId, users.id))
+      .leftJoin(artisanProfiles, eq(users.id, artisanProfiles.userId))
+      .orderBy(sql`${clickEvents.createdAt} desc`)
+      .limit(limit);
+  } catch {
+    return [];
+  }
 }
 
 async function getTotalByArtisan(): Promise<ArtisanClickStats[]> {
-  return db
-    .select({
-      artisanName: users.name,
-      businessName: artisanProfiles.businessName,
-      eventType: clickEvents.eventType,
-      count: sql<number>`count(*)::int`,
-    })
-    .from(clickEvents)
-    .leftJoin(users, eq(clickEvents.artisanId, users.id))
-    .leftJoin(artisanProfiles, eq(users.id, artisanProfiles.userId))
-    .where(sql`${clickEvents.artisanId} is not null`)
-    .groupBy(clickEvents.eventType, users.name, artisanProfiles.businessName)
-    .orderBy(sql`count(*) desc`);
+  try {
+    return await db
+      .select({
+        artisanName: users.name,
+        businessName: artisanProfiles.businessName,
+        eventType: clickEvents.eventType,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(clickEvents)
+      .leftJoin(users, eq(clickEvents.artisanId, users.id))
+      .leftJoin(artisanProfiles, eq(users.id, artisanProfiles.userId))
+      .where(sql`${clickEvents.artisanId} is not null`)
+      .groupBy(clickEvents.eventType, users.name, artisanProfiles.businessName)
+      .orderBy(sql`count(*) desc`);
+  } catch {
+    return [];
+  }
 }
 
 const EVENT_LABELS: Record<string, { en: string; es: string; emoji: string }> = {
@@ -90,13 +106,12 @@ export default async function AnalyticsPage() {
   const { t, locale } = await getTranslations();
   const isEs = locale === "es";
 
-  const [totalClicks, clicksByType, recentClicks, artisanStats] =
-    await Promise.all([
-      getTotalClicks(),
-      getClicksByType(),
-      getRecentClicks(),
-      getTotalByArtisan(),
-    ]);
+  const [totalClicks, clicksByType, recentClicks, artisanStats] = await Promise.all([
+    getTotalClicks(),
+    getClicksByType(),
+    getRecentClicks(),
+    getTotalByArtisan(),
+  ]);
 
   return (
     <div className="space-y-8">
