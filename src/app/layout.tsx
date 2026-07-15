@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { ClerkProvider } from "@clerk/nextjs";
-import { LanguageProvider } from "@/i18n/LanguageProvider";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import Providers from "@/components/Providers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "./globals.css";
@@ -69,15 +67,11 @@ export default async function RootLayout({
         className="flex min-h-full flex-col bg-carreta-cream font-sans text-[#1A1A2E] dark:bg-[#1A1A2E] dark:text-carreta-eggshell"
         suppressHydrationWarning
       >
-        <ClerkProvider>
-          <LanguageProvider>
-            <ThemeProvider initialServerTheme={initialTheme}>
-              <Header />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </ThemeProvider>
-          </LanguageProvider>
-        </ClerkProvider>
+        <Providers initialServerTheme={initialTheme}>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
