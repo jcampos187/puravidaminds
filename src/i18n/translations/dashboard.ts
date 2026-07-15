@@ -161,6 +161,38 @@ const dashboard: Record<string, Record<Locale, TranslationValue>> = {
     en: "Edit",
     es: "Editar",
   },
+  "dashboard.table.delete": {
+    en: "Delete",
+    es: "Eliminar",
+  },
+  "dashboard.delete.title": {
+    en: "Delete Product",
+    es: "Eliminar Producto",
+  },
+  "dashboard.delete.confirm": {
+    en: (title: string) => `Are you sure you want to delete "${title}"? This action cannot be undone.`,
+    es: (title: string) => `¿Estás seguro de que deseas eliminar "${title}"? Esta acción no se puede deshacer.`,
+  },
+  "dashboard.delete.button": {
+    en: "Delete",
+    es: "Eliminar",
+  },
+  "dashboard.delete.cancel": {
+    en: "Cancel",
+    es: "Cancelar",
+  },
+  "dashboard.delete.deleting": {
+    en: "Deleting...",
+    es: "Eliminando...",
+  },
+  "dashboard.delete.success": {
+    en: "Product deleted successfully",
+    es: "Producto eliminado exitosamente",
+  },
+  "dashboard.delete.error": {
+    en: "Failed to delete product",
+    es: "Error al eliminar el producto",
+  },
 
   // Edit/Add titles
   "edit.title": {
