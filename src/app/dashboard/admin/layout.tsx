@@ -90,6 +90,12 @@ export default async function AdminLayout({
           )}
         </Link>
         <Link
+          href="/dashboard/admin/analytics"
+          className="text-sm font-medium text-[#1A1A2E]/60 transition-colors hover:text-carreta-red dark:text-carreta-eggshell/60 dark:hover:text-carreta-gold"
+        >
+          📊 {t("admin.nav.analytics")}
+        </Link>
+        <Link
           href="/dashboard"
           className="ml-auto text-sm font-medium text-[#1A1A2E]/60 transition-colors hover:text-carreta-red dark:text-carreta-eggshell/60 dark:hover:text-carreta-gold"
         >

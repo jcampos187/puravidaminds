@@ -401,6 +401,10 @@ const dashboard: Record<string, Record<Locale, TranslationValue>> = {
     en: "Product Approvals",
     es: "Aprobaciones de Productos",
   },
+  "admin.nav.analytics": {
+    en: "Analytics",
+    es: "Analíticas",
+  },
   "admin.pendingArtisans": {
     en: "Pending Artisan Applications",
     es: "Solicitudes de Artesanos Pendientes",

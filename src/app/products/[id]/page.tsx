@@ -7,6 +7,7 @@ import { products, productImages, users, artisanProfiles, categories } from "@/d
 import { eq, and, ne, sql, desc } from "drizzle-orm";
 import ProductImageGallery from "@/components/ProductImageGallery";
 import ProductCard from "@/components/ProductCard";
+import TrackedLink from "@/components/TrackedLink";
 import { getTranslations } from "@/i18n/getTranslations";
 
 /** Simple UUID v4 regex — matches 8-4-4-4-12 hex format */
@@ -287,34 +288,40 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 {/* Contact buttons */}
                 <div className="mt-4 flex flex-wrap gap-3">
                   {product.artisanWhatsapp && (
-                    <a
+                    <TrackedLink
                       href={`https://wa.me/${product.artisanWhatsapp.replace(/[^0-9]/g, "")}?text=Hi! I'm interested in ${product.title}`}
+                      eventType="whatsapp_click"
+                      artisanId={product.artisanId}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 rounded-full border-2 border-green-500/30 px-4 py-2 text-xs font-medium text-green-600 transition-all hover:border-green-500 hover:bg-green-500/5"
                     >
                       💬 {t("product.whatsapp")}
-                    </a>
+                    </TrackedLink>
                   )}
                   {product.artisanInstagram && (
-                    <a
+                    <TrackedLink
                       href={`https://instagram.com/${product.artisanInstagram.replace("@", "")}`}
+                      eventType="instagram_click"
+                      artisanId={product.artisanId}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 rounded-full border-2 border-carreta-fuchsia/30 px-4 py-2 text-xs font-medium text-carreta-fuchsia transition-all hover:border-carreta-fuchsia hover:bg-carreta-fuchsia/5"
                     >
                       📸 {t("product.instagram")}
-                    </a>
+                    </TrackedLink>
                   )}
                   {product.artisanFacebook && (
-                    <a
+                    <TrackedLink
                       href={product.artisanFacebook.startsWith("http") ? product.artisanFacebook : `https://facebook.com/${product.artisanFacebook}`}
+                      eventType="facebook_click"
+                      artisanId={product.artisanId}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 rounded-full border-2 border-blue-500/30 px-4 py-2 text-xs font-medium text-blue-600 transition-all hover:border-blue-500 hover:bg-blue-500/5"
                     >
                       📘 {t("product.facebook")}
-                    </a>
+                    </TrackedLink>
                   )}
                 </div>
               </div>

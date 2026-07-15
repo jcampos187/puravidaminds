@@ -6,6 +6,7 @@ import { eq, desc, sql } from "drizzle-orm";
 import Image from "next/image";
 import CarretaWheel from "@/components/CarretaWheel";
 import ProductCard from "@/components/ProductCard";
+import TrackedLink from "@/components/TrackedLink";
 import { getTranslations } from "@/i18n/getTranslations";
 
 /** Simple UUID v4 regex — matches 8-4-4-4-12 hex format */
@@ -235,8 +236,10 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
                     {artisan.profile.phone}
                   </div>
                 )}                  {artisan.profile?.whatsapp && (
-                  <a
+                  <TrackedLink
                     href={`https://wa.me/${artisan.profile.whatsapp.replace(/[^0-9]/g, "")}`}
+                    eventType="whatsapp_click"
+                    artisanId={artisan.id}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 text-sm text-green-600 transition-colors hover:text-green-500"
@@ -245,7 +248,7 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
                       💬
                     </span>
                     {t("artisan.whatsapp")}
-                  </a>
+                  </TrackedLink>
                 )}
 
                 {artisan.profile?.website && (
@@ -263,8 +266,10 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
                 )}
 
                 {artisan.profile?.instagram && (
-                  <a
+                  <TrackedLink
                     href={`https://instagram.com/${artisan.profile.instagram.replace("@", "")}`}
+                    eventType="instagram_click"
+                    artisanId={artisan.id}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 text-sm text-carreta-fuchsia transition-colors hover:text-carreta-fuchsia-light"
@@ -275,10 +280,12 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
                     {artisan.profile.instagram.startsWith("@")
                       ? artisan.profile.instagram
                       : `@${artisan.profile.instagram}`}
-                  </a>
+                  </TrackedLink>
                 )}                  {artisan.profile?.facebook && (
-                  <a
-                    href={artisan.profile.facebook}
+                  <TrackedLink
+                    href={artisan.profile.facebook.startsWith("http") ? artisan.profile.facebook : `https://facebook.com/${artisan.profile.facebook}`}
+                    eventType="facebook_click"
+                    artisanId={artisan.id}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 text-sm text-carreta-blue transition-colors hover:text-carreta-red"
@@ -287,7 +294,7 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
                       👍
                     </span>
                     {t("artisan.facebook")}
-                  </a>
+                  </TrackedLink>
                 )}
               </div>
             </div>

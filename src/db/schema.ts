@@ -91,6 +91,16 @@ export const productImages = pgTable("product_images", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// ─── Click Events (Analytics) ────────────────────────────────────
+export const clickEvents = pgTable("click_events", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  eventType: text("event_type").notNull(), // "whatsapp_click" | "facebook_click" | "instagram_click"
+  target: text("target").notNull(), // the URL that was clicked
+  pageUrl: text("page_url"), // the page where the click happened
+  artisanId: uuid("artisan_id").references(() => users.id, { onDelete: "set null" }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 // ─── Type exports ────────────────────────────────────────────────
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
