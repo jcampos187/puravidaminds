@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const validTypes = ["whatsapp_click", "facebook_click", "instagram_click", "website_click", "phone_click"];
+    const validTypes = ["whatsapp_click", "facebook_click", "instagram_click", "email_click", "website_click", "phone_click"];
     if (!validTypes.includes(eventType)) {
       return NextResponse.json(
         { error: `Invalid eventType. Must be one of: ${validTypes.join(", ")}` },

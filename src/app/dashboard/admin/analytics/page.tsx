@@ -88,6 +88,7 @@ const EVENT_LABELS: Record<string, { en: string; es: string; emoji: string }> = 
   whatsapp_click: { en: "WhatsApp", es: "WhatsApp", emoji: "💬" },
   facebook_click: { en: "Facebook", es: "Facebook", emoji: "📘" },
   instagram_click: { en: "Instagram", es: "Instagram", emoji: "📸" },
+  email_click: { en: "Email", es: "Correo", emoji: "✉️" },
   website_click: { en: "Website", es: "Sitio web", emoji: "🌐" },
   phone_click: { en: "Phone", es: "Teléfono", emoji: "📞" },
 };
