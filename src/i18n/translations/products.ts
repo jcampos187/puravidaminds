@@ -39,6 +39,24 @@ const products: Record<string, Record<Locale, TranslationValue>> = {
     es: (q: string) => `Sin resultados para "${q}". Intenta con otro término de búsqueda.`,
   },
 
+  // ─── Sorting ────────────────────────────────────────────────
+  "products.sort.newest": {
+    en: "Newest",
+    es: "Más recientes",
+  },
+  "products.sort.priceLow": {
+    en: "Price: Low to High",
+    es: "Precio: Menor a Mayor",
+  },
+  "products.sort.priceHigh": {
+    en: "Price: High to Low",
+    es: "Precio: Mayor a Menor",
+  },
+  "products.sort.label": {
+    en: "Sort by",
+    es: "Ordenar por",
+  },
+
   // ─── Product Detail ────────────────────────────────────────
   "product.contact.title": {
     en: "Contact Artisan",
