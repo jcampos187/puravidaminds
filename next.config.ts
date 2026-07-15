@@ -25,7 +25,7 @@ const securityHeaders = [
         "style-src 'self' https://*.clerk.accounts.dev 'unsafe-inline'",
         "img-src 'self' data: blob: https://*.clerk.com https://utfs.io https://images.unsplash.com",
         "font-src 'self' data:",
-        "connect-src 'self' https://*.clerk.com https://*.clerk.accounts.dev wss://*.clerk.com",
+        "connect-src 'self' https://*.clerk.com https://*.clerk.accounts.dev wss://*.clerk.com https://api.uploadthing.com https://*.ingest.uploadthing.com",
         "frame-src 'self' https://*.clerk.com https://*.clerk.accounts.dev https://challenges.cloudflare.com",
         "worker-src 'self' blob:",
         "object-src 'none'",
