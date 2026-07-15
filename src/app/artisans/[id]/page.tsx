@@ -164,21 +164,23 @@ export default async function ArtisanProfilePage({ params }: PageProps) {
           </div>
 
           <div className="flex-1 pb-6">
-            <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-bold tracking-tight text-[#1A1A2E] dark:text-carreta-eggshell">
-                {displayName}
-              </h1>
-              {artisan.profile?.isVerified && (
-                <span className="rounded-full bg-carreta-blue/10 px-3 py-1 text-xs font-medium text-carreta-blue">
-                  {t("artisan.verified")}
-                </span>
+            <div className="rounded-xl bg-white/80 px-4 py-3 shadow-sm backdrop-blur-sm dark:bg-[#1A1A2E]/80">
+              <div className="flex items-center gap-3">
+                <h1 className="text-3xl font-bold tracking-tight text-[#1A1A2E] dark:text-carreta-eggshell">
+                  {displayName}
+                </h1>
+                {artisan.profile?.isVerified && (
+                  <span className="shrink-0 rounded-full bg-carreta-blue/10 px-3 py-1 text-xs font-medium text-carreta-blue">
+                    {t("artisan.verified")}
+                  </span>
+                )}
+              </div>
+              {artisan.profile?.location && (
+                <p className="mt-1 text-[#1A1A2E]/60 dark:text-carreta-eggshell/60">
+                  📍 {artisan.profile.location}
+                </p>
               )}
             </div>
-            {artisan.profile?.location && (
-              <p className="mt-1 text-[#1A1A2E]/60 dark:text-carreta-eggshell/60">
-                📍 {artisan.profile.location}
-              </p>
-            )}
           </div>
         </div>
 
