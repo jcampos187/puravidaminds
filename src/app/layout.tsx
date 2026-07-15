@@ -59,23 +59,26 @@ export default async function RootLayout({
   const initialTheme = themeCookie?.value === "dark" ? "dark" : "light";
 
   return (
-    <ClerkProvider>
-      <LanguageProvider>
-        <ThemeProvider initialServerTheme={initialTheme}>
-          <html
-            lang="en"
-            className={`h-full antialiased${initialTheme === "dark" ? " dark" : ""}`}
-            suppressHydrationWarning
-          >
-            <head />
-            <body className="flex min-h-full flex-col bg-carreta-cream font-sans text-[#1A1A2E] dark:bg-[#1A1A2E] dark:text-carreta-eggshell">
+    <html
+      lang="en"
+      className={`h-full antialiased${initialTheme === "dark" ? " dark" : ""}`}
+      suppressHydrationWarning
+    >
+      <head />
+      <body
+        className="flex min-h-full flex-col bg-carreta-cream font-sans text-[#1A1A2E] dark:bg-[#1A1A2E] dark:text-carreta-eggshell"
+        suppressHydrationWarning
+      >
+        <ClerkProvider>
+          <LanguageProvider>
+            <ThemeProvider initialServerTheme={initialTheme}>
               <Header />
               <main className="flex-1">{children}</main>
               <Footer />
-            </body>
-          </html>
-        </ThemeProvider>
-      </LanguageProvider>
-    </ClerkProvider>
+            </ThemeProvider>
+          </LanguageProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }
