@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { users, artisanProfiles, products, productImages, categories } from "@/db/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import CarretaWheel from "@/components/CarretaWheel";
+import DeleteProductButton from "@/components/DeleteProductButton";
 import { getTranslations } from "@/i18n/getTranslations";
 
 export default async function MyProductsPage() {
@@ -168,12 +169,19 @@ export default async function MyProductsPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <Link
-                        href={`/dashboard/products/${product.id}/edit`}
-                        className="text-sm font-medium text-carreta-blue transition-colors hover:text-carreta-red"
-                      >
-                        {t("dashboard.table.edit")}
-                      </Link>
+                      <div className="flex items-center justify-end gap-3">
+                        <Link
+                          href={`/dashboard/products/${product.id}/edit`}
+                          className="text-sm font-medium text-carreta-blue transition-colors hover:text-carreta-red"
+                        >
+                          {t("dashboard.table.edit")}
+                        </Link>
+                        <span className="text-[#1A1A2E]/20 dark:text-carreta-eggshell/20">|</span>
+                        <DeleteProductButton
+                          productId={product.id}
+                          productTitle={product.title}
+                        />
+                      </div>
                     </td>
                   </tr>
                 );
