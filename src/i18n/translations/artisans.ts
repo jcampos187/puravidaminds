@@ -48,6 +48,10 @@ const artisans: Record<string, Record<Locale, TranslationValue>> = {
     en: "Facebook",
     es: "Facebook",
   },
+  "artisan.email": {
+    en: "Email",
+    es: "Correo",
+  },
 
   // ─── ArtisanCard ──────────────────────────────────────────
   "artisanCard.artesania": {

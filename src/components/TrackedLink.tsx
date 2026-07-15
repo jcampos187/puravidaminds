@@ -4,7 +4,7 @@ import type { ReactNode, MouseEvent } from "react";
 
 interface TrackedLinkProps {
   href: string;
-  eventType: "whatsapp_click" | "facebook_click" | "instagram_click" | "website_click" | "phone_click";
+  eventType: "whatsapp_click" | "facebook_click" | "instagram_click" | "email_click" | "website_click" | "phone_click";
   artisanId?: string | null;
   children: ReactNode;
   className?: string;

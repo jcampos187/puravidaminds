@@ -72,6 +72,10 @@ const products: Record<string, Record<Locale, TranslationValue>> = {
     en: "Facebook",
     es: "Facebook",
   },
+  "product.email": {
+    en: "Email",
+    es: "Correo",
+  },
   "product.status.active": {
     en: "Active",
     es: "Activo",
