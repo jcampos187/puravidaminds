@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { db } from "@/db";
 import { products, categories, productImages, users, artisanProfiles } from "@/db/schema";
-import { eq, desc, and, sql, ilike, or } from "drizzle-orm";
+import { eq, desc, asc, and, sql, ilike, or } from "drizzle-orm";
 import ProductCard from "@/components/ProductCard";
 import CarretaWheel from "@/components/CarretaWheel";
+import SortDropdown from "@/components/SortDropdown";
 import { getTranslations } from "@/i18n/getTranslations";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -29,11 +30,12 @@ interface PageProps {
   searchParams: Promise<{
     category?: string;
     q?: string;
+    sort?: string;
   }>;
 }
 
 async function getProducts(searchParams: Awaited<PageProps["searchParams"]>) {
-  const { category, q } = searchParams;
+  const { category, q, sort } = searchParams;
 
   const conditions = [eq(products.status, "active")];
 
@@ -56,6 +58,19 @@ async function getProducts(searchParams: Awaited<PageProps["searchParams"]>) {
         ilike(products.description, `%${q}%`)
       )!
     );
+  }
+
+  // Determine sort order
+  let orderBy;
+  switch (sort) {
+    case "price_asc":
+      orderBy = asc(products.price);
+      break;
+    case "price_desc":
+      orderBy = desc(products.price);
+      break;
+    default:
+      orderBy = desc(products.createdAt);
   }
 
   const result = await db
@@ -87,9 +102,27 @@ async function getProducts(searchParams: Awaited<PageProps["searchParams"]>) {
     .leftJoin(productImages, eq(products.id, productImages.productId))
     .where(and(...conditions))
     .groupBy(products.id, products.artisanId, products.categoryId, products.status, products.tags, products.createdAt, products.updatedAt, users.name, artisanProfiles.location, categories.name, categories.slug)
-    .orderBy(desc(products.createdAt));
+    .orderBy(orderBy);
 
   return result;
+}
+
+/** Build a URL preserving existing search params, overriding specific keys */
+function buildFilterUrl(
+  currentParams: Awaited<PageProps["searchParams"]>,
+  overrides: Record<string, string | undefined>
+): string {
+  const params = new URLSearchParams();
+  if (currentParams.category) params.set("category", currentParams.category);
+  if (currentParams.q) params.set("q", currentParams.q);
+  if (currentParams.sort) params.set("sort", currentParams.sort);
+  // Apply overrides (overwrites or deletes)
+  for (const [key, value] of Object.entries(overrides)) {
+    if (value) params.set(key, value);
+    else params.delete(key);
+  }
+  const qs = params.toString();
+  return `/products${qs ? `?${qs}` : ""}`;
 }
 
 async function getAllCategories() {
@@ -123,6 +156,9 @@ export default async function ProductsPage({ searchParams }: PageProps) {
       <div className="mb-10 flex flex-col gap-4">
         {/* Search */}
         <form className="relative w-full" method="GET" action="/products">
+          {/* Preserve category and sort when searching */}
+          {params.category && <input type="hidden" name="category" value={params.category} />}
+          {params.sort && <input type="hidden" name="sort" value={params.sort} />}
           <input
             type="text"
             name="q"
@@ -141,31 +177,46 @@ export default async function ProductsPage({ searchParams }: PageProps) {
           </svg>
         </form>
 
-        {/* Category filter pills */}
-        <div className="flex flex-wrap gap-2">
-          <Link
-            href="/products"
-            className={`rounded-full border-2 px-4 py-2 text-xs font-medium transition-all ${
-              !params.category
-                ? "border-carreta-red bg-carreta-red/10 text-carreta-red"
-                : "border-[#1A1A2E]/20 text-[#1A1A2E]/60 hover:border-carreta-red/50 hover:text-carreta-red dark:border-carreta-eggshell/20 dark:text-carreta-eggshell/60"
-            }`}
-          >
-            {t("products.all")}
-          </Link>
-          {allCategories.map((cat) => (
+        {/* Filters row: category pills + sort dropdown */}
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          {/* Category filter pills */}
+          <div className="flex flex-wrap gap-2">
             <Link
-              key={cat.id}
-              href={`/products?category=${cat.slug}`}
+              href={buildFilterUrl(params, { category: undefined })}
               className={`rounded-full border-2 px-4 py-2 text-xs font-medium transition-all ${
-                params.category === cat.slug
+                !params.category
                   ? "border-carreta-red bg-carreta-red/10 text-carreta-red"
                   : "border-[#1A1A2E]/20 text-[#1A1A2E]/60 hover:border-carreta-red/50 hover:text-carreta-red dark:border-carreta-eggshell/20 dark:text-carreta-eggshell/60"
               }`}
->
-              {t(`cat.${cat.slug}`)}
+            >
+              {t("products.all")}
             </Link>
-          ))}
+            {allCategories.map((cat) => (
+              <Link
+                key={cat.id}
+                href={buildFilterUrl(params, { category: cat.slug })}
+                className={`rounded-full border-2 px-4 py-2 text-xs font-medium transition-all ${
+                  params.category === cat.slug
+                    ? "border-carreta-red bg-carreta-red/10 text-carreta-red"
+                    : "border-[#1A1A2E]/20 text-[#1A1A2E]/60 hover:border-carreta-red/50 hover:text-carreta-red dark:border-carreta-eggshell/20 dark:text-carreta-eggshell/60"
+                }`}
+>
+                {t(`cat.${cat.slug}`)}
+              </Link>
+            ))}
+          </div>
+
+          {/* Sort dropdown (client component) */}
+          <SortDropdown
+            value={params.sort || "newest"}
+            label={t("products.sort.label")}
+            currentParams={{ category: params.category, q: params.q }}
+            options={[
+              { value: "newest", label: t("products.sort.newest") },
+              { value: "price_asc", label: t("products.sort.priceLow") },
+              { value: "price_desc", label: t("products.sort.priceHigh") },
+            ]}
+          />
         </div>
       </div>
 
